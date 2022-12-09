@@ -1,4 +1,4 @@
-<?php 
+    <?php 
 error_reporting(E_ALL);
 ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
@@ -17,6 +17,11 @@ class csvDataUpload {
         $finalDatas = array();
       
         foreach($csvData as $row){
+            if($row){
+                echo "_eps_customer_id";
+                
+            }
+
             $row  = array_map('trim',$row);
             array_push($finalDatas,array_combine($csvHeader, $row));
         }
@@ -287,8 +292,8 @@ class csvDataUpload {
        
         $owner_unique_id =  (isset($finalData['Pet Owner Unique ID'])) ? $finalData['Pet Owner Unique ID'] : "";
        
-        $email        = trim($owneremail);
-        $exists = email_exists(trim($owneremail));
+        $email          = trim($owneremail);
+        $exists         = email_exists(trim($owneremail));
         if($email == ""){
 
              $petID = $this->importCreatePetProfile($finalData,$userid);
@@ -339,7 +344,7 @@ class csvDataUpload {
             }
             // update_user_meta( $user_id, 'sl_email_confirmation', 'false');
             // salient_register_emails_filter_replace($_POST['org_email']);
-              $petID = $this->importCreatePetProfile($finalData,$user_id);
+                $petID = $this->importCreatePetProfile($finalData,$user_id);
             return  json_encode(array('success'=>1,'title'=>'Pet Owner','action' =>'created', 'user_id' => $user_id,'pet_id' => $petID,'message'=>'Account successfully created.'));
                  // echo json_encode(array('success'=>1,'title'=>'Pet Professional','message'=>'Account successfully created.'));
         
@@ -386,7 +391,7 @@ class csvDataUpload {
             $petID = $this->importCreatePetProfile($finalData,$userId);
             // update_user_meta( $userId, 'sl_email_confirmation', 'false');
             return json_encode(array('success'=>1,'title'=>'Pet Owner','action' =>'updated','user_id' => $userId,'pet_id' => $petID, 'message'=>'Account successfully updated.'));
-    }
+      }
  
     }
 

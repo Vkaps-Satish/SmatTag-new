@@ -147,16 +147,21 @@ class GeekSerialNumber {
      * Gets data for serial numbers dropdowns which are displayed using javascript
      */
     function woocommerce_admin_order_items_after_line_items( $order_id ) {
-        global $globalMicrochipDataId, $globalMicrochipStandrdId, $globalBrassIdTag, $globalAluminumIdTag;
+        global $globalMicrochipDataId, $globalMicrochipStandrdId, $globalBrassIdTag, $globalAluminumIdTag, $globalMicrochipMiniData, $globalMicrochipMiniBox;
+
+global $woocommerce;
         // update_option( 'microchip_max_serial_number', 50,"","yes"); 
         $order = new WC_Order($order_id);
         $items = $order->get_items();
+
         foreach ($items as $itemKey => $item) {
             $data = $item->get_data();
+        
             if (!empty(wc_get_order_item_meta($itemKey,'Serial Number Range'))) {
                 // wc_delete_order_item_meta( $itemKey, 'Serial Number Range' );
             }else{
-                if ($data['product_id'] == $globalMicrochipDataId || $data['product_id'] == $globalMicrochipStandrdId) {
+
+                if ($data['product_id'] == $globalMicrochipDataId || $data['product_id'] == $globalMicrochipMiniBox || $data['product_id'] == $globalMicrochipMiniData || $data['product_id'] == $globalMicrochipStandrdId) {
                     print '<div class="serial-number-manage-div"><input type="text" value="" placeholder="Min range" class="serial-min-range" data-item-key="'.$itemKey.'"/><input type="text" value="" placeholder="Max range" class="serial-max-range" data-item-key="'.$itemKey.'"/></div>';
                 }
             }

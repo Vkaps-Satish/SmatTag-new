@@ -22,9 +22,32 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
+
+
  $paged  = (get_query_var('paged')) ? get_query_var('paged') : 1;
     echo "<div class='page-heading'><h1>My Pets Information</h1></div>";
     global $current_user;
+    
+
+     $current_user = wp_get_current_user();
+            $roles = $current_user->roles;  
+            $user_role = $roles['0'];
+
+            if($user_role == 'pet_professional'){
+            echo '<button class="syncPetProsData">Sync</button>';    
+            }
+
+            echo '<input type="hidden" class="userRole" value="'.$user_role.'">';
+
+
+
+
+
+
+
+
+
+
     
     $args = array(
         'post_type' => 'pet_profile',
@@ -68,9 +91,17 @@ if ( ! defined( 'ABSPATH' ) ) {
                 $microchipDate      = '';
             }
             
+            
+           
+
             ?>
 
-        
+            
+               
+
+
+
+
             <div class="bottom-border-box">
                 <h3><?php echo get_the_title(); ?></h3>
                 <div class="row">
@@ -178,4 +209,65 @@ if ( ! defined( 'ABSPATH' ) ) {
      */
     do_action( 'woocommerce_after_my_account' );
 
+
+
+
 /* Omit closing PHP tag at the end of PHP files to avoid "headers already sent" issues. */
+    update_user_meta( get_current_user_id(), 'FirstTimeLogIn', 'sp');
+    update_user_meta( get_current_user_id(), 'FirstTimeLogIn', 's');
+    $FirstTimeLogIn  = get_user_meta( get_current_user_id(), 'FirstTimeLogIn',true);
+     echo '<input type="hidden" class="FirstTimeLogIn" value="'.$FirstTimeLogIn.'" user_id="'.get_current_user_id().'"
+     >';
+    ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var userRole = $('.userRole').val(); 
+
+        /*import basic data on database and set flag*/
+     
+        if(userRole != 'pet_professional'){        
+            var FirstTimeLogIn = $('.FirstTimeLogIn').val(); 
+            
+               if(localStorage.getItem('popState') != 'shown' || localStorage.getItem('popStatePetPros') != 'shown'){
+                    if (FirstTimeLogIn =='s'|| FirstTimeLogIn =='sp'){
+                        localStorage.setItem('popState','shown');
+                        localStorage.setItem('popStatePetPros','shown');
+                         
+
+
+                                Swal.fire({
+                                    title: 'SmartTag!',
+                                    text: 'Thank you for your Time.',
+                                    imageUrl: 'http://northerntechmap.com/assets/img/loading-dog-final.gif',
+                                    imageWidth: 400,
+                                    imageHeight: 200,
+                                    imageAlt: 'Dog image',
+                                    showConfirmButton: false,
+                                    allowOutsideClick:false,
+                                });
+
+                                $.ajax({url: "https://staging.idtag.com/import-data-firstlogin/", 
+                                   success: function(result) {
+                                       var arrNames = result.split("-");
+
+                                           if(arrNames !=''){
+                                               swal.close();
+                                               localStorage.setItem('popState','shown');
+                                            }else{
+                                                swal.close();
+                                            } 
+                                   }
+                                }); 
+                    }else{
+                            '<?php update_user_meta( get_current_user_id(), 'FirstTimeLogIn', ''); ?>';
+                        } 
+
+               }else{
+                         localStorage.setItem('popState','shown');
+                   }     
+        }else{
+            console.log('pet professional section');
+        }
+    });
+</script>

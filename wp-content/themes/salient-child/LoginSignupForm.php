@@ -24,6 +24,317 @@ if ( is_user_logged_in() ){
 $countries_obj = new WC_Countries();
 $CountriesName = $countries_obj->__get('countries'); 
 ?>
+
+
+
+<?php
+if (!isset($_COOKIE["formForFirstTime"])){  ?>
+
+	
+	<div class="container-wrap occena">		
+		<div class="container main-content">
+			<div class="row">
+				<div class="woo-sidebar col-sm-3">
+			        <?php echo do_shortcode("[stag_sidebar id='main-sidebar']"); ?>
+			    </div>
+				<div class="woo-content col-sm-9" id="woo-content">
+					<!-- <div class="woocommerce-message" role="alert"> -->
+						<p id="existing_info"></p>
+					<!-- </div> -->
+					<div class="site-tabs-wrap">
+						<div class="tabGroup">
+					        <ul class="swichtab-controller">
+					            <li data-swichtab="controller" class="singup-click"><a href="#singup">Sign Up</a></li>
+					            <li data-swichtab="controller" class="login-click"><a href="#login">Log In</a></li>
+					            <li data-swichtab="controller" class="forget-password-click"><a href="#forgot_pass">Forgot Password?</a></li>
+					        </ul>
+					        <div class="swichtab-contents">
+					            <div id="singup" class="swichtab-panel" data-swichtab="target">
+					                <?php if (has_post_thumbnail( $post->ID ) ): ?>
+									    <?php $image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' ); ?>
+									    <div class="page-image">
+									    	<img src="<?php echo $image[0]; ?>" alt="image" />
+									    </div>
+									<?php endif; ?>
+									<div class="page-heading heading-right-link">
+										<h1>Sign Up with SmartTag®</h1>
+										<a href="<?php echo get_site_url(); ?>/pet-professionals-signup/">Sign Up as a Shelter / Pet Professional <i class="fa fa-caret-right"></i></a>
+									</div>
+									<p>Note:- Accurate Phone and Email are vital for your pet's safety.</p>
+									<p id="SigEror" style="display: none;color:red;"></p>
+							<form id="SmtSignup" method="POST" name="SmtSignupform">		
+						         <div class="contact-form" id="cus-info">
+							       <div class="field-wrap two-fields-wrap">
+										<div class="field-div">
+											<label>*First Name </label>
+											<input type="text" name="p_fst_name" placeholder="First Name" class="user-data" id="u-first" required="" />
+										</div>
+										<div class="field-div">
+											<label>*Last Name </label>
+											<input type="text" name="p_lst_name" placeholder="Last Name" class="user-data" id="u-last" required="" />
+										</div>
+									</div>
+									<div class="field-wrap two-fields-wrap">
+										<div class="field-div">
+											<label>*Email </label>
+											<input type="email" name="p_email" placeholder="Enter Email Address" class="user-data" id="u-email" required="" />
+										</div>
+										<div class="field-div">
+											<label>*Confirm Email </label>
+											<input type="email" name="confirm_email" placeholder="Enter Confirm Email Address" class="user-data" id="confirm-email" required="" />
+										</div>							
+									</div>
+									<div class="field-wrap two-fields-wrap">
+										<div class="field-div">
+											<label>*Password </label>
+											<input type="password" name="password" placeholder="Enter Password" class="user-data"  required="" id="u-password" />
+										</div>
+										<div class="field-div">
+											<label>*Confirm Password </label>
+											<input type="password" name="confirm_password" placeholder="Enter Confirm Password" class="user-data" id="confirm-password" required="" />
+										</div>							
+									</div>
+									<div class="field-wrap">
+										<div class="field-div">
+											<label>*Select Your Country </label>
+											<select name="p_country" class="user-data address-country" required="" >
+											<option value="">Select</option>
+											<?php 
+											foreach ($CountriesName as $key => $value) {?>
+												<option value="<?php echo $key; ?>"><?php echo $value;?></option>
+												<?php } ?>
+											</select>
+										</div>
+									</div>
+									<!-- <div class="field-wrap two-fields-wrap">							
+										<div class="field-div">
+											<label>*Address: </label>
+											<input type="text" name="p_add1" placeholder="Address line 1" class="user-data" id="u-add1" required="" />
+											<input type="text" name="p_city" placeholder="City" class="user-data" id="u-city1" required="" />
+										</div>
+										<div class="field-div">
+											<label></label>
+											<input type="text" name="p_add2" placeholder="Address line 2" class="user-data" id="u-add2"/>
+											<div class="field-wrap two-fields-wrap">
+												<div class="field-div">
+													//<input type="text" name="UserState" class="user-data" id="usrstate" required=""> 
+													<select name="UserState" class="user-data address-state" id="usrstate" data-val=""></select>
+												</div>
+												<div class="field-div">
+													<input type="text" name="p_zipcode" placeholder="Zipcode" class="user-data" id="u-zip" />
+												</div>
+											</div>
+										</div>
+									</div> -->
+									<div class="field-wrap two-fields-wrap">	
+										<div class="field-div">
+											<label>*Address</label>
+											<input type="text" name="p_add1" placeholder="Address line 1" class="user-data" id="u-add1" required="" />
+										</div>		
+										<div class="field-div">
+											<label></label>
+											<input type="text" name="p_add2" placeholder="Address line 2" class="user-data" id="u-add2"/>
+										</div>	
+									</div>
+									<div class="field-wrap two-fields-wrap">	
+										<div class="field-div">
+											<input type="text" name="p_city" placeholder="City" class="user-data" id="u-city1" required="" />
+										</div>		
+										<div class="field-div">
+											<div class="field-wrap two-fields-wrap">
+												<div class="field-div">
+													<label style="display: none;" class="statevalidate"></label>
+													<select name="UserState" class="user-data address-state" id="usrstate" data-val=""></select>
+												</div>
+												<div class="field-div">
+													<input type="text" name="p_zipcode" placeholder="Zipcode" class="user-data" id="u-zip" />
+												</div>
+											</div>
+										</div>	
+									</div>
+									<div class="field-wrap two-fields-wrap">
+										<div class="field-div phone-div">
+											<label>*Primary Phone Number </label>
+											<input type="text" name="p_prm_no" placeholder="(555) 123-1234" class="user-data phone-number" id="urp-phone1"  required="" />
+											<input type="hidden" name="p_prm_no_code" placeholder="(555) 123-1234" class="user-data" id="urp-phone-code" required="" value="1"/>
+										</div>
+										<div class="field-div phone-div">
+											<label>Secondary Phone Number </label>
+											<input type="text" name="p_sec_no" placeholder="(555) 123-1234" class="user-data phone-number" id="urps-phone" />
+											<input type="hidden" name="p_sec_no_code" placeholder="(555) 123-1234" class="user-data" id="urps-phone-code" value="1" />
+										</div>
+									</div>
+									<div class="field-wrap two-fields-wrap">
+										<div class="field-div">
+											<label>*Security Question</label>
+											<select name="Squs1" class="user-data mySelect mySelect-1" id="sqrtyQus1" required="">
+												<option value="">Select a Question..</option>
+												<option value="Question1">What was the name of your first school?</option>
+												<option value="Question2">Which kind of music is your favorite?</option>
+												
+											</select>
+										</div>
+										<div class="field-div">
+											<label>*Security Answer </label>
+											<input type="text" name="SqAns1" placeholder="Enter Your Answer" class="user-data" id="sqrtyAns1" required="" />
+										</div>
+									</div>
+									<!--  <div class="field-wrap two-fields-wrap">
+										<div class="field-div">
+											<label>*Security Question2 </label>
+											<select name="Squs2" class="user-data mySelect mySelect-2" id="sqrtyQus2" required="">
+												<option value="">Select a Question..</option>
+												<option value="Question1">Question1</option>
+												<option value="Question2">Question2</option>
+												<option value="Question3">Question3</option>
+												<option value="Question4">Question4</option>
+											</select>
+										</div>
+										<div class="field-div">
+											<label>*Security Answer2 </label>
+											<input type="text" name="SqAns2" placeholder="Enter Your Answer" class="user-data" id="sqrtyAns2" required="" />
+										</div>
+									   </div> -->
+								        <div class="field-wrap two-fields-wrap checkbox-wrap">
+											<div class="field-div">
+												<div class="clearfix">
+													<label class="checkbox-label">Sign up for Email Promotion!</label>
+													<input type="checkbox" class="Org-data" name="signup" />
+												</div>
+												<div class="clearfix">
+													<input type="checkbox" name="terms" required="" />
+													<label class="checkbox-label">I agree to the <a href="<?= site_url('/terms-conditions/');?>">terms and conditions</a></label>
+													<div id="agreeValidate"></div>
+													
+												</div>
+									    	</div>
+										</div>	    
+										<div class="field-wrap two-fields-wrap">
+											<div class="field-div">
+												<label>*Please verify that you are human</label>
+												<div id="recaptcha1" class="g-recaptcha"  data-sitekey="6LeopR8dAAAAACUSquEK1H0qx8jWChLfwDPxxCxL" data-callback="verifyCallback"></div>
+												<input type="text" class="hiddenRecaptcha required" name="hiddenRecaptcha" id="hiddenRecaptcha">
+												<p id="NtHumn" style="display: none;color:red;"></p>
+											</div>
+											<div class="field-div">
+										    <div class="field-wrap two-fields-wrap">
+										        <div class="field-div-full">
+														<button class="btn btn-default " type="submit">Create My New Account <i class="fa fa-caret-right"></i></button>
+										            </div>
+										      </div>
+										   </div> 
+										</div>
+						              </div>							
+							       </form>	
+					            </div>
+					            <div id="login" class="swichtab-panel" data-swichtab="target">
+					                <?php if (has_post_thumbnail( $post->ID ) ): ?>
+									    <?php $image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' ); ?>
+									    <div class="page-image">
+									    	<img src="<?php echo $image[0]; ?>" alt="image" />
+									    </div>
+									<?php endif; ?>
+									<div class="page-heading heading-right-link">
+										<h1>Log In to SmartTag®</h1>
+										
+									</div>
+									<p id="EmEror" style="display: none;color:red;"></p>
+								<form method="post" id="FirstEmailSignIn" name="FirstEmailSignIn">
+								 <div class="contact-form" id="FirstEmailSignIn">
+								 	
+                                 <div class="field-wrap two-fields-wrap">
+                                    <div class="field-div">
+                                        <label>*Email or Phone Number </label>
+                                        <input type="text" name="email" placeholder="Enter Email or Phone Number" class="signIndata" required="" />
+                                       </div>
+                                    <div class="field-div">
+                                        <label>*Password</label>
+                                        <input type="password" name="password" placeholder="Enter Password" class="signIndata" required="" />
+                                    </div>
+                                 </div>
+                                <div class="field-wrap two-fields-wrap">
+	                               <div class="field-div">&nbsp;</div>
+	 								 <div class="field-div">
+	  									 <div class="field-wrap two-fields-wrap">
+					               				 <div class="field-div">
+                                	 				 <input type="checkbox" name="remember" value="false" id="rember1" class="signIndata">
+                                	 	  			<label>Remember me</label>
+					                  			</div>  
+                                    		<div class="field-div">
+		                                	<button class="btn btn-default" type="submit">Log In <i class="fa fa-caret-right"></i></button>
+		                              		</div>
+		                          		 </div>
+    								</div>
+								</div> 
+                               </div>       
+                            </form>
+	                            
+					            </div>
+					            		<div id="forgot_pass" class="swichtab-panel" data-swichtab="target">
+							                <?php if (has_post_thumbnail( $post->ID ) ): ?>
+											    <?php $image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' ); ?>
+											    <div class="page-image">
+											    	<img src="<?php echo $image[0]; ?>" alt="image" />
+											    </div>
+											<?php endif; ?>
+											<div class="row middle-border">
+												<div class="col-sm-6 rmb-15">
+													<div class="page-heading">
+														<h1>Forgot your password?</h1>
+													</div>
+											       	<form method="POST" id="FogetPass" class="woocommerce-ResetPassword lost_reset_password" name="FogetPassform"><?php wp_nonce_field('ajax-forgot-nonce', 'forgotsecurity'); ?>    
+													  	<div class="contact-form" id="cus-info">
+															<div class="field-wrap">
+																<div class="field-div">
+																	<label>Enter the Email address or Phone Number associated with SmartTag account</label>
+																	<input class="woocommerce-Input woocommerce-Input--text input-text Fgemail" type="text" placeholder="Enter Email Address" name="user_login" id="user_login" autocomplete="username" />
+																	<?php do_action( 'woocommerce_lostpassword_form' ); ?>
+																	<input type="hidden" name="wc_reset_password" value="true" />
+																	<p id="Fgpass" style="color: red;"></p>	
+																	<?php wp_nonce_field( 'lost_password', 'woocommerce-lost-password-nonce' ); ?>
+																</div>
+															</div>
+															<div class="step-btns">
+																<button class="btn btn-default" type="submit">Send Password Request <i class="fa fa-caret-right"></i></button>
+															</div>
+														</div>	
+													</form>	
+					                            </div>
+												<div class="col-sm-6">
+													<div class="page-heading">
+														<h1>Forgot your email log in?</h1>
+													</div>
+													<form id="ForgetEmail" name="ForgetEmailform">	
+														<?php wp_nonce_field('ajax-forgot-nonce', 'forgotsecurity'); ?> 	
+												        <div class="contact-form" id="">
+														        <div class="field-wrap">
+																	<div class="field-div">
+																		<label>Enter the Phone Number associated with SmartTag account</label>
+																		<input type="text" name="phone" placeholder="Enter Phone Number" class="UsrPnO" required="" />
+																		<p id="recap3" style="display: none;color:red;"></p>
+																	</div>
+																</div>
+														    <div class="step-btns">
+	                                                            <button class="btn btn-default" type="submit">Send Login Request <i class="fa fa-caret-right"></i></button>
+									                         </div>
+						                                </div>	
+						                            </form>	  
+						                        </div>
+											</div>
+							            </div>
+							        </div>
+							    </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+				
+
+	<?php }else{ ?>
+
+
+
 <div class="container-wrap">		
 	<div class="container main-content">
 		<div class="row">
@@ -350,7 +661,11 @@ $CountriesName = $countries_obj->__get('countries');
 				</div>
 			</div>
 		</div>
-<?php get_footer(); ?>
+
+<?php 
+
+}
+get_footer(); ?>
 
 <script type="text/javascript">
 jQuery(document).ready(function($){
@@ -454,7 +769,7 @@ return true;
                         processData: false,
                         success: function(response) {
 
-                        
+                
 
                         var obj = jQuery.parseJSON( response );
                             if(obj.success == 0){
@@ -845,7 +1160,145 @@ return true;
 			});	
 
 		});
+
+	/*add functionalitry for first Time login*/
+		$("form[name='FirstEmailSignIn']").validate({
+			    // Specify validation rules
+			    rules: {
+			  		email: {
+				        required: true,
+				        checkEmailAndNumber: true,
+			      	},
+			      	password: {
+				        required: true,
+				        minlength: 8
+		      		}
+			    },
+
+			    messages: {
+			        password: {
+				        required: "Please provide a password",
+				        minlength: "Your password must be at least 8 characters long"
+				        },
+			        
+			    },
+			    submitHandler: function(form) {
+			    $('#EmEror').text("");
+	            $('.loader-wrap').fadeIn();
+	            var Edata =  new FormData();
+	            var loginData =  new FormData();
+	              	Edata.append('action', 'firstTimeLoginWithEmailPassword');
+
+	              
+	             
+	             	$.each($('#FirstEmailSignIn .signIndata'), function() {
+	               		Edata.append($(this).attr('name'), $(this).val());
+	                }); 
+	                
+	                $.each($('#FirstEmailSignIn .signIndata'), function() {
+	               		Data.append($(this).attr('name'), $(this).val());
+	                }); 
+
+
+						
+								baseFn(ajaxurl, Edata, 'POST' ,Data);
+
+	                    $.ajax({
+	                        type: 'POST',
+	                         url: ajaxurl,
+	                         data: Edata,
+	                        contentType: false,
+	                        processData: false,
+	                        success: function(response) {
+
+	                        	Cookies.set('formForFirstTime', 'formForFirstTime');
+
+	                        	var obj = jQuery.parseJSON( response );
+	                        		if(obj.success == 1){
+										window.location.href = "<?php echo get_site_url(); ?>/my-account/";
+									}
+							},
+	                         complete:function(){
+	                           $('.loader-wrap').fadeOut();
+	                         }
+			   
+			  		});
+	            }
+	        });
+
+
+
 	});
+
+
+
+
+
+
+
+
+
+
+
+/*
+async function userCreate(ajaxurl, Data, method) {
+    return $.ajax({
+        type: method || 'POST',
+        url: 'https://staging.idtag.com/import-data-firstlogin/',
+        data: Data,
+        contentType: false,
+        processData: false
+    });
+}
+
+
+async function baseFn(ajaxurl, Edata, method) {
+   
+	try {
+
+        const response_1 = await userCreate(ajaxurl, Data, method)
+
+
+        var obj = JSON.parse(response_1);
+        console.log(obj);
+        return false;
+
+
+        
+    } catch (error) {
+        console.log('error response_1', error)
+ 	}
+
+
+
+
+
+
+    try {
+
+        const response_1 = await userCreate(ajaxurl, Edata, method)
+
+
+        var obj = JSON.parse(response_1);
+        console.log(obj);
+        return false;
+
+
+        
+    } catch (error) {
+        console.log('error response_1', error)
+    }
+  }  
+
+
+
+
+
+*/
+
+
+
+
    
 </script>
 

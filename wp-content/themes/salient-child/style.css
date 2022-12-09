@@ -7553,3 +7553,24 @@ section#generate-multiple-owner {
 .variation-Duration {
     display: none !important;
 }
+body .section-bottom-btn {
+    position: relative !important;
+}
+
+body .section-bottom-btn a.home-btn.blog-btn {
+    position: absolute !important;
+    z-index: 1000 !important; 
+    bottom: 10px !important; 
+    left: 50% !important; 
+    transform: translate(-50%, -50%) !important ;
+}
+
+body .header-log-sign form.search-form input.search-submit:hover,
+body .header-log-sign  a.header-login:hover
+ {background: red !important;}
+
+ .slide-st-btn a:hover,
+ .continue-customize-btn a#continue-cust:hover {
+    background: #4581b1;
+    color: #fff;
+}

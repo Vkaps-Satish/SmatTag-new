@@ -7,8 +7,8 @@
 
 //ini_set('display_errors','Off');
 //ini_set('error_reporting', E_ALL );
-define('WP_DEBUG', false);
-define('WP_DEBUG_DISPLAY', false);
+/*define('WP_DEBUG', false);
+define('WP_DEBUG_DISPLAY', false);*/
 
 //https://prelaunch.idtag.com/wp-admin/post.php?post=7804&action=edit
 /* ..............................................................................................*/
@@ -81,9 +81,11 @@ $aluminumIdTagProductSlug = "aluminum-id-tag";
 
 /*Microchip Product*/
 
-global $globalMicrochipDataId, $globalMicrochipStandrdId;
+global $globalMicrochipDataId, $globalMicrochipStandrdId, $globalMicrochipMiniData, $globalMicrochipMiniBox;
 $globalMicrochipDataId = 6134;
 $globalMicrochipStandrdId = 7908;
+$globalMicrochipMiniData = 78799;  
+$globalMicrochipMiniBox = 78798;
 
 /*Universal Microchip Plan*/
 
@@ -181,48 +183,29 @@ wp_enqueue_script( 'jquery-js', 'https://cdn.jsdelivr.net/npm/jquery.ui.widget@1
     
 }
 
-    function my_scripts() {
-   
-}
 
 
-//add_action( 'wp_enqueue_scripts', 'my_scripts' );
+//function load_admin_script() {
 
+    //  wp_enqueue_script( 'jquery-js', 'https://code.jquery.com/ui/1.10.4/jquery-ui.min.js', array( 'jquery' ),rand(),true );
 
+    //$post = get_post_type();
+    //if($post == 'pet_profile'){
+         // wp_enqueue_script( 'jquery-js', 'https://code.jquery.com/ui/1.10.4/jquery-ui.min.js', array( 'jquery' ),rand(),true );
 
-
-function custom_admin_js() {
-    
-
- }
- add_action('admin_footer', 'custom_admin_js');
-
-
-function load_admin_script() {
-
-      wp_enqueue_script( 'jquery-js', 'https://code.jquery.com/ui/1.10.4/jquery-ui.min.js', array( 'jquery' ),rand(),true );
-
-    $post = get_post_type();
-    if($post == 'pet_profile'){
-          wp_enqueue_script( 'jquery-js', 'https://code.jquery.com/ui/1.10.4/jquery-ui.min.js', array( 'jquery' ),rand(),true );
-
-        wp_enqueue_script( 'jquery-js', get_stylesheet_directory_uri() .'/js/jquery-dropdown.js', array( 'jquery' ),rand(),true );
+       // wp_enqueue_script( 'jquery-js', get_stylesheet_directory_uri() .'/js/jquery-dropdown.js', array( 'jquery' ),rand(),true );
 
        /* wp_enqueue_script( 'jquery-ui-script', get_stylesheet_directory_uri() .'/js/jquery-ui.js', array( 'jquery' ),rand(),true );*/   
         
-        wp_enqueue_script( 'combobox-script', get_stylesheet_directory_uri() .'/js/jquery.ui.combobox.js', array( 'jquery' ),rand(),true );
+       // wp_enqueue_script( 'combobox-script', get_stylesheet_directory_uri() .'/js/jquery.ui.combobox.js', array( 'jquery' ),rand(),true );
 
-        wp_enqueue_script( 'custom-dropdown', get_stylesheet_directory_uri() .'/js/custom-dropdown.js', array( 'jquery' ),rand(),true );
-    }
+       // wp_enqueue_script( 'custom-dropdown', get_stylesheet_directory_uri() .'/js/custom-dropdown.js', array( 'jquery' ),rand(),true );
+   // }
 
-    wp_enqueue_script( 'phone-code-script', get_stylesheet_directory_uri() . '/js/intlTelInput.js', array( 'jquery' ),rand(),true );
-}
-     add_action( 'admin_enqueue_scripts', 'load_admin_script' );
+    //wp_enqueue_script( 'phone-code-script', get_stylesheet_directory_uri() . '/js/intlTelInput.js', array( 'jquery' ),rand(),true );
+//}
+     //add_action( 'admin_enqueue_scripts', 'load_admin_script' );
 
-
-
-
-    
     
   /*custom jquery code start--added by satish*/
     
@@ -6963,7 +6946,7 @@ echo '</pre>';
 }
 
 
-/*  add_action( 'admin_enqueue_scripts', 'load_custom_script' ); 
+  add_action( 'admin_enqueue_scripts', 'load_custom_script' ); 
   function load_custom_script() {
       
       wp_enqueue_script('custom_js_script', 'https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js', array('jquery'));
@@ -6981,30 +6964,10 @@ echo '</pre>';
 
         </script>
       <?php
-  }*/
+  }
 
 
 
-
-function admin_js() { ?>
-    
-<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js'></script>
-
-
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.0/css/jquery.dataTables.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.0/js/jquery.dataTables.js"></script>
-<!-- CSS only -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" >
-
-<script type="text/javascript">
-/*    $(document).ready( function () {
-    $('#myTable').DataTable();
-} );*/
-
-
-    </script>
-<?php }
-add_action('admin_head', 'admin_js');
 
 
 function register_custom_menu_page() {
@@ -7019,8 +6982,8 @@ $paged = get_query_var('paged')? get_query_var('paged') : 1;
 
        $args = array(
             'post_type' => 'pet_profile',
-            'order' => 'ASC',
-            'paged' => $paged,
+             'post_status' => 'publish',
+              'posts_per_page' => 10,
                 'meta_query' => array(
                     'meta_value' => array(
                         'key' => 'michrochip_status',
@@ -8105,8 +8068,132 @@ function smarttag_registring(WP_REST_Request $request) {
 }
 
 
+// Conditional function that checks if a product is in cart and return the correct button text
+function change_button_text( $product_id, $button_text ) {
+    foreach( WC()->cart->get_cart() as $item ) {
+        if( $product_id === $item['product_id'] ) {
+            return __('Added to Cart', 'woocommerce');
+        }
+    }
+    return $button_text;
+}
+
+// Archive pages: For simple products (ajax add to cart button)
+add_filter( 'woocommerce_product_add_to_cart_text', 'change_ajax_add_to_cart_button_text', 10, 2 );
+function change_ajax_add_to_cart_button_text( $button_text, $product ) {
+    if ( $product->is_type('simple') ) {
+        $button_text = change_button_text( $product->get_id(), $button_text );
+    }
+    return $button_text;
+}
+
+// Single product pages: Simple and external products
+add_filter( 'woocommerce_product_single_add_to_cart_text', 'change_single_add_to_cart_button_text', 10, 2 );
+function change_single_add_to_cart_button_text( $button_text, $product ) {
+    if (  ! $product->is_type('variable') ) {
+        $button_text = change_button_text( $product->get_id(), $button_text );
+    }
+    return $button_text;
+}
+
+// Single product pages: Variable product and its variations
+add_action( 'woocommerce_after_variations_form', 'action_after_variations_form_callback' );
+function action_after_variations_form_callback() {
+    global $product;
+
+    // Get the produc variation Ids for the variable product
+    $children_ids = $product->get_visible_children();
+
+    $ids_in_cart  = [];
+
+    // Loop through cart items
+    foreach( WC()->cart->get_cart() as $item ) {
+        if( in_array( $item['variation_id'], $children_ids ) ) {
+            $ids_in_cart[] = $item['variation_id'];
+        }
+    }
+    ?>
+    <script type="text/javascript">
+    jQuery(function($){
+        var b = 'button.single_add_to_cart_button',
+            t = '<?php echo $product->single_add_to_cart_text(); ?>';
+
+        $('form.variations_form').on('show_variation hide_variation found_variation', function(){
+            $.each(<?php echo json_encode($ids_in_cart); ?>, function(j, v){
+                var i = $('input[name="variation_id"]').val();
+                if(v == i && i != 0 ) {
+                    $(b).html('<?php _e('Added to Cart', 'woocommerce'); ?>');
+                    return false;
+                } else {
+                    $(b).html(t);
+                }
+            });
+        });
+    });
+    </script>
+    <?php
+}
 
 
+
+
+
+
+
+/*Functionality implement fot first time login page*/
+
+add_action('wp_ajax_firstTimeLoginWithEmailPassword', 'firstTimeLogin');
+add_action('wp_ajax_nopriv_firstTimeLoginWithEmailPassword', 'firstTimeLogin');
+
+function firstTimeLogin(){
+
+
+    if($_POST['action']== 'firstTimeLoginWithEmailPassword'){
+        global $wpdb;
+
+        // setcookie("formForFirstTime", "formForFirstTime", time() + 2 * 24 * 60 * 60);
+
+
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $remember_me = $_POST['remember'];
+
+            if( empty($password) || empty($email) ) {
+                $response =  array(
+                        "error"        => 'true',
+                        "msg"        => 'Please enter both fields'
+                    );
+                echo json_encode($response);
+            }else{
+            
+                    $exists = email_exists( $email );
+                        if($exists){
+
+                            $user_data = array(
+                                'ID' => $exists,
+                                'user_pass' => $password
+                            );
+
+                            $y = wp_update_user($user_data);
+                            $login_data = array();  
+                            $login_data['user_login'] = $username;  
+                            $login_data['user_password'] = $password;
+                            $login_data['remember'] = $remember_me;  
+                              
+                            $user_verify = wp_signon( $login_data, false ); 
+                           wp_set_auth_cookie($exists,$_POST['remember']);
+                             
+                           echo json_encode(array('success'=>1,'message'=>'You are login'));
+                           exit();
+                        }
+                }
+    }
+
+}
+
+
+/*reset password email Stop*/
+add_filter( 'send_password_change_email', '__return_false' );
 
 
 require_once "functions/functions-cart-checkout-order-page.php";

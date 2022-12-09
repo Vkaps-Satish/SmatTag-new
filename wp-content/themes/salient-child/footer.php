@@ -75,7 +75,13 @@
 
 		<?php if (isset($_GET['login']) && $_GET['login'] == 1) { ?>
 			jQuery("li.login-click a").click();
-		<?php } ?>
+		<?php }
+
+			if (isset($_GET['signup']) && $_GET['signup'] == 1) { ?>
+			jQuery("li.singup-click a").click();
+		<?php }
+
+		 ?>
 		
 		jQuery(".cart_item").each(function(){
 			jQuery(this).children().children("dl.variation").children("dd.variation-FrontLine1, dt.variation-FrontLine1").wrapAll("<div class='variation-frontlines1'></div>");

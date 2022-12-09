@@ -142,7 +142,7 @@
 					<i class="fa fa-check color-light-blue"></i>
 				</td>
 			</tr>
-			<tr>
+			<!-- <tr>
 				<td>
 					<div class="pet-pro-plus-wrap">
 						<span class="pet-pro-sign fa fa-plus"></span>
@@ -158,7 +158,7 @@
 				<td class="text-center">
 					<i class="fa fa-check color-light-blue"></i>
 				</td>
-			</tr>
+			</tr> -->
 			<tr>
 				<td>
 					<div class="pet-pro-plus-wrap">

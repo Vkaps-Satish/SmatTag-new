@@ -32,6 +32,11 @@ extract($fp_options);
 
 				 //buddypress
 				 global $bp; 
+
+
+				 		
+
+
 				 if($bp && !bp_is_blog_page()) echo '<h1>' . get_the_title() . '</h1>';
 				
 				 //fullscreen rows
@@ -39,7 +44,9 @@ extract($fp_options);
 
 					 if(have_posts()) : while(have_posts()) : the_post(); 
 						
-						 the_content(); 
+						
+
+						the_content(); 
 			
 					 endwhile; endif; 
 					

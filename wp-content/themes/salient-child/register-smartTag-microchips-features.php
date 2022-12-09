@@ -204,7 +204,7 @@
 				<td></td>
 			</tr>
 			<tr>
-				<td class="text-center">
+				<!-- <td class="text-center">
 					<div class="pet-pro-plus-wrap">
 						<span class="pet-pro-sign fa fa-plus"></span>
 						<div class="pet-pro-plus-content">
@@ -214,7 +214,7 @@
 					<img src="<?php bloginfo('template_url'); ?>-child/images/icons/aid-icon.png" alt="image">
 					<br>
 					<strong>Free Pet Medical Insurance</strong> (30 days)
-				</td>
+				</td> -->
 				<td>
 					<i class="fa fa-check color-light-blue"></i>
 				</td>

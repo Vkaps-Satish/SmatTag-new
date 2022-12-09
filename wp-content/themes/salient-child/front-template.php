@@ -458,11 +458,12 @@ if( $lost_query->have_posts()){ ?>
 						<div class="home-prods-img">
 							<img src="<?php echo get_site_url(); ?>/wp-content/themes/salient-child/images/universal-microchip-home.png" alt="image" />
 						</div>
+					
 						<div class="home-prods-desc">
 							<p>Register ANY brand microchip here for only $14.95 for the lifetime registration, we are part of the national AAHA microchip database. All microchips show up in all Google searches.</p>
 						</div>
 						<div class="home-prods-btn">
-							<a href="<?php echo get_site_url(); ?>/universal-microchip-register-new/">Universal Microchip Registry ($6.95/yr or $14.95 Lifetime)</a>
+							<a href="<?php echo get_site_url(); ?>/our-services/universal-microchip-register-new/">Universal Microchip Registry ($6.95/yr or $14.95 Lifetime)</a>
 						</div>
 					</div>
 				</div>
@@ -607,7 +608,8 @@ $args = array('post_type' => 'found_pet',
 		<?php echo do_shortcode("[blog_posts]"); ?>
 	</div>
 	<div class="section-bottom-btn">
-		<a href="<?php echo get_site_url(); ?>/blogs/" class="home-btn">Read Our Blog <i class="fa fa-caret-right"></i></a>
+		
+		<a href="<?php echo get_site_url(); ?>/blogs/" class="home-btn blog-btn">Read Our Blog <i class="fa fa-caret-right"></i></a>
 	</div>
 </section>
 <script type="text/javascript">
@@ -617,9 +619,7 @@ jQuery(document).ready(function($){
 	$.ajax({
             type: 'POST',
             url: ajaxurl,
-            data: {
-	                action : 'get_session',
-	            },
+            data: { action : 'get_session', },
             success: function(response) {
     		var Obj = JSON.parse(response);
     		$('#ul .list li option[value="'+Obj.type+'"]').prop('selected', true);

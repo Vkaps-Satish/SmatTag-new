@@ -18,6 +18,25 @@ if ( is_user_logged_in() ){
 		print('<script>window.location.href="'.get_site_url().'/pet-professionals-signup"</script>');     
     }
     ?>
+
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
+<script type="text/javascript">
+   /* $(document).ready(function() {
+        var user_id = '<?php echo get_current_user_id(); ?>';
+            if(localStorage.getItem('popStatePetPros') != 'shown'){
+                '<?php update_user_meta( get_current_user_id(), 'FistTimeLogIn', 'Sync'); ?>';
+                localStorage.setItem('popStatePetPros','shown')
+                Swal.fire(
+                      'Attention',
+                      'Your account is being updated for our new site',
+                    )
+             }else{
+                '<?php update_user_meta( get_current_user_id(), 'FistTimeLogIn', 'Async'); ?>';
+            }  
+});
+*/</script>
+
+
 <div class="container-wrap">		
 	<div class="container main-content">
 		<div class="row">

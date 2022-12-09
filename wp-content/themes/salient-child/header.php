@@ -248,7 +248,7 @@ if($perm_trans != 1 || $perm_trans == 1 && $bg_header == 'false' || $page_full_s
 					    
 					}else{
 						echo '<a href="'.get_site_url().'/login-to-smarttag/?login=1" class="header-login">Log In</a>
-							<a href="'.get_site_url().'/login-to-smarttag/" class="header-signup">Sign Up</a>';
+							<a href="'.get_site_url().'/login-to-smarttag/?signup=1" class="header-signup">Sign Up</a>';
 						//echo '<a href="'.get_site_url().'/login-to-smarttag/" class="header-login">Log In</a>
 							// <a href="'.get_site_url().'/login-to-smarttag/" class="header-signup">Sign Up</a>';
 					} 
