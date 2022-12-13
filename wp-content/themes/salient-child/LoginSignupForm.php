@@ -3,6 +3,7 @@
 * Template Name:  Login to SmartTag
 
 */
+
 get_header(); 
 
 if ( is_user_logged_in() ){
@@ -30,7 +31,17 @@ $CountriesName = $countries_obj->__get('countries');
 <?php
 if (!isset($_COOKIE["formForFirstTime"])){  ?>
 
-	
+	<style type="text/css">
+		.secure {
+		    position: relative;
+		}
+
+		#togglePassword {
+		    position: absolute;
+		    top: 18%;
+		    right: 18px;
+		}
+	</style>
 	<div class="container-wrap occena">		
 		<div class="container main-content">
 			<div class="row">
@@ -87,7 +98,8 @@ if (!isset($_COOKIE["formForFirstTime"])){  ?>
 									<div class="field-wrap two-fields-wrap">
 										<div class="field-div">
 											<label>*Password </label>
-											<input type="password" name="password" placeholder="Enter Password" class="user-data"  required="" id="u-password" />
+											<input type="password" id="password" name="password" placeholder="Enter Password" class="user-data"  required="" id="u-password" />
+											
 										</div>
 										<div class="field-div">
 											<label>*Confirm Password </label>
@@ -236,6 +248,8 @@ if (!isset($_COOKIE["formForFirstTime"])){  ?>
 									<?php endif; ?>
 									<div class="page-heading heading-right-link">
 										<h1>Log In to SmartTag®</h1>
+										<a href="javascript:void(0)" id="Swplogin"> Log In with ID Serial Number <i class="fa fa-caret-right"></i></a>
+									<a href="javascript:void(0)" id="Swplogin1">Log In With Customers Email <i class="fa fa-caret-right"></i></a>
 										
 									</div>
 									<p id="EmEror" style="display: none;color:red;"></p>
@@ -245,11 +259,14 @@ if (!isset($_COOKIE["formForFirstTime"])){  ?>
                                  <div class="field-wrap two-fields-wrap">
                                     <div class="field-div">
                                         <label>*Email or Phone Number </label>
-                                        <input type="text" name="email" placeholder="Enter Email or Phone Number" class="signIndata" required="" />
+                                        <input type="text" name="email" placeholder="Enter Email or Phone Number" class="signIndata"  autocomplete="off" required="" />
                                        </div>
                                     <div class="field-div">
                                         <label>*Password</label>
-                                        <input type="password" name="password" placeholder="Enter Password" class="signIndata" required="" />
+                                        <div class="secure">
+                                        <input type="password" id="password" name="password"  autocomplete="off" placeholder="Enter Password" class="signIndata password" required="" />
+                                        <i class="far fa-eye" id="togglePassword" style="margin-left: -30px; cursor: pointer;"></i>
+                                        </div>
                                     </div>
                                  </div>
                                 <div class="field-wrap two-fields-wrap">
@@ -258,6 +275,34 @@ if (!isset($_COOKIE["formForFirstTime"])){  ?>
 	  									 <div class="field-wrap two-fields-wrap">
 					               				 <div class="field-div">
                                 	 				 <input type="checkbox" name="remember" value="false" id="rember1" class="signIndata">
+                                	 	  			<label>Remember me</label>
+					                  			</div>  
+                                    		<div class="field-div">
+		                                	<button class="btn btn-default" type="submit">Log In <i class="fa fa-caret-right"></i></button>
+		                              		</div>
+		                          		 </div>
+    								</div>
+								</div> 
+                               </div>       
+                            </form>
+                            <form method="post" id="SrialSignIn" name="SrialSignInform">
+								 <div class="contact-form" id="Sriform">
+								 <div class="field-wrap two-fields-wrap">
+                                    <div class="field-div">
+                                        <label>*Id Serial Number </label>
+                                        <input type="text" id="SrilId" name="SrialId" placeholder="Enter Id Serial Number" class="SrialData" required="" />
+                                       </div>
+                                    <div class="field-div">
+                                        <label>*Confirm Id Serial Number</label>
+                                        <input type="text" id="srialId1" name="ConSrialId" placeholder="Enter Id Serial Number" class="SrialData" required="" />
+                                    </div>
+                                 </div>
+                                <div class="field-wrap two-fields-wrap">
+	                               <div class="field-div">&nbsp;</div>
+	 								 <div class="field-div">
+	  									 <div class="field-wrap two-fields-wrap">
+					               				 <div class="field-div">
+                                	 				 <input type="checkbox" name="remember" value="false" id="rember" class="SrialData">
                                 	 	  			<label>Remember me</label>
 					                  			</div>  
                                     		<div class="field-div">
@@ -540,8 +585,8 @@ if (!isset($_COOKIE["formForFirstTime"])){  ?>
 								<?php endif; ?>
 								<div class="page-heading heading-right-link">
 									<h1>Log In to SmartTag®</h1>
-									<a href="javascript:void(0)" id="Swplogin"> Log In with ID Serial Number <i class="fa fa-caret-right"></i></a>
-									<a href="javascript:void(0)" id="Swplogin1">Log In With Customers Email <i class="fa fa-caret-right"></i></a>		
+									<a href="javascript:void(0)" id="Swplogin2"> Log In with ID Serial Number <i class="fa fa-caret-right"></i></a>
+									<a href="javascript:void(0)" id="Swplogin3">Log In With Customers Email <i class="fa fa-caret-right"></i></a>		
 								</div>
 								<p id="EmEror" style="display: none;color:red;"></p>
 							<form method="post" id="EmailSignIn" name="EmailSignInform">
@@ -717,7 +762,7 @@ return true;
  			$('a#Swplogin').click(function(){
  				$(this).hide(); 			
 	 			$('a#Swplogin1').show();
-	 			$('#EmailSignIn').toggle();
+	 			$('#FirstEmailSignIn').toggle();
 	 			$('#Sriform').toggle();
 	 		});
 	 	//}
@@ -725,7 +770,7 @@ return true;
 	 		$('a#Swplogin1').click(function(){
 	 			$(this).hide();
 	 			$('a#Swplogin').show();
-	 			$('#EmailSignIn').toggle();
+	 			$('#FirstEmailSignIn').toggle();
 	 			$('#Sriform').toggle();
 	 		});
 	 			
@@ -1186,10 +1231,11 @@ return true;
 			    $('#EmEror').text("");
 	            $('.loader-wrap').fadeIn();
 	            var Edata =  new FormData();
-	            var loginData =  new FormData();
+	            var Data =  new FormData();
 	              	Edata.append('action', 'firstTimeLoginWithEmailPassword');
 
-	              
+	             
+	               window.resResult = new Array();
 	             
 	             	$.each($('#FirstEmailSignIn .signIndata'), function() {
 	               		Edata.append($(this).attr('name'), $(this).val());
@@ -1199,30 +1245,8 @@ return true;
 	               		Data.append($(this).attr('name'), $(this).val());
 	                }); 
 
+						baseFunction(ajaxurl, Edata, 'POST' ,Data ,resResult);
 
-						
-								baseFn(ajaxurl, Edata, 'POST' ,Data);
-
-	                    $.ajax({
-	                        type: 'POST',
-	                         url: ajaxurl,
-	                         data: Edata,
-	                        contentType: false,
-	                        processData: false,
-	                        success: function(response) {
-
-	                        	Cookies.set('formForFirstTime', 'formForFirstTime');
-
-	                        	var obj = jQuery.parseJSON( response );
-	                        		if(obj.success == 1){
-										window.location.href = "<?php echo get_site_url(); ?>/my-account/";
-									}
-							},
-	                         complete:function(){
-	                           $('.loader-wrap').fadeOut();
-	                         }
-			   
-			  		});
 	            }
 	        });
 
@@ -1230,75 +1254,104 @@ return true;
 
 	});
 
+async function importDataAndLogin(ajaxurl, Data, method) {
 
 
-
-
-
-
-
-
-
-
-/*
-async function userCreate(ajaxurl, Data, method) {
     return $.ajax({
         type: method || 'POST',
-        url: 'https://staging.idtag.com/import-data-firstlogin/',
+        url: ajaxurl,
         data: Data,
         contentType: false,
-        processData: false
+        processData: false,
+        
     });
 }
 
 
-async function baseFn(ajaxurl, Edata, method) {
+async function baseFunction(ajaxurl, Edata, method , Data ,resResult) {
    
-	try {
+   	try{
+			const response = await importDataAndLogin(ajaxurl, Edata, method)
+			var obj = jQuery.parseJSON(response);
+			
+			if(obj.success == 0 && obj.user_type == 'pet-professional'){
+				$('.loader-wrap').fadeOut();
+		 		$('#EmEror').text(obj.message).fadeIn();
+		 		return false;
+			}else if(obj.success == 0 && obj.user_type == 'customer'){
+				$('.loader-wrap').fadeOut();
+		 		$('#EmEror').text(obj.message).fadeIn();
+		 		return false;
+			}else if(obj.success == 1 && obj.importStatus == 'S'){
+	      		var email = obj.email;
+	      		getAllInformationFromDrupal(email);
+			}else if(obj.success == 2 && obj.importStatus == 'false'){
+	      		$('.loader-wrap').fadeOut();
+		 		$('#EmEror').text(obj.message).fadeIn();
+		 		return false;
+			}else if(obj.success == 3 && obj.importStatus == 'S'){
+	      		var email = obj.email;
+	      		getAllInformationFromDrupal(email);
+			}else if(obj.success == 4 && obj.importStatus == 'S'){
+	      		var email = obj.email;
+	      		getAllInformationFromDrupal(email);
+			}else if(obj.success == 5 && obj.importStatus == 'false'){
+	      		$('.loader-wrap').fadeOut();
+		 		$('#EmEror').text(obj.message).fadeIn();
+			}else{
+				$('.loader-wrap').fadeOut();
+				window.location.href = "<?php echo get_site_url(); ?>/my-account/";
+			}	
 
-        const response_1 = await userCreate(ajaxurl, Data, method)
-
-
-        var obj = JSON.parse(response_1);
-        console.log(obj);
-        return false;
-
-
-        
-    } catch (error) {
-        console.log('error response_1', error)
- 	}
-
-
-
-
-
-
-    try {
-
-        const response_1 = await userCreate(ajaxurl, Edata, method)
-
-
-        var obj = JSON.parse(response_1);
-        console.log(obj);
-        return false;
-
-
-        
-    } catch (error) {
-        console.log('error response_1', error)
-    }
-  }  
-
-
-
-
-
-*/
+		}catch (error) {
+			$('.loader-wrap').fadeOut();
+        	console.log('error response_1', error)
+    	}
 
 
+   	
+	
+	
+}  
 
+
+function getAllInformationFromDrupal(email){
+	
+
+	$.ajax({url: "https://staging.idtag.com/import-data-firstlogin/", 
+			type: "post",
+	        data: {'email':email},
+	        dataType: 'json',
+		   	success: function(result) {
+				$('.loader-wrap').fadeOut();
+					$.each(result, function(k, v) {
+    					var parse = jQuery.parseJSON(v);
+		   					if(parse.success == '1'){
+								$('.loader-wrap').fadeOut();
+				 					window.location.href = "<?php echo get_site_url(); ?>/my-account/";
+							}else{
+									$('.loader-wrap').fadeOut();
+							} 	
+					});			
+		  	}	
+		});
+}
+
+/*For show eye on password field's*/
+var  togglePassword = document.querySelector('#togglePassword');
+  var password = document.querySelector('.password');
+
+  togglePassword.addEventListener('click', function (e) {
+    // toggle the type attribute
+
+    var type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    // toggle the eye slash icon
+    this.classList.toggle('fa-eye-slash');
+});
 
    
 </script>
+
+
 

@@ -4,31 +4,41 @@
 */
 
 
-ini_set('display_errors', 1); 
+/*ini_set('display_errors', 1); 
 ini_set('display_startup_errors', 1); 
-error_reporting(E_ALL);
+error_reporting(E_ALL);*/
 set_time_limit(100);
  $log_filename = $_SERVER['DOCUMENT_ROOT']."/Querylog";
   if (!file_exists($log_filename)){
         mkdir($log_filename, 0777, true);
     }
-    
+
+
 
     if ( is_user_logged_in() ) {
 
-            
-
             $current_user = wp_get_current_user();
             $user_id = $current_user->ID;
+            update_user_meta( get_current_user_id(), 'importStatus', 'S');
+            $FistTimeLogIn = get_user_meta( $user_id, 'importStatus' ,true);
+            $user_email  = $current_user->user_email;
+    }else{
+         $user_email  = $_POST['email'];
 
-            update_user_meta( get_current_user_id(), 'FirstTimeLogIn', 's');
-            $FistTimeLogIn = get_user_meta( $user_id, 'FirstTimeLogIn' ,true);
+    }
+
+
+         /*   $current_user = wp_get_current_user();
+               $user_id = $current_user->ID;
+
+            update_user_meta( get_current_user_id(), 'importStatus', 'S');
+            $FistTimeLogIn = get_user_meta( $user_id, 'importStatus' ,true);
 
 
             //$FistTimeLogIn =  'sync';
-                    if($FistTimeLogIn  == 's' || $FistTimeLogIn  == 'sp'){
+                    //if($FistTimeLogIn  == 's' || $FistTimeLogIn  == 'sp'){
 
-                        $user_email  = $current_user->user_email;
+                        $user_email  = $current_user->user_email;*/
 
 
 
@@ -49,56 +59,71 @@ set_time_limit(100);
                             $response = curl_exec($curl);
 
                         try {
-
                                 $finalDatas = json_decode($response, true);
-
-                                $count = sizeof($finalDatas);
-                                
-                                $log  = json_encode(array('success'=>1,'total_rows'=>$count));
-                                $log_file_data = $log_filename.'/log_' . date('d-M-Y') . '.log';
-                                file_put_contents($log_file_data, $log . "\n", FILE_APPEND);
+                                if(empty($finalDatas)){
 
 
+                                     echo json_encode(array('success'=>3,'message'=>'Email or Phone Number Does not Exists. Please try again', 'email'=> $user_email));
+                                     exit();
 
-                                 $i = 0;
-                                    while ($i < $count) {  
+                                }else{
+
+                                     $count = sizeof($finalDatas);
+                                    
+                                    $log  = json_encode(array('success'=>1,'total_rows'=>$count));
+                                    $log_file_data = $log_filename.'/log_' . date('d-M-Y') . '.log';
+                                    file_put_contents($log_file_data, $log . "\n", FILE_APPEND);
 
 
-                                     $finalData = array_map('trim',$finalDatas[$i]);
-                                   
-                                        $user      = PetsProfessionalSignup($finalData);
-                                        $userData  = json_decode($user);
 
-                                        if($userData->action == 'not_found'){
-                                            $userId = "";
-                                        }elseif($userData->action == 'created'){
-                                            $userId = $userData->user_id; 
-                                        }else{
-                                            $userId = $userData->user_id;
-                                        }
-                                        
-                                        if($userId){
-                                            $petID = createOwnerProfileUnderPetPro($finalData,$userId);
-                                          
-                                            echo  $userId."-".$petID;
-                                        }
-                                        else{
-                                            $petID = createOwnerProfile($finalData);
-                                        }
-                                        update_user_meta( $userId, 'FistTimeLogIn', 'completed');
-                                        $i++;
-                                     }
+                                     $i = 0;
+                                     $petID = array();
+                                        while ($i < $count) {  
+
+
+                                         $finalData = array_map('trim',$finalDatas[$i]);
+                                       
+                                            $user      = PetsProfessionalSignup($finalData);
+                                            $userData  = json_decode($user);
+
+                                            if($userData->action == 'not_found'){
+                                                $userId = "";
+                                            }elseif($userData->action == 'created'){
+                                                $userId = $userData->user_id; 
+                                            }else{
+                                                $userId = $userData->user_id;
+                                            }
+                                            
+                                            if($userId){
+                                                $petID[]= createOwnerProfileUnderPetPro($finalData,$userId);
+                                              
+                                                //echo  $userId."-".$petID;
+                                               // echo  $petID;
+                                             
+                                            }
+                                            else{
+                                                $petID = createOwnerProfile($finalData);
+                                            }
+                                            update_user_meta( $user_id, 'importStatus', 'C');
+                                            $i++;
+
+                                         }
+                                         echo $json = json_encode($petID);
+
+                                       
+                                 }    
+
                             }catch(Exception $e){
                             
                             $log_file_data = $log_filename.'/log_' . date('d-M-Y') . '.log';
                             file_put_contents($log_file_data, $e . "\n", FILE_APPEND);
                             } 
-                    }else{
+                    //}else{
 
-                        echo "Ajax not working";
+                    //    echo "Ajax not working";
 
-                    }
-    }
+                   // }
+   
 
 
 
@@ -208,6 +233,7 @@ set_time_limit(100);
                 'secondary_argent_alert'    => $pet_pro_sec_receive_alert,
                 'idtagsite_pet_pro_uniqueid'    => $pet_pro_idtag_uniqueid,
                 'source_system'             => 'IDTAG IMPORT',
+                 'importStatus'            => 'S',
 
             );
             
@@ -253,6 +279,7 @@ set_time_limit(100);
                 'secondary_argent_alert'    => $pet_pro_sec_receive_alert,
                 'idtagsite_pet_pro_uniqueid'    => $pet_pro_idtag_uniqueid,
                 'source_system'             => 'IDTAG IMPORT',
+                'importStatus'            => 'S',
 
             );
             
@@ -381,6 +408,7 @@ function createOwnerProfileUnderPetPro($finalData,$userid){
             'idtagsite_owener_unique_id' => $owner_unique_id,
             'created_by'              => $userid,
             'source_system'           => 'IDTAG IMPORT',
+             'importStatus'            => 'S',
 
         );
         
@@ -440,6 +468,7 @@ else{
             'idtagsite_owener_unique_id' => $owner_unique_id,
             'created_by'              => $userid,
             'source_system'           => 'IDTAG IMPORT',
+             'importStatus'            => 'S',
 
 
         );
@@ -559,6 +588,7 @@ else{
                 'secondary_argent_alert'  => $sec_owner_alert,
                 'idtagsite_owener_unique_id' => $owner_unique_id,
                 'source_system'           => 'IDTAG IMPORT',
+                 'importStatus'            => 'S',
 
             );
             
@@ -612,6 +642,7 @@ else{
                 'secondary_argent_alert'  => $sec_owner_alert,
                 'idtagsite_owener_unique_id' => $owner_unique_id,
                 'source_system'           => 'IDTAG IMPORT',
+                 'importStatus'            => 'S',
 
 
             );

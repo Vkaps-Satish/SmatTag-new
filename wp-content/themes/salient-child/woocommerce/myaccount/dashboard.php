@@ -213,20 +213,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 /* Omit closing PHP tag at the end of PHP files to avoid "headers already sent" issues. */
-    update_user_meta( get_current_user_id(), 'FirstTimeLogIn', 'sp');
+   /* update_user_meta( get_current_user_id(), 'FirstTimeLogIn', 'sp');
     update_user_meta( get_current_user_id(), 'FirstTimeLogIn', 's');
     $FirstTimeLogIn  = get_user_meta( get_current_user_id(), 'FirstTimeLogIn',true);
      echo '<input type="hidden" class="FirstTimeLogIn" value="'.$FirstTimeLogIn.'" user_id="'.get_current_user_id().'"
-     >';
+     >'*/;
     ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.24/sweetalert2.all.js"></script>
 <script type="text/javascript">
-    $(document).ready(function() {
+   /* $(document).ready(function() {
         var userRole = $('.userRole').val(); 
 
         /*import basic data on database and set flag*/
      
-        if(userRole != 'pet_professional'){        
+        /*if(userRole != 'pet_professional'){        
             var FirstTimeLogIn = $('.FirstTimeLogIn').val(); 
             
                if(localStorage.getItem('popState') != 'shown' || localStorage.getItem('popStatePetPros') != 'shown'){
@@ -269,5 +269,5 @@ if ( ! defined( 'ABSPATH' ) ) {
         }else{
             console.log('pet professional section');
         }
-    });
+    });*/
 </script>

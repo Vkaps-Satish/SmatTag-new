@@ -3273,10 +3273,10 @@ function loginWithUserEmail(){
 
                  endwhile;
                
-                 }else {
-                             echo json_encode(array('success'=>0,'message'=>'Invalid Serial Id'));
+                 }else{
+                        echo json_encode(array('success'=>0,'message'=>'Invalid Serial Id'));
                              exit;
-                         }
+                        }
 
 
 
@@ -4833,12 +4833,33 @@ function checkSmartTagIDValid_test(){
 
 if (!function_exists ('phone_exists')) {
     function phone_exists($phone){
-        $args = array(
+
+    $phone  = preg_replace('~.*(\d{3})[^\d]{0,7}(\d{3})[^\d]{0,7}(\d{4}).*~', '($1) $2-$3', $phone). "\n";
+    /*echo $phone;
+    die();*/
+
+    if($phone){
+   
+
+
+            $args = array(
             'meta_key' => 'primary_home_number',
-            'meta_value' => $phone,
+            'meta_value' => trim($phone),
             'number' => 1,
+       
             'count_total' => true
         );
+    }else{
+        $args = array(
+            'meta_key' => 'primary_home_number',
+            'meta_value' => trim($phone),
+            'number' => 1,
+          
+            'count_total' => true
+        );
+    }
+
+         
         $user = reset(get_users($args)); 
         if ($user) {
             $result['success'] = 1;
@@ -8136,6 +8157,39 @@ function action_after_variations_form_callback() {
 
 
 
+function email_exist_in_drupal($email){
+
+
+    $curl = curl_init();
+
+    curl_setopt_array($curl, [
+        CURLOPT_URL => "http://3.80.120.98/basicRowScript.php?email=".$email,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "GET",
+    ]);
+
+
+    $response = curl_exec($curl);
+   
+    $finalDatas = json_decode($response, true);
+    if(empty($finalDatas)){
+         return false;
+    }else{
+        return true;
+    }
+
+
+
+}
+
+
+
+
 
 
 
@@ -8146,51 +8200,163 @@ add_action('wp_ajax_firstTimeLoginWithEmailPassword', 'firstTimeLogin');
 add_action('wp_ajax_nopriv_firstTimeLoginWithEmailPassword', 'firstTimeLogin');
 
 function firstTimeLogin(){
-
-
+/*ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);*/
     if($_POST['action']== 'firstTimeLoginWithEmailPassword'){
         global $wpdb;
-
-        // setcookie("formForFirstTime", "formForFirstTime", time() + 2 * 24 * 60 * 60);
-
 
         $email = $_POST['email'];
         $password = $_POST['password'];
         $remember_me = $_POST['remember'];
+        $exists = email_exists( $email );
 
-            if( empty($password) || empty($email) ) {
-                $response =  array(
-                        "error"        => 'true',
-                        "msg"        => 'Please enter both fields'
-                    );
-                echo json_encode($response);
-            }else{
-            
-                    $exists = email_exists( $email );
-                        if($exists){
 
-                            $user_data = array(
-                                'ID' => $exists,
-                                'user_pass' => $password
-                            );
+        if(!empty($_POST["email"]) && !empty($_POST['password']) && email_exists( $email )){
+                
+                $user  = get_user_by( 'id', $exists );
+                $userLogin  = $user->user_login;
+                $user_id = $user->ID;
+                $creds = array(
+                    'user_login'    => $userLogin,
+                    'user_password' => $password,
+                    'remember'      => $remember
+                );
 
-                            $y = wp_update_user($user_data);
-                            $login_data = array();  
-                            $login_data['user_login'] = $username;  
-                            $login_data['user_password'] = $password;
-                            $login_data['remember'] = $remember_me;  
-                              
-                            $user_verify = wp_signon( $login_data, false ); 
-                           wp_set_auth_cookie($exists,$_POST['remember']);
-                             
-                           echo json_encode(array('success'=>1,'message'=>'You are login'));
-                           exit();
-                        }
+                $user_meta = get_userdata($user_id);
+                $user_roles = $user_meta->roles;
+                if(  in_array('pet_professional', $user_roles)){
+                        echo json_encode(array('success'=>0, 'user_type'=>'pet-professional','message'=>'This is Pet Professional username. Please login from Pet-Professional'));
+                    exit();
                 }
+
+                $importStatus = get_user_meta( $exists, 'importStatus' ,true);
+
+                $loginuser = wp_signon($creds);
+                if ( is_wp_error( $loginuser ) ){
+                    echo $user->get_error_message();
+                    echo json_encode(array('success'=>0, 'user_type'=>'customer', 'message'=>'Invalid password. Please try again'));
+                        exit();
+                }else{
+                echo json_encode(array('success'=>1, 'importStatus' => $importStatus,'user_type'=> 'new_in website', 'message'=>'You are login','email'=> $email));
+                        exit();
+                }
+
+
+
+            }elseif(is_numeric($_POST["email"])){
+
+                $phone = phone_exists($_POST["email"]);
+                    if ($phone['success']) {
+                            $userId    = $phone['user']->ID;
+                            $user_meta = get_userdata($userId);
+                            $email     = $user_meta->data->user_email;
+                            $exists = email_exists( $email );
+
+                            $user  = get_user_by( 'id', $exists );
+                            $userLogin  = $user->user_login;
+                            $password = $_POST['password'];    
+
+
+                            $creds = array(
+                                'user_login'    => $userLogin,
+                                'user_password' => $password,
+                                'remember'      => $remember
+                            );
+                      
+                            update_user_meta( $exists, 'importStatus', 'S');
+                            $importStatus = get_user_meta( $exists, 'importStatus' ,true);
+                            $loginuser = wp_signon($creds);
+                            if ( is_wp_error( $loginuser ) ){
+                                    $user->get_error_message();
+                                        echo json_encode(array('success'=>0,'message'=>'Invalid password. Please try again'));
+                                        exit();
+                            }else{
+                                echo json_encode(array('success'=>4,'importStatus' => $importStatus,'message'=>'loginIn','email'=> $email));
+                                exit();
+                            }
+                        }else{
+                            echo json_encode(array('success'=>5,'importStatus' => 'false','message'=>'Email and Phone Number Does not Exists. Please try again'));
+                            exit();
+                        }
+            }elseif(!email_exists($email) && email_exist_in_drupal($email) ==false){
+
+                     
+                 echo json_encode(array('success'=>2, 'importStatus' => 'false','user_type'=> 'Not available', 'message'=>'Email And Phone Does not Exists. Please try again'));
+                        exit();        
+
+
+            }elseif(!email_exists($email) && email_exist_in_drupal($email) ==true){
+
+                $random_password    = rand();
+                $user_id            =  wp_create_user( $email , $random_password, $email );
+                
+                $user_data = array(
+                    'ID' => $user_id,
+                    'user_pass' => $password
+                    );
+
+                    $y = wp_update_user($user_data);
+                    $login_data['user_login'] = $email;  
+                    $login_data['user_password'] = $password;
+                    $login_data['remember'] = $remember_me;  
+                    update_user_meta( $user_id, 'importStatus', 'S');
+                    $importStatus = get_user_meta( $user_id, 'importStatus' ,true);
+
+                    $user_verify = wp_signon( $login_data, false );
+                    echo json_encode(array('success'=>3, 'importStatus' => $importStatus, 'email'=>$email, 'user_type'=> 'CreateNewUserFromDrupal', 'message'=>'You are login in wordpress'));
+                    exit(); 
+
+
+
+            }       
     }
 
 }
 
+
+
+add_action('wp_ajax_createNewUserComing', 'createNewUserComing');
+add_action('wp_ajax_nopriv_createNewUserComing', 'createNewUserComing');
+
+function createNewUserComing(){
+
+
+
+
+    if($_POST['action']== 'createNewUserComing'){
+
+        $email = $_POST['email']; 
+            /*Come's in drupal database*/
+            
+            $user_name          = $_POST['email'];
+            $org_email          = $_POST['email'];
+            $random_password    = rand();
+            $user_id            =  wp_create_user( $user_name , $random_password, $org_email );
+            $password = 'admin001';
+             $user_data = array(
+                    'ID' => $user_id,
+                    'user_pass' => $password
+                );
+
+                $y = wp_update_user($user_data);
+                $login_data['user_login'] = $email;  
+                $login_data['user_password'] = $password;
+                $login_data['remember'] = $remember_me;  
+                update_user_meta( $user_id, 'importStatus', 'S');
+
+
+
+
+                  
+                $user_verify = wp_signon( $login_data, false );
+                echo json_encode(array('success'=>1, 'email'=>$user_name, 'user_type'=> 'createNewUserComing', 'message'=>'You are login'));
+            exit();
+
+    }
+
+
+}
 
 /*reset password email Stop*/
 add_filter( 'send_password_change_email', '__return_false' );
