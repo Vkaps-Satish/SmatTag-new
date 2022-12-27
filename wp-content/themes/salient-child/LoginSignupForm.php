@@ -98,7 +98,7 @@ if (!isset($_COOKIE["formForFirstTime"])){  ?>
 									<div class="field-wrap two-fields-wrap">
 										<div class="field-div">
 											<label>*Password </label>
-											<input type="password" id="password" name="password" placeholder="Enter Password" class="user-data"  required="" id="u-password" />
+											<input type="password"  name="password" placeholder="Enter Password" class="user-data"  required="" id="u-password" />
 											
 										</div>
 										<div class="field-div">
@@ -1082,8 +1082,7 @@ return true;
 		                    contentType: false,
 		                    processData: false,
 		                    success: function(response) {
-	                    	console.log(response);
-	                    	return false;
+	                    
 	                    	var Obj = jQuery.parseJSON( response );
 		                    if(Obj.success==1){
 			                        $('.popup-wrap').fadeIn(function() {   				
@@ -1135,7 +1134,9 @@ return true;
 		                success: function(response) {
 						var Obj = JSON.parse(response);
 						
-							if(Obj.success == '1'){                    		
+							if(Obj.success == '1'){  
+
+
 								$('.popup-wrap').fadeIn(function() {   						
 			            			$('#poptitle').text(Obj.title);
 			            			$('#popcont').text(Obj.message);
@@ -1277,22 +1278,23 @@ async function baseFunction(ajaxurl, Edata, method , Data ,resResult) {
 			if(obj.success == 0 && obj.user_type == 'pet-professional'){
 				$('.loader-wrap').fadeOut();
 		 		$('#EmEror').text(obj.message).fadeIn();
-		 		return false;
+		 			return false;
 			}else if(obj.success == 0 && obj.user_type == 'customer'){
 				$('.loader-wrap').fadeOut();
 		 		$('#EmEror').text(obj.message).fadeIn();
-		 		return false;
+		 			return false;
 			}else if(obj.success == 1 && obj.importStatus == 'S'){
 	      		var email = obj.email;
 	      		getAllInformationFromDrupal(email);
 			}else if(obj.success == 2 && obj.importStatus == 'false'){
 	      		$('.loader-wrap').fadeOut();
 		 		$('#EmEror').text(obj.message).fadeIn();
-		 		return false;
+		 			return false;
 			}else if(obj.success == 3 && obj.importStatus == 'S'){
 	      		var email = obj.email;
 	      		getAllInformationFromDrupal(email);
 			}else if(obj.success == 4 && obj.importStatus == 'S'){
+					
 	      		var email = obj.email;
 	      		getAllInformationFromDrupal(email);
 			}else if(obj.success == 5 && obj.importStatus == 'false'){
@@ -1316,42 +1318,46 @@ async function baseFunction(ajaxurl, Edata, method , Data ,resResult) {
 
 
 function getAllInformationFromDrupal(email){
-	
-
 	$.ajax({url: "https://staging.idtag.com/import-data-firstlogin/", 
 			type: "post",
 	        data: {'email':email},
 	        dataType: 'json',
 		   	success: function(result) {
 				$('.loader-wrap').fadeOut();
-					$.each(result, function(k, v) {
-    					var parse = jQuery.parseJSON(v);
-		   					if(parse.success == '1'){
-								$('.loader-wrap').fadeOut();
-				 					window.location.href = "<?php echo get_site_url(); ?>/my-account/";
-							}else{
+
+				if(result.success == '6'){
+					window.location.href = "<?php echo get_site_url(); ?>/my-account/";
+				}else{
+						$.each(result, function(k, v) {
+	    					var parse = jQuery.parseJSON(v);
+			   					if(parse.success == '1'){
 									$('.loader-wrap').fadeOut();
-							} 	
-					});			
+					 				window.location.href = "<?php echo get_site_url(); ?>/my-account/";
+								}else{
+										$('.loader-wrap').fadeOut();
+								} 	
+						});	
+				}		
 		  	}	
-		});
+	});
 }
 
 /*For show eye on password field's*/
 var  togglePassword = document.querySelector('#togglePassword');
-  var password = document.querySelector('.password');
-
-  togglePassword.addEventListener('click', function (e) {
+var password = document.querySelector('.password');
+togglePassword.addEventListener('click', function (e) {
     // toggle the type attribute
-
-    var type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-    password.setAttribute('type', type);
-    // toggle the eye slash icon
-    this.classList.toggle('fa-eye-slash');
+ var type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    		password.setAttribute('type', type);
+    		this.classList.toggle('fa-eye-slash');
 });
 
    
 </script>
+
+
+
+
 
 
 

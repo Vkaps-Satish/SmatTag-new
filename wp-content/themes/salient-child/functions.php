@@ -1421,10 +1421,18 @@ function display_home_slider(){
     ?>
     <?php 
         $thumb = wp_get_attachment_image_src( get_post_thumbnail_id(get_the_id()), 'full' );
+
+       // print_r($thumb);
+
+
         $mypod = pods( 'home_slider_new', get_the_id() );
     ?> 
     <?php
-    $result .= "<li style='background-image: url($thumb[0]);background-position: right center;'><div class='container'><div class='slider-faderIn'  style='display:none;'><div class='slide-content'><h3>";
+
+    $result .= "<li style='background-position: right center;'>";
+    $result .=  "<img src='$thumb[0]' alt='' >";
+     $result .="<div class='container'>
+      <div class='slider-faderIn'  style='display:none;'><div class='slide-content'><h3>";
    /* $result .= get_the_title();*/
     $result .= '</h3><div class="slide-content-list">';
     $result .= get_the_content();
@@ -2389,8 +2397,10 @@ function cvf_upload_files(){
             if ($key == "microchip_id") {
                 $key = "microchip_id_number";
             }
+            $value =  str_replace(' ','',$value);
             update_post_meta($postid,$key,$value);
         }
+        
         
 
               $_SESSION['pet_name'] = $pet_name;
@@ -3402,7 +3412,7 @@ function loginWithUserEmail(){
     }    
     exit();
 }
-add_action("wp_ajax_PetLoginWithEmailPassword", "PetloginWithUserEmail");
+/*add_action("wp_ajax_PetLoginWithEmailPassword", "PetloginWithUserEmail");
 add_action("wp_ajax_nopriv_PetLoginWithEmailPassword", "PetloginWithUserEmail");
 
 function PetloginWithUserEmail(){    
@@ -3506,89 +3516,213 @@ function PetloginWithUserEmail(){
         exit();
     }
     exit();
-}
+}*/
  
+add_action("wp_ajax_PetLoginWithEmailPassword", "PetloginWithUserEmail");
+add_action("wp_ajax_nopriv_PetLoginWithEmailPassword", "PetloginWithUserEmail");
+
+function PetloginWithUserEmail(){ 
+
+    $email = $_POST['PetProfessionalemail'];
+
+
+    $password = $_POST['password'];
+    $remember_me = $_POST['remember'];
+    if(!empty($_POST['srialId'])){
+
+
+        $rs     = 0;
+        $userId = "";
+         $blogusers = get_users();
+        if(is_user_logged_in()){
+            echo json_encode(array('success'=>1,'message'=>'You are already logged in'));
+            exit();
+        }
+
+        foreach ( $blogusers as $user ) {
+            $serial = get_user_meta($user->ID,"smartTag_id",true);
+            $email  = $user->user_email;
+           
+            if( strpos($serial, ",") !== false ) {
+                $ids = explode(',',$serial);
+                if(in_array($_POST['srialId'],$ids)){
+                    // $userdata->user_login;
+                    
+                    wp_set_auth_cookie($user->ID,$_POST['remember']);
+                    echo json_encode(array('success'=>1,'message'=>'You are login'));
+                    exit();
+                        
+                }
+            }else{
+                if($serial == $_POST['srialId']){
+                    wp_set_auth_cookie($user->ID,$_POST['remember']);
+                    echo json_encode(array('success'=>1,'message'=>'You are login'));
+                    exit;
+                }
+            }
+        }
+
+        
+        if (!$rs) {
+            echo json_encode(array('success'=>0,'message'=>'Invalid Login Id'));
+           
+        }
+                
+    }elseif(!empty($_POST["PetProfessionalemail"]) && !empty($_POST['password']) && email_exists( $email )){
+               
+                $exists = email_exists( $email );
+                $user  = get_user_by( 'id', $exists );
+                $userLogin  = $user->user_login;
+                $user_id = $user->ID;
+                $creds = array(
+                    'user_login'    => $userLogin,
+                    'user_password' => $password,
+                    'remember'      => $remember
+                );
+
+                $user_meta = get_userdata($user_id);
+                
+                 $user_roles = $user_meta->roles;
+                
+               
+                if(  !in_array('pet_professional', $user_roles)){
+                        echo json_encode(array('success'=>0, 'user_type'=>'pet-professional','message'=>'This is Pet Customer username. Please login from Customer portal'));
+                    exit();
+                }
+
+                 $importStatus = get_user_meta( $exists, 'importStatus' ,true);
+
+                $loginuser = wp_signon($creds);
+                if ( is_wp_error( $loginuser ) ){
+                    echo $user->get_error_message();
+                    echo json_encode(array('success'=>0, 'user_type'=>'customer', 'message'=>'Invalid password. Please try again'));
+                        exit();
+                }else{
+                echo json_encode(array('success'=>1, 'importStatus' => $importStatus,'user_type'=> 'new_in website', 'message'=>'You are login','email'=> $email));
+                        exit();
+                }
+
+
+
+            }elseif(is_numeric($_POST["PetProfessionalemail"])){
+
+                $phone = phone_exists($_POST["PetProfessionalemail"]);
+                    if ($phone['success']) {
+                            $userId    = $phone['user']->ID;
+                            $user_meta = get_userdata($userId);
+                            $email     = $user_meta->data->user_email;
+                            $exists = email_exists( $email );
+
+                            $user  = get_user_by( 'id', $exists );
+                            $userLogin  = $user->user_login;
+                            $password = $_POST['password'];    
+
+
+                            $creds = array(
+                                'user_login'    => $userLogin,
+                                'user_password' => $password,
+                                'remember'      => $remember
+                            );
+                      
+                            update_user_meta( $exists, 'importStatus', 'S');
+                            $importStatus = get_user_meta( $exists, 'importStatus' ,true);
+                            $loginuser = wp_signon($creds);
+                            if ( is_wp_error( $loginuser ) ){
+                                    $user->get_error_message();
+                                        echo json_encode(array('success'=>0,'message'=>'Invalid password. Please try again'));
+                                        exit();
+                            }else{
+                                echo json_encode(array('success'=>4,'importStatus' => $importStatus,'message'=>'loginIn','email'=> $email));
+                                exit();
+                            }
+                        }else{
+                            echo json_encode(array('success'=>5,'importStatus' => 'false','message'=>'Email and Phone Number Does not Exists. Please try again'));
+                            exit();
+                        }
+            }elseif(!email_exists($email) && email_exist_in_drupal($email) ==false){
+
+                     
+                 echo json_encode(array('success'=>2, 'importStatus' => 'false','user_type'=> 'Not available', 'message'=>'Email And Phone Does not Exists. Please try again'));
+                        exit();        
+
+
+            }elseif(!email_exists($email) && email_exist_in_drupal($email) ==true){
+
+                $random_password    = rand();
+                $user_id            =  wp_create_user( $email , $random_password, $email );
+                
+                $user_data = array(
+                    'ID' => $user_id,
+                    'user_pass' => $password
+                    );
+
+                    $y = wp_update_user($user_data);
+                    $login_data['user_login'] = $email;  
+                    $login_data['user_password'] = $password;
+                    $login_data['remember'] = $remember_me;  
+                    update_user_meta( $user_id, 'importStatus', 'S');
+                    $importStatus = get_user_meta( $user_id, 'importStatus' ,true);
+
+                    $user_verify = wp_signon( $login_data, false );
+                    echo json_encode(array('success'=>3, 'importStatus' => $importStatus, 'email'=>$email, 'user_type'=> 'CreateNewUserFromDrupal', 'message'=>'You are login in wordpress'));
+                    exit(); 
+
+
+
+            }       
+    
+}
+
+
+
+
+
+
+
+
+
+
+
 add_action("wp_ajax_ForgetUserEmail", "ForgetEmailByPhone");
 add_action("wp_ajax_nopriv_ForgetUserEmail", "ForgetEmailByPhone");
 
  function ForgetEmailByPhone(){
    
-        $phone   =  $_POST['phone'];
-        $sender  =  "VINODM";
+      
+            $sender  =  "VINODM";
         $users   = get_users( array( 'fields' => array( 'ID' ) ) );
-        foreach($users as $user_id){
 
-            $status =""; 
-            $PrimaryPhone =  get_user_meta ($user_id->ID,'primary_home_number',true);
+         $phone = phone_exists($_POST['phone']);   
+        if($phone['success']){
+          foreach($users as $user_id){
+                $status =""; 
+              $PrimaryPhone =  get_user_meta ($user_id->ID,'primary_home_number',true);
+             
+                if($PrimaryPhone){
+                        $user_meta  = get_userdata($user_id->ID);
+                        $user_roles = $user_meta->roles;
+                        if( $user_roles == 'pet_professional' || in_array( 'pet_professional', $user_roles )){
+                                echo json_encode(array('success'=>0, 'message'=>'This form is only for Customers..'));
+                                exit();
+                        }else{
+                            
+                            $userId = $user_id->ID;
+                            $action = $_POST['action'];
+                           $sms =  getSMSByTwillo($_POST['phone'],$userId, $action);
+                            $deliveryMessage = $sms['message'];
+                            echo json_encode(array('success'=>1,'title'=>'Send', 'message'=>$deliveryMessage));
+                           
 
-            if($PrimaryPhone == $phone){
-                
-                $user_meta  = get_userdata($user_id->ID);
-                $user_roles = $user_meta->roles;
-
-               
-                if( $user_roles == 'pet_professional' || in_array( 'pet_professional', $user_roles )){
-
-                    echo json_encode(array('success'=>0, 'message'=>'This form is only for Customers..'));
-                 
+                            }   
+                }
+             }
+        }else{
+              
+                 echo json_encode(array('success'=>1,'title'=>'Forgot Email', 'message'=> 'Phone Number is not associated with SmartTag account. Please contact Support for better assist'));
                  exit();
-                  }else{
-                  
-                    
-                    $status =1;
-                    $user_info = get_userdata($user_id->ID);
-                    $user_nicename = $user_info->user_nicename;
-                        
-                    $user_login = $user_info->user_login;
-                    $userEmail  = $user_info->user_email;
-                    $userRole   = $user_info->roles;
-                    
-                  
-                    $Message .= " Dear ".$user_nicename;
-                    $Message .= " This is Your Email Address ".$userEmail."\\n\\r";
-                    $Message .= " Thank you.";
-                    $Message .= "\\n\\r";
-                    $Message .= " SmartTag Team ";
-                    
-               
-
-                    $curl = curl_init();
-                      curl_setopt_array($curl, array(
-                      CURLOPT_URL => "http://api.msg91.com/api/v2/sendsms",
-                      CURLOPT_RETURNTRANSFER => true,
-                      CURLOPT_ENCODING => "",
-                      CURLOPT_MAXREDIRS => 10,
-                      CURLOPT_TIMEOUT => 30,
-                      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                      CURLOPT_CUSTOMREQUEST => "POST",
-                      CURLOPT_POSTFIELDS => "{ \"sender\": \"".$sender."\", \"route\": \"4\", \"country\": \"91\", \"sms\": [ { \"message\": \"".$Message."\", \"to\": [ \"".$phone."\"] } ] }",
-                      CURLOPT_SSL_VERIFYHOST => 0,
-                      CURLOPT_SSL_VERIFYPEER => 0,
-                      CURLOPT_HTTPHEADER => array(
-                        "authkey:88141A2KPSB54z559b861b",
-                        "content-type: application/json"
-                      ),
-                    ));
-
-                    $response = curl_exec($curl);
-                    
-                    $err = curl_error($curl);
-
-                    curl_close($curl);
-                     if ($err) {
-                        echo json_encode(array('success'=>0,'title'=>'Forgot Email', 'message'=>$err));
-                     
-                    } else {
-                         echo json_encode(array('success'=>1,'title'=>'Forgot Email','message'=>'Message sent Successfully'));
-                       exit();
-                    }
-
-                }   
-                                   }
-            }
-            if($status != 1){
-                 echo json_encode(array('success'=>0,'title'=>'Forgot Email', 'message'=>'Invalid Phone Number'));
-              }
+             
+        }    
+            
         exit(); 
     } 
 
@@ -3598,101 +3732,110 @@ add_action("wp_ajax_nopriv_ForgetUserPassword", "ForgetPasswordEmail");
 
 function ForgetPasswordEmail(){
 
+
     if ( is_user_logged_in() ){
         echo json_encode(array('success'=>0, 'message'=>'User Already Login.'));
         exit();
     }else{
 
-        $useremail = get_user_by_email($_POST['user_login'],'ID',true);
-        $user_meta = get_userdata($useremail->ID);
-        $user_roles = $user_meta->roles;
-       
-        if( in_array('pet_professional', $user_roles) || $user_roles =='pet_professional' ){ 
-            echo json_encode(array('success'=>0,'message'=>'This form only for customers.'));
-            die();
-        }else{
-            // First check the nonce, if it fails the function will break
-            check_ajax_referer( 'ajax-forgot-nonce', 'security' );
-            global $wpdb;    
             $account = $_POST['user_login'];
-            $user_exists = false;
-                
-            if (email_exists($account)){
-                $user_exists = true;
-                         
-            }else{
-                echo json_encode(array('success'=>0,'title'=>'Password Reset Request', 'message'=>'Email was not found, try again!'));
-                exit();
-            }
 
-            if ($user_exists){
-                // Get user data using email id
-                $user = get_user_by( 'email', $account );
-            
-                $user_id = $user->ID;
-                $success = 1;                
+            if(email_exists($account)){
 
-                if(dtc_send_password_reset_mail($user_id)){
-                
-                    echo json_encode(array('success'=>1,'title'=>'Password Reset Request', 'message'=>"Password Reset Request link has been sent to your email address."));
-                }
+                $user = get_user_by( 'email', $_POST['user_login']);
+                $user_meta = get_userdata($user->ID);
+                $user_roles = $user_meta->roles;
                
-                exit();
+                if( in_array('pet_professional', $user_roles) || $user_roles =='pet_professional' ){ 
+                        echo json_encode(array('success'=>0,'message'=>'This form only for customers.'));
+                        die();
+                }
+                    check_ajax_referer( 'ajax-forgot-nonce', 'security' );
+                    global $wpdb;    
+                    $account = $_POST['user_login'];
 
-            }
-        }
-        exit();
-    }
-}    
+                    $user = get_user_by( 'email', $account );
+                    $user_id = $user->ID;
+                    $success = 1;                
+                        if(dtc_send_password_reset_mail($user_id)){
+                            echo json_encode(array('success'=>1,'title'=>'Password Reset Request', 'message'=>"Password Reset Request link has been sent to your email address."));
+                                exit();
+                        }    
+                }elseif(is_numeric($account)){
+
+                        $phone = phone_exists($account);
+                            if ($phone['success']) {
+
+                                $userId = $phone['user']->ID;
+                                $action = $_POST['action'];
+                                $sms = getSMSByTwillo($account,$userId,$action);
+                                $deliveryMessage = $sms['message'];
+                                    echo json_encode(array('success'=>1,'title'=>'Send', 'message'=>$deliveryMessage));
+                                    exit();   
+                            }else{
+                                         echo json_encode(array('success'=>1,'title'=>'Password Reset Request Failer', 'message'=>"This Phone Number is not associated with SmartTag account "));
+                                exit();
+                                }
+
+
+                }else{
+                     echo json_encode(array('success'=>0,'title'=>'Password Reset Request', 'message'=>'Email was not found, try again!'));
+                         exit();
+                }
+            }   
+}             
 
 add_action("wp_ajax_ForgetPetProPassword", "PetPasswordEmail");
 add_action("wp_ajax_nopriv_ForgetPetProPassword", "PetPasswordEmail");
 
 function PetPasswordEmail(){
 
-    $useremail = get_user_by_email($_POST['user_login'],'ID',true);
-    $useremail->ID;
-    $user_meta = get_userdata($useremail->ID);
-    $user_roles = $user_meta->roles;
-         
-    if( in_array('pet_professional', $user_roles)){ 
-            
-        // First check the nonce, if it fails the function will break
-        check_ajax_referer( 'ajax-forgot-nonce', 'security' );
-        global $wpdb;    
-        $account = $_POST['user_login'];
-        $user_exists = false;
+     $account = $_POST['user_login'];
+    if (email_exists($account)){
+        $user = get_user_by( 'email', $account );
         
-        if (email_exists($account)){
+        $user_meta = get_userdata($user->data->ID);
+        $user_roles = $user_meta->roles;
+            if( in_array('pet_professional', $user_roles) || $user_roles =='pet_professional' ){ 
+                check_ajax_referer( 'ajax-forgot-nonce', 'security' );
+                global $wpdb;    
+                $account = $_POST['user_login'];
+                $user_exists = false;
+            }else{
+                    echo json_encode(array('success'=>0,'title'=>'Pet Professional', 'message'=>'This user is not Pet Professional'));  
+                    exit();
+                }
+                $user_exists = true;
+                $user       = get_user_by( 'email', $account );
+                $user_id    = $user->ID;
+                $success    = 1;            
 
-            $user_exists = true;
-
-        }else{
-
-            echo json_encode(array('success'=>0,'title'=>'Password Reset Request', 'message'=>'Email was not found, try again!'));
-                exit();
-        }
-
-        if ($user_exists){
-
-            $user       = get_user_by( 'email', $account );
-            $user_id    = $user->ID;
-            $success    = 1;            
-
-            if(dtc_send_password_reset_mail($user_id)){
-                
-                echo json_encode(array('success'=>1,'title'=>'Password Reset Request', 'message'=>"Password Reset Request link has been sent to your email address."));
+                if(dtc_send_password_reset_mail($user_id)){
+                    echo json_encode(array('success'=>1,'title'=>'Password Reset Request', 'message'=>"Password Reset Request link has been sent to your email address."));
+                      exit();
+                }
+                  
+    }elseif (is_numeric($account)){
+            $phone = phone_exists($account);   
+            if($phone['success']){
+                $userId = $phone['user']->ID;
+                $action = $_POST['action'];
+                $sms = getSMSByTwillo($account,$userId, $action);
+                $deliveryMessage = $sms['message'];
+                 echo json_encode(array('success'=>1,'title'=>'Send', 'message'=>$deliveryMessage));
+                    exit();
+            }else{
+                 echo json_encode(array('success'=>0,'title'=>'Password Reset Request', 'message'=>'Phone Number was not found, try again!'));
+                    exit();
             }
-            exit();
-        }
     }else{
-      echo json_encode(array('success'=>0,'title'=>'Pet Professional', 'message'=>'This user is not Pet Professional'));  
-    }
-    exit();
+            echo json_encode(array('success'=>0,'title'=>'Password Reset Request', 'message'=>'Email was not found, try again!'));
+                    exit();
+            }
+
 }
-
 function dtc_send_password_reset_mail($user_id){
-
+    
     $user = get_user_by('id', $user_id);
     $username = $user->first_name;
 
@@ -3704,7 +3847,7 @@ function dtc_send_password_reset_mail($user_id){
     //$rp_link = "https://staging.idtag.com/password-reset?action=rp&key=".$key."&login=".rawurlencode($user_login); 
     $rp_link = site_url()."/password-reset?action=rp&key=".$key."&login=".rawurlencode($user_login); 
 
-    forgot_password($username ,$email, $rp_link);
+    forgot_password_mail($username ,$email, $rp_link);
     
     return true;
    
@@ -3724,11 +3867,8 @@ function PetForgetEmailByPhone(){
         $phone   =  trim($_POST['phone']);
         $sender  =  "VINODM";
         $users   = get_users( array( 'fields' => array( 'ID' ) ) );
-        
-        // foreach($users as $user_id){
-        //     print_r($user_id->ID);
-        // }
-        // die;
+         $phone = phone_exists($_POST['phone']);   
+        if($phone['success']){
         foreach($users as $user_id){
             $status =""; 
             $PrimaryPhone =  get_user_meta ($user_id->ID,'primary_home_number',true);
@@ -3744,58 +3884,21 @@ function PetForgetEmailByPhone(){
                  
                     exit();
                 }else{
-                    
-                    $status =1;
-                    $user_info = get_userdata($user_id->ID);
-                    $user_nicename = $user_info->user_nicename;
-                    
-                    $user_login = $user_info->user_login;
-                    $userEmail  = $user_info->user_email;
-                    $userRole   = $user_info->roles;
-                      
-                  
-                    $Message .= " Dear ".$user_nicename;
-                    $Message .= " This is Your Email Address ".$userEmail."\n\r";
-                    $Message .= " Thank you.";
-                    $Message .= " idtag.agiliscloud Team ";
-                    
-                    $curl = curl_init();
-                      curl_setopt_array($curl, array(
-                      CURLOPT_URL => "http://api.msg91.com/api/v2/sendsms",
-                      CURLOPT_RETURNTRANSFER => true,
-                      CURLOPT_ENCODING => "",
-                      CURLOPT_MAXREDIRS => 10,
-                      CURLOPT_TIMEOUT => 30,
-                      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                      CURLOPT_CUSTOMREQUEST => "POST",
-                      CURLOPT_POSTFIELDS => "{ \"sender\": \"".$sender."\", \"route\": \"4\", \"country\": \"91\", \"sms\": [ { \"message\": \"".$Message."\", \"to\": [ \"".$phone."\"] } ] }",
-                      CURLOPT_SSL_VERIFYHOST => 0,
-                      CURLOPT_SSL_VERIFYPEER => 0,
-                      CURLOPT_HTTPHEADER => array(
-                        "authkey:88141A2KPSB54z559b861b",
-                        "content-type: application/json"
-                      ),
-                    ));
 
-                    $response = curl_exec($curl);
-                    $err = curl_error($curl);
-
-                    curl_close($curl);
-                    if ($err) {
-                        echo json_encode(array('success'=>0,'title'=>'Forget Email', 'message'=>$err));
-                     
-                    } else {
-                         echo json_encode(array('success'=>1,'title'=>'Forget Email','message'=>'Message send Successfully'));
-                       exit();
-                    }
+                    $userId = $user_id->ID;
+                    $action = $_POST['action'];
+                    $sms = getSMSByTwillo($_POST['phone'],$userId, $action);
+                    $deliveryMessage = $sms['message'];
+                    echo json_encode(array('success'=>1,'title'=>'Send', 'message'=>$deliveryMessage));
 
                 }   
             }
+         }   
+        }else{
+            echo json_encode(array('success'=>1,'title'=>'Forgot Email', 'message'=> 'Phone Number is not associated with SmartTag account. Please contact Support for better assist'));
+                 exit();
         }
-        
-        if($status != 1){
-             echo json_encode(array('success'=>0,'title'=>'Forget Email', 'message'=>'Invalid Phone Number'));
-        }
+         
         exit(); 
     }
 
@@ -4111,7 +4214,7 @@ error_reporting(E_ALL);*/
         $pet_data = $_POST['Petdata'];
 
        $length = strlen($pet_data);
-       if($length == 10){
+       if($length > 10){
 
          $phone = preg_replace("/[^0-9]*/",'',$pet_data);
           if(strlen($phone) != 10) return(false);
@@ -4145,12 +4248,12 @@ error_reporting(E_ALL);*/
                               ),
                         array(
                                 'key'     => 'smarttag_id_number',
-                                'value'   => $pet_data,
+                                'value'   => $_POST['Petdata'],
                                 'compare' => '='
                              ),
                         array(
                                 'key'     => 'microchip_id_number',
-                                'value'   => $pet_data,
+                                'value'   => $_POST['Petdata'],
                                 'compare' => '='
                         ),
                          array(
@@ -4834,41 +4937,37 @@ function checkSmartTagIDValid_test(){
 if (!function_exists ('phone_exists')) {
     function phone_exists($phone){
 
-    $phone  = preg_replace('~.*(\d{3})[^\d]{0,7}(\d{3})[^\d]{0,7}(\d{4}).*~', '($1) $2-$3', $phone). "\n";
-    /*echo $phone;
-    die();*/
 
-    if($phone){
-   
+$phones  = preg_replace('~.*(\d{3})[^\d]{0,7}(\d{3})[^\d]{0,7}(\d{4}).*~', '($1) $2-$3', $phone). "\n";
 
+    if($phones){
 
-            $args = array(
+        $args = array(
             'meta_key' => 'primary_home_number',
-            'meta_value' => trim($phone),
+            'meta_value' => trim($phones),
             'number' => 1,
-       
-            'count_total' => true
+            'count_total' => true,
+            'operator' => 'LIKE',
         );
     }else{
+
         $args = array(
             'meta_key' => 'primary_home_number',
             'meta_value' => trim($phone),
             'number' => 1,
-          
-            'count_total' => true
+            'count_total' => true,
+             'operator' => 'LIKE',
         );
     }
-
-         
         $user = reset(get_users($args)); 
-        if ($user) {
-            $result['success'] = 1;
-            $result['user']    = $user;
-            return $result;
-        }else{
-            $result['success'] = 0;
-            return $result;
-        }
+            if ($user) {
+                $result['success'] = 1;
+                $result['user']    = $user;
+                return $result;
+            }else{
+                $result['success'] = 0;
+                return $result;
+            }
     }
 }
 
@@ -6117,6 +6216,29 @@ function complimentary_petfirst_insurance_confirmation($email){
     send_email_woocommerce_style($email , $subject , $heading , $message );
 }
 /*point no 24*/
+
+function forgot_password_mail($userName , $email , $link) {
+
+    global $loginUrl;
+    
+    $subject = "SmarTag Password Reset";
+    $heading = "SmarTag Password Reset";
+
+
+    $message  .= "Hello ".$userName.",". "\r\n";
+    $message  .= "SmartTag has received a password reset request for your account on Please click this link to reset your password and log in.". "\r\n\r\n";
+
+   $message .= "<a href=".$link.">Click Here</a>"."\r\n\r\n";       
+    $message  .= "If you did not make this password reset request, you can ignore this message or contact us via support@idtag.com or (201) 537-5644 for further assistance or to verify your account."."\r\n\r\n";
+    $message  .= "Thank you,"."\r\n\r\n";
+    $message  .= " SmartTag Team;,"."\r\n\r\n";
+  
+    //$message  .= mailFooter();
+
+    //send_email_woocommerce_style("rohit@vkaps.com" , $subject , $heading , $message );
+    send_email_woocommerce_style($email , $subject ,$heading, $message );
+ }
+
 
 function forgot_password($userName , $email , $link) {
 
@@ -8212,7 +8334,7 @@ error_reporting(E_ALL);*/
         $exists = email_exists( $email );
 
 
-        if(!empty($_POST["email"]) && !empty($_POST['password']) && email_exists( $email )){
+        if(!empty($_POST["email"]) && !empty($_POST['password']) && email_exists( $email ) && !is_numeric( $email )){
                 
                 $user  = get_user_by( 'id', $exists );
                 $userLogin  = $user->user_login;
@@ -8248,7 +8370,9 @@ error_reporting(E_ALL);*/
 
                 $phone = phone_exists($_POST["email"]);
                     if ($phone['success']) {
-                            $userId    = $phone['user']->ID;
+                        $userId    = $phone['user']->ID;
+                        
+
                             $user_meta = get_userdata($userId);
                             $email     = $user_meta->data->user_email;
                             $exists = email_exists( $email );
@@ -8275,9 +8399,41 @@ error_reporting(E_ALL);*/
                                 echo json_encode(array('success'=>4,'importStatus' => $importStatus,'message'=>'loginIn','email'=> $email));
                                 exit();
                             }
+                        }elseif(email_exist_in_drupal($email)== true){
+                               
+                                $phone = phone_exists($_POST["email"]); /*To check*/
+                                $userId    = $phone['user']->ID;
+                                $user_meta = get_userdata($userId);
+                                $email     = $user_meta->data->user_email;
+                                $exists = email_exists( $email );
+                                    if($exists){
+                                            echo json_encode(array('success'=>6, 'account_exist'=>'yes','message'=>'Invalid password. Please try again'));    
+
+                                     }else{
+
+                                            $random_password    = rand();
+                                            $user_id           =  wp_create_user( $email , $random_password, $email );
+                                             $user_data = array(
+                                                'ID' => $user_id,
+                                                'user_pass' => $password
+                                                );
+
+                                                $y = wp_update_user($user_data);
+                                                $login_data['user_login'] = $email;  
+                                                $login_data['user_password'] = $password;
+                                                $login_data['remember'] = $remember_me;  
+                                                update_user_meta( $user_id, 'importStatus', 'S');
+                                                $importStatus = get_user_meta( $user_id, 'importStatus' ,true);
+
+                                                $user_verify = wp_signon( $login_data, false );
+                                                echo json_encode(array('success'=>3, 'importStatus' => $importStatus, 'email'=>$email, 'user_type'=> 'CreateNewUserFromDrupal', 'message'=>'You are login in wordpress'));
+                                                exit(); 
+
+                                               
+                                     }
                         }else{
-                            echo json_encode(array('success'=>5,'importStatus' => 'false','message'=>'Email and Phone Number Does not Exists. Please try again'));
-                            exit();
+                                echo json_encode(array('success'=>5,'importStatus' => 'false','message'=>'Email and Phone Number Does not Exists. Please try again'));
+                                exit();
                         }
             }elseif(!email_exists($email) && email_exist_in_drupal($email) ==false){
 
@@ -8368,3 +8524,436 @@ require_once "functions/functions-subscription-link.php";
 require_once "functions/functions-BabelBark-api.php";
 require_once "functions/function-import-csv.php";
 require_once "functions/functions-aaha-api.php";
+
+
+ function getSMSByTwillo($account,$userId, $action){
+
+    $user = get_user_by('id', $userId);
+    $username = $user->first_name;
+
+    $email = $user->user_email;
+    $key = get_password_reset_key( $user );
+    $user_login = $user->user_login;
+
+    $status =1;
+    $user_info = get_userdata($userId);
+    $user_nicename = $user_info->user_nicename;
+    $user_login = $user_info->user_login;
+    $userEmail  = $user_info->user_email;
+    $userRole   = $user_info->roles;
+    $message = site_url()."/password-reset?action=rp&key=".$key."&login=".rawurlencode($user_login); 
+    $twillo_sid = 'AC333b6c2c50f3445e067ff7caf8f895e7'; 
+    
+
+        $number = preg_replace("/[^0-9]/", "", $account);
+        $to  = '1'.$account;
+        
+        //(646) 355-8711
+        $from = '12012258134';
+       
+        
+                $Message .= " Dear ".$user_nicename;
+                $Message .= " This is Your Email Address ".$userEmail."\\n\\r";
+                $Message .= " Thank you.";
+                $Message .= "\\n\\r";
+                $Message .= " SmartTag Team ";
+       
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.twilio.com/2010-04-01/Accounts/'.$twillo_sid.'/Messages.j%0A',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => 'From=%2B'.$from.'&Body='.$message.'%20&To=%2B'.$to,
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/x-www-form-urlencoded',
+                'Authorization: Basic QUMzMzNiNmMyYzUwZjM0NDVlMDY3ZmY3Y2FmOGY4OTVlNzowOTJlMGMxMWYwYjVhZjI3OWNjZmFlZjNiMzY2ZGVmOQ=='
+          ),
+        ));
+        $response = curl_exec($curl);
+        $xml = simplexml_load_string($response);
+        $json = json_encode($xml);
+        $array = json_decode($json,TRUE);
+        
+        $RestExceptionCode = $array['RestException']['Code'];
+        $RestExceptionMessage = $array['RestException']['Message'];
+        $delivery_status = $array['Message']['Status'];
+            if($RestExceptionCode!=''){
+                $result['success'] = 1;
+                $result['title']    = 'Message Not Send';
+                $result['message']    = $RestExceptionMessage;
+            }elseif($delivery_status == 'queued' || $delivery_status == 'sending' || $delivery_status == 'sent'){
+                $result['success'] = 1;
+                $result['title']    = 'send';
+                $result['message']    = 'Password Reset Request link has been sent to your Phone Number.';
+            }
+              
+                return $result;
+                die();  
+}
+
+/*Michreochip Range Search functionalitry for backend*/
+
+
+function register_functionlity_for_microchip_search() {
+    add_menu_page('Microchip Search', 'Search Microchip', 'add_users', 'Search_microchip_page', '_custom_menu_seach_page', null, 6); 
+}
+add_action('admin_menu', 'register_functionlity_for_microchip_search');  
+
+
+function _custom_menu_seach_page(){
+    ?><form method="post">
+        <div class="form-group">
+            <label for="">MichroChip Range Start</label>
+                <input type="text" class="form-control" id="michrochip_start_range" aria-describedby="emailHelp" placeholder="Enter MichroChip number">
+                <span class="michrochip_start_range" style="display:none;">This field is required</span>
+          <!--   <div class="form-group">
+                <label for="">MichroChip Range End</label>
+                <input type="text" class="form-control" id="michrochip_end_range" aria-describedby="emailHelp" placeholder="Enter MichroChip number">
+                <span class="michrochip_end_range" style="display:none;">This field is required</span>
+            </div> -->
+        </div>    
+      <button type="submit" id="searchWithMicroChip" class="btn btn-primary">Submit</button>
+    </form>
+
+    <div class="search-row"></div> 
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+        </div>
+
+<?php  
+
+}
+
+add_action( 'admin_footer', 'searchWithMichrochip' );
+function searchWithMichrochip() { ?>
+    <script type="text/javascript" >
+    jQuery(document).ready(function($) {
+        jQuery('#searchWithMicroChip').click(function(e){
+            e.preventDefault();
+
+            var michrochip_start_range = $('#michrochip_start_range').val();
+            var michrochip_end_range = $('#michrochip_end_range').val();
+          
+
+            var dataVariable = {
+                'action': 'SeachWithMicrochip', // your action name
+                'michrochip_start_range': $('#michrochip_start_range').val(), // some additional data to send
+                'michrochip_end_range': $('#michrochip_end_range').val(),// some additional data to send
+            };
+
+            jQuery.ajax({
+                url: ajaxurl, // this will point to admin-ajax.php
+                type: 'POST',
+                data: dataVariable, 
+                success: function (response) {
+                    $('.search-row').html(response);
+                    return false;
+                }
+            });
+        });    
+    });
+    </script> 
+    <?php
+}
+
+
+add_action("wp_ajax_SeachWithMicrochip" , "SeachWithMicrochip");
+//array('987000008578277' , '987000008578291')
+
+function SeachWithMicrochip(){
+
+
+
+    $michrochip_start_range = $_POST['michrochip_start_range'];
+    $michrochip_end_range = $_POST['michrochip_end_range'];
+   /* if(!empty($michrochip_start_range) && empty($michrochip_end_range) ){
+        $value =  $michrochip_start_range;
+        $compare = '=';
+    }elseif(!empty($michrochip_start_range) && !empty($michrochip_end_range)){
+        $value = array($michrochip_start_range, $michrochip_end_range);
+        $compare = 'BETWEEN';
+    }elseif(empty($michrochip_start_range) && !empty($michrochip_end_range) ){
+        $value =  $michrochip_end_range;
+        $compare = '=';
+    }*/
+
+    $args = array(
+        'post_type' => 'pet_profile',
+        'posts_per_page' => 10, 
+      
+
+        'meta_query' => array( 
+         array(
+             'key' => 'microchip_id_number',
+             'value' =>  $michrochip_start_range,
+             'compare'=> '='
+           
+             ),
+         )
+    ); 
+$loop = new WP_Query( $args );
+
+    if($loop->have_posts()){
+
+
+        while ( $loop->have_posts() ) : $loop->the_post();
+                 $userId = get_post_field( 'post_author', get_the_ID() );
+
+                
+              /*Pet Information*/  
+
+                $microchip_id_number = get_post_meta(get_the_ID(),"microchip_id_number",true);
+                $smarttag_id_number = get_post_meta(get_the_ID(),"smarttag_id_number",true);
+
+                $PetProsUser_ids = get_getProName_microchipName($microchip_id_number, $smarttag_id_number);
+                $PetProsUser_id = $PetProsUser_ids['user_id'];
+                $getMichroChipRange = getMichroChipRange($microchip_id_number, $PetProsUser_id); 
+                $michroChipRange  = $getMichroChipRange['range']; 
+                if(isset($michroChipRange)){
+                    $range = $getMichroChipRange['range'];
+                }else{
+                    $range = 'Range Not Avaliable';
+                }
+                $PetProfessional = get_userdata($PetProsUser_id);
+                $pet_name = get_post_meta(get_the_ID(),"pet_name",true);  
+                $pet_type = get_post_meta(get_the_ID(),"pet_type",true); 
+                        
+                if($pet_type == 587){
+                  $pets_type = 'Cat';
+                }else if($pet_type == 1045){
+                  $pets_type = 'Dog';
+                }else if($pet_type == 1046){
+                  $pets_type = 'Ferret';
+                }else if($pet_type == 588){
+                  $pets_type = 'Horse';
+                }else if($pet_type == 1048){
+                  $pets_type = 'Other';
+                }else{
+                  $pets_type = 'Rabbit';
+                }
+
+                $pet_type = (isset(get_term( $pet_type )->name));  
+                $primary_breed = get_post_meta(get_the_ID(),"primary_breed",true);  
+                $p_breed =   (isset(get_term( $primary_breed )->name)) ? get_term( $primary_breed )->name : "" ;
+                $secondary_breed = get_post_meta(get_the_ID(),"secondary_breed",true);
+                $b_breed =   (isset(get_term( $secondary_breed )->name)) ? get_term( $secondary_breed )->name : "" ;   
+                $primary_color = get_post_meta(get_the_ID(),"primary_color",true);   
+                if($primary_color == '1'){
+                  $primarycolor =  'Black';
+                }else if($primary_color == '2'){
+                  $primarycolor = 'Blue';
+                }else if($primary_color == '3'){
+                  $primarycolor =  'Brown';
+                }else if($primary_color == '4'){
+                  $primarycolor =  'Gold';
+                }else if($primary_color == '5'){
+                  $primarycolor =  'Gray';
+                }else if($primary_color == '6'){
+                  $primarycolor =  'Orange';
+                }else if($primary_color == '7'){
+                  $primarycolor = 'Sliver';
+                }else if($primary_color == '8'){
+                  $primarycolor = 'Tan';
+                }else if($primary_color == '9'){
+                  $primarycolor =  'White';
+                }else{
+                  $primarycolor =  'Yellow';
+                }
+              $secondary_color = get_post_meta(get_the_ID(),"secondary_color",true);
+              if($secondary_color == '1'){
+                  $secoundarycolor =  'Black';
+                }else if($secondary_color == '2'){
+                  $secoundarycolor = 'Blue';
+                }else if($secondary_color == '3'){
+                  $secoundarycolor =  'Brown';
+                }else if($secondary_color == '4'){
+                  $secoundarycolor =  'Gold';
+                }else if($secondary_color == '5'){
+                  $secoundarycolor =  'Gray';
+                }else if($secondary_color == '6'){
+                  $secoundarycolor =  'Orange';
+                }else if($secondary_color == '7'){
+                  $secoundarycolor = 'Sliver';
+                }else if($secondary_color == '8'){
+                  $secoundarycolor = 'Tan';
+                }else if($secondary_color == '9'){
+                  $secoundarycolor =  'White';
+                }else{
+                  $secoundarycolor =  'Yellow';
+                }   
+                $size = get_post_meta(get_the_ID(),"size",true); 
+                if($size == 1){
+                    $size = 'Small';
+                }elseif($size == 2){
+                    $size =  'Medium';
+                }else{
+                    $size ='Large';
+                }
+
+              $gender = get_post_meta(get_the_ID(),"gender",true);   
+              $pet_date_of_birth = get_post_meta(get_the_ID(),"pet_date_of_birth",true);   
+              $petId = get_the_ID(); 
+               $pet_profile_link = site_url().'/my-account/show-profile?pet_id='.$petId;
+
+                $user_profile = site_url().'/wp-admin/user-edit.php?user_id='.$userId;
+
+
+
+
+              /*userInfo*/
+              //900141000000002
+
+                  $user_info = get_userdata($userId);
+                  $user_login = $user_info->user_login;
+                  $email = $user_info->email;
+                  $first_name = $user_info->first_name;
+                  $last_name = $user_info->last_name;
+                  $primary_address_line1 = $user_info->primary_address_line1;
+                  $primary_city = $user_info->primary_city;
+                  $primary_state = $user_info->primary_state;
+                  $primary_postcode = $user_info->primary_postcode;
+                  $primary_home_number = $user_info->primary_home_number;
+                  $secondary_cell_number = $user_info->secondary_cell_number;
+                  $secondary_phone_country_code = $user_info->secondary_phone_country_code; 
+                  $primary_phone_country_code = $user_info->primary_phone_country_code; 
+                  $primary_country = $user_info->primary_country;
+                  $Owner = site_url().'/my-account/show-profile?pet_id='.$petId;
+
+
+                  $title = get_the_title(get_the_ID()); 
+                  if (has_post_thumbnail( get_the_ID())){
+
+
+                      $image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'single-post-thumbnail' );
+
+                      $image = $image[0];
+
+                  }else{
+                      $image = site_url().'/wp-content/uploads/2021/01/dog-placeholder.png';
+                  }
+
+                      echo '<div class="col-sm-12">
+                      <div class="acc-blue-box">
+                      <div class="acc-blue-head">
+                              Pet Information
+                           </div>
+                           <div class="acc-blue-content">
+                           <div class="row" style="display:flex;">
+                           <div class="col-lg-6">
+                           <strong>Microchip ID Number:</strong> <span>' .$microchip_id_number.'</span><br>
+                            <strong>ID Tag Serial Number:</strong><span>' .$smarttag_id_number.'</span><br>
+                            <strong>Pet Name:</strong> <span>' .$pet_name.'</span><br>
+                            <strong>Pet Type:</strong><span>' .$pets_type.'</span>
+                          <br><strong>Gender:</strong> <span>' .$gender.'</span><br><strong>Size:</strong> <span></span>
+                            ' .$size.'<br><strong>Pet Date of Birth:</strong> <span>' .$pet_date_of_birth.'</span><br>
+                          <strong>Primary Breed:</strong>' .$p_breed.'<span></span><br>
+                          <strong>Secondary Breed:</strong>' .$b_breed.'<span></span><br>
+                          <strong>Primary Color:</strong> <span>' .$primarycolor.'</span>
+                          <br>
+                          <strong>Secondary Color:</strong><span>' .$secoundarycolor.' </span><br>
+                         </div>
+                           <div class="col-lg-6">
+                           <div class="pet-img">
+                           <img src="'.$image.'" alt="" />
+                           </div>
+                           </div>
+                           </div>
+
+                                            
+                          </div>
+                          </div>
+                          <div class="acc-blue-box">
+                           <div class="acc-blue-head">
+                            Owner Information
+                            
+                          </div>
+                          <div class="acc-blue-content">
+                            <strong>Email:</strong> <span>'.$email.'</span>
+                            <br>
+                            <strong>First Name:</strong> <span>'.$first_name.'</span>
+                            <br>
+                            <strong>Last Name:</strong> <span>'.$last_name.'</span>
+                            <br>
+                            <strong>Address:</strong>
+                            <br>
+                            <span>'.$primary_address_line1.' <br>'.$primary_city.', '.$primary_state.' ,'.$primary_postcode.', <br>'.$primary_country.' </span>
+                          <br>
+                          <strong>Primary Phone Number:</strong> <span><span class="phone-country-code" data-val="in"></span>'.$primary_home_number.'</span>
+                          <br>
+                          <strong>Secondary Phone Number:</strong> <span><span class="phone-country-code" data-val="us"></span> '.$secondary_cell_number.'</span><br>
+
+                          <strong>Pet Professional Name:</strong> <span><span class="phone-country-code" data-val="us"></span> '.$PetProfessional->data->display_name.'</span><br>
+                             <strong>Pet Owner Profile Link:</strong><span> <a href="'.$user_profile.'">Owner Profile</a </span> <br>
+                               <strong>Range it belongs to:</strong><span>"'.str_replace('""', '', $range).'"</span> 
+
+                          </div>
+                          </div>
+                         </div>';
+            endwhile;
+            exit();
+
+    }else{
+        echo 'Not Found Any Post';
+        exit();
+    }
+}
+
+
+
+function get_getProName_microchipName($microchip_id_number, $smarttag_id_number){
+    global $wpdb;
+    if(!empty($microchip_id_number)){
+        $number= $microchip_id_number;
+    }else{
+         $number= $smarttag_id_number;
+    }
+    $post_id = $wpdb->get_results("SELECT * FROM `wp_serial_number_data` WHERE `serial_number` = '$number' ORDER BY `serial_number`");
+        $result['success'] = 1;
+        $result['title']    = 'Get User';
+        $result['user_id']    = $post_id[0]->user_id;
+        return $result;  
+        die(); 
+}
+
+
+function getMichroChipRange($microchip_id_number, $PetProsUser_id){
+
+    $customer_orders = get_posts(array(
+          'numberposts' => -1,
+          'meta_key' => '_customer_user',
+          'orderby' => 'date',
+          'order' => 'DESC',
+          'meta_value' => $PetProsUser_id,//Pet Prof orderId
+          'post_type' => wc_get_order_types(),
+          'post_status' => array_keys(wc_get_order_statuses()), 
+          'fields' => 'ids',
+    ));
+    $data = array();
+    $user_orders = array(); //
+    foreach ($customer_orders as $orderID) {
+        $orderObj = wc_get_order($orderID);
+            foreach ( $orderObj->get_items() as $item_id => $item ) {
+                $data[] = wc_get_order_item_meta( $item_id, 'Serial Number Range', true ); 
+            }
+    }
+            foreach(array_filter($data) as $range){
+                $range = explode('-', $range);
+                $value = $microchip_id_number;
+                $min = $range[0];
+                $max = $range[1];
+                    if (in_array($value, range($min, $max))) {
+                        $range = $min.'-'.$max;
+                        $result['range'] = $range;
+                        return $result; 
+                    } 
+            }           die();
+}

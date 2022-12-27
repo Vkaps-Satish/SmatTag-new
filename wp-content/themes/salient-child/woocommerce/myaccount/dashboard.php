@@ -28,27 +28,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     echo "<div class='page-heading'><h1>My Pets Information</h1></div>";
     global $current_user;
     
-
-     $current_user = wp_get_current_user();
-            $roles = $current_user->roles;  
-            $user_role = $roles['0'];
-
-            if($user_role == 'pet_professional'){
-            echo '<button class="syncPetProsData">Sync</button>';    
-            }
-
-            echo '<input type="hidden" class="userRole" value="'.$user_role.'">';
-
-
-
-
-
-
-
-
-
-
-    
     $args = array(
         'post_type' => 'pet_profile',
         'author'        =>  $current_user->ID,

@@ -7246,29 +7246,54 @@ th.product-price{
 }
 /*home slider css*/
 ul#banner-slider {
-    height: 610px !important;
+    height: 565px !important;
     padding-bottom: 0px !important;
 }
 ul#banner-slider li:first-child {
     background-image: none !important;
     position: relative;
 }
-ul#banner-slider li:first-child:after {
+.banner-slides ul.lSPager.lSpg {
+    bottom: 40px;
+}
+/*ul#banner-slider li:first-child:after {
     content: '';
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-image: url(https://staging.idtag.com/wp-content/uploads/2018/01/smart-tag-website-header-2022-scaled-e1655996816920-3-1.png);
-/*   background-image: url(https://staging.idtag.com/wp-content/uploads/2021/01/header-bg.png);*/
+ background-image: url(https://staging.idtag.com/wp-content/uploads/2021/01/Holiday-Website-Homepage_SmartTag_option1-01.jpg);
+  background-image: url(https://staging.idtag.com/wp-content/uploads/2021/01/Holiday-Website-Homepage_SmartTag_option1-01.jpg);
     background-repeat: no-repeat;
     background-size: contain;
     z-index: -1;
-}
+}*/
 .slide-content-list ul li:after{
     display: none;
 }
+/*ul#banner-slider li .position-img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    top:-84px;
+    left: 0;
+}
+ul#banner-slider li {
+    position: relative !important;
+}*/
+
+ul#banner-slider li img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position:top;
+}
+
 @media only screen and (max-width: 767px) {
  ul#banner-slider {
      height: 850px !important;
@@ -7276,6 +7301,12 @@ ul#banner-slider li:first-child:after {
  ul#banner-slider li:first-child:after {
     background-size: cover;
  }
+}
+@media only screen and (min-width: 1350px)  and (min-width: 1600px) {
+    ul#banner-slider {
+        padding-bottom: 0px !important;
+        height: 670px !important;
+    }
 }
 @media only screen and (min-width: 1750px) {
  ul#banner-slider li:first-child:after {

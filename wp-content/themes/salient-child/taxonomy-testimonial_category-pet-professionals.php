@@ -36,6 +36,7 @@
 							</div> -->
 							<div class="testi-list-content">
 								<h3 class="testi-title">
+									
 									<a href="<?php echo get_permalink(get_the_id()); ?>">
 										<?php echo get_the_title(); ?>		
 									</a>

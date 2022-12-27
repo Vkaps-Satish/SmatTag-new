@@ -61,9 +61,12 @@ set_time_limit(100);
                         try {
                                 $finalDatas = json_decode($response, true);
                                 if(empty($finalDatas)){
+                                    $user = get_user_by( 'email', $user_email );
+                                        $userId = $user->ID;
+                                                    update_user_meta( $userId, 'importStatus', 'C');
 
 
-                                     echo json_encode(array('success'=>3,'message'=>'Email or Phone Number Does not Exists. Please try again', 'email'=> $user_email));
+                                     echo json_encode(array('success'=>6,'message'=>'Email or Phone Number Does not Exists. Please try again', 'email'=> $user_email));
                                      exit();
 
                                 }else{

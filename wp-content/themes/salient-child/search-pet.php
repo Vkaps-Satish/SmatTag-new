@@ -137,9 +137,7 @@ $(document).ready(function(){
     $('.submit').click(function(){
 
  $('.loader-wrap').fadeIn();
-
-
-        if(error_search == true){
+      if(error_search == true){
 
            var data = new FormData();
             data.append('action', 'PetDataSearch');

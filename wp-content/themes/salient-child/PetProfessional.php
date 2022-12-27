@@ -30,6 +30,17 @@ $countries_obj = new WC_Countries();
 $CountriesName = $countries_obj->__get('countries'); 
 
 ?>
+<style type="text/css">
+		.secure {
+		    position: relative;
+		}
+
+		#togglePassword {
+		    position: absolute;
+		    top: 45%;
+		    right: 18px;
+		}
+	</style>
 <div class="container-wrap">		
 	<div class="container main-content">
 		<div class="row">
@@ -241,7 +252,8 @@ $CountriesName = $countries_obj->__get('countries');
                                     </div>
                                     <div class="field-div">
                                         <label>*Password</label>
-                                        <input type="password" name="password" placeholder="Enter Password" class="signIndata" required=""  />
+                                        <input type="password" id="password" name="password" placeholder="Enter Password" class="signIndata" required=""  />
+                                         <i class="far fa-eye" id="togglePassword" style="margin-left: -30px; cursor: pointer;"></i>
                                     </div>
                                  </div>
                                 <div class="field-wrap two-fields-wrap">
@@ -323,6 +335,28 @@ $CountriesName = $countries_obj->__get('countries');
 <script type="text/javascript">
 	$(function() {
 
+
+
+			jQuery.validator.addMethod("checkEmailAndNumber", function (value, element) {
+		if (value.match(/^[0-9]+$/) != null) {
+			if (value.length != 10) {
+				return false;
+			}
+		}else{
+			if (!validateEmail(value)) {
+				return false
+			}
+		}
+		return true;
+    }, "Please enter valid Email or Phone Number.");
+
+
+
+
+
+
+
+
 		jQuery.validator.addMethod("checkSpecialCharate", function (value, element) {
      var regExp = /[a-z]/i;
 
@@ -339,22 +373,12 @@ return true;
 
 
 
-
-
-
-
-
-
-
-
-
-
-		$("form[name='EmailSignInform']").validate({
+$("form[name='EmailSignInform']").validate({
 		    // Specify validation rules
 		    rules: {
 		  		PetProfessionalemail: {
 				        required: true,
-				        email: true
+				        checkEmailAndNumber: true
 		      			},
 		      	password: {
 				        required: true,
@@ -376,7 +400,9 @@ return true;
 		        $.each($('#EmailSignIn .signIndata'), function() {
 		         	Phdata.append($(this).attr('name'), $(this).val());
                 	 });
-                 		 $.ajax({
+
+		        baseFunction(ajaxurl, Phdata, 'POST');
+                 	/*	 $.ajax({
 		                    type: 'POST',
 		                    url: ajaxurl,
 		                    data: Phdata,
@@ -394,7 +420,7 @@ return true;
 	                   		complete:function(){
 	                   			$('.loader-wrap').fadeOut();
 	                   		}
-	                   	});
+	                   	});*/
 	  		}
 	  	}); 
 
@@ -404,7 +430,7 @@ return true;
 		    rules: {
 		  		user_login: {
 				        required: true,
-				        email: true
+				        checkEmailAndNumber: true
 		      			},
 		      	},
 		    messages: {
@@ -429,7 +455,9 @@ return true;
 	                processData: false,
 	               	success: function(response) {
 						var Obj = JSON.parse(response);
-	                	if(Obj.success == '1'){                    		
+	                	if(Obj.success == '0'){                    		
+	                		$("#Fgpass").text(Obj.message).show().css("color","red"); 
+	      				}if(Obj.success == '1'){                    		
 	                		$("#Fgpass").text(Obj.message).show().css("color","green"); 
 	      				}else{
 	      					
@@ -626,5 +654,113 @@ return true;
 		});
 	   
 	});      
+
+async function importDataAndLogin(ajaxurl, Data, method) {
+
+    return $.ajax({
+        type: method || 'POST',
+        url: ajaxurl,
+        data: Data,
+        contentType: false,
+        processData: false,
+        
+    });
+}
+
+
+async function baseFunction(ajaxurl, Edata, method , Data ,resResult) {
+   
+   	try{
+			const response = await importDataAndLogin(ajaxurl, Edata, method)
+			var obj = jQuery.parseJSON(response);
+
+
+			
+			if(obj.success == 0 && obj.user_type == 'pet-professional'){
+				$('.loader-wrap').fadeOut();
+		 		$('#LgMes').text(obj.message).fadeIn();
+		 		return false;
+			}else if(obj.success == 0 && obj.user_type == 'customer'){
+				$('.loader-wrap').fadeOut();
+		 		$('#LgMes').text(obj.message).fadeIn();
+		 		return false;
+			}else if(obj.success == 1 && obj.importStatus == 'S'){
+	      		var email = obj.email;
+	      		getAllInformationFromDrupal(email);
+			}else if(obj.success == 2 && obj.importStatus == 'false'){
+	      		$('.loader-wrap').fadeOut();
+		 		$('#LgMes').text(obj.message).fadeIn();
+		 		return false;
+			}else if(obj.success == 3 && obj.importStatus == 'S'){
+	      		var email = obj.email;
+	      		getAllInformationFromDrupal(email);
+			}else if(obj.success == 4 && obj.importStatus == 'S'){
+	      		var email = obj.email;
+	      		getAllInformationFromDrupal(email);
+			}else if(obj.success == 5 && obj.importStatus == 'false'){
+	      		$('.loader-wrap').fadeOut();
+		 		$('#LgMes').text(obj.message).fadeIn();
+			}else{
+				$('.loader-wrap').fadeOut();
+				window.location.href = "<?php echo get_site_url(); ?>/my-account/";
+			}	
+
+		}catch (error) {
+			$('.loader-wrap').fadeOut();
+        	console.log('error response_1', error)
+    	}
+
+
+   	
+	
+	
+}  
+
+
+function getAllInformationFromDrupal(email){
+	
+
+	$.ajax({url: "https://staging.idtag.com/import-data-firstlogin/", 
+			type: "post",
+	        data: {'email':email},
+	        dataType: 'json',
+		   	success: function(result) {
+				$('.loader-wrap').fadeOut();
+
+				if(result.success == '6'){
+					window.location.href = "<?php echo get_site_url(); ?>/my-account/";
+				}else{
+						$.each(result, function(k, v) {
+	    					var parse = jQuery.parseJSON(v);
+			   					if(parse.success == '1'){
+									$('.loader-wrap').fadeOut();
+					 				window.location.href = "<?php echo get_site_url(); ?>/my-account/";
+								}else{
+										$('.loader-wrap').fadeOut();
+								} 	
+						});	
+				}
+
+			
+							
+		  	}	
+		});
+}
+
+/*For show eye on password field's*/
+var  togglePassword = document.querySelector('#togglePassword');
+  var password = document.querySelector('#password');
+
+  togglePassword.addEventListener('click', function (e) {
+    // toggle the type attribute
+
+    var type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    // toggle the eye slash icon
+    this.classList.toggle('fa-eye-slash');
+});
+
+
+
 </script>
 
