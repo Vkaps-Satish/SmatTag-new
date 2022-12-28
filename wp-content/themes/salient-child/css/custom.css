@@ -1,0 +1,83 @@
+.michrochip_range .form-group {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.michrochip_range #michrochip_start_range {
+    /* background:red; */
+    width: 30%;
+    padding: 8px;
+    margin-top: 20px;
+}
+
+
+
+.michrochip_range #searchWithMicroChip {
+    background: #1e83d3;
+    padding: 13px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 17px;
+}
+
+.wp-admin .acc-blue-box {
+    /*background: red;
+    *//*padding: 0 50px;
+    */margin-top: 40px;
+    border: 1px solid #69a1e0;
+    border-radius: 12px;
+    width: 80%;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    -ms-border-radius: 12px;
+    -o-border-radius: 12px;
+}
+.wp-admin .row {
+    justify-content: space-between;
+}
+
+.wp-admin .bold_area { 
+    font-size: 15px;
+    padding-right: 10px;
+    color: #000;
+    line-height: 2;
+}
+
+.wp-admin .bold_child_sub {
+    font-size: 15px;
+    padding-right: 10px;
+    color: #000;
+}
+.wp-admin .acc-blue-head {
+    background: #2196f3;
+    padding: 10px;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    border-radius: 8px 0px 0 0px;
+}
+.wp-admin .acc-blue-content {
+    padding: 0 50px;
+    padding-bottom: 50px;
+}
+.wp-admin img {
+    padding-top: 50px;
+}
+.wp-admin .bold_child_sub a {
+    text-decoration: none;
+}
+.wp-admin #wpfooter {
+    position: relative;
+   
+}
+.wp-admin .form-group {
+    position: relative;
+}
+
+.wp-admin .michrochip_start_range{
+    position: absolute;
+    bottom: -29px;
+    left: 2px;
+}

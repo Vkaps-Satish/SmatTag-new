@@ -214,6 +214,7 @@ function load_admin_style() {
     wp_enqueue_style( 'jquery-ui-style', get_stylesheet_directory_uri().'wp-content/themes/salient-child/css/jquery-ui.css', false,00);
  /*custom jquery code end--added by satish*/
     wp_enqueue_style(  'phone-code-style',  get_stylesheet_directory_uri(). '/css/intlTelInput.css', array(), '1', 'screen' );
+     wp_enqueue_style(  'custome-style',  get_stylesheet_directory_uri(). '/css/custom.css', array(), '1', 'screen' );
 }
 add_action( 'admin_enqueue_scripts', 'load_admin_style' );
 
@@ -4211,7 +4212,7 @@ error_reporting(E_ALL);*/
 
    if(isset($_POST['action'])== 'PetDataSearch'){
 
-        $pet_data = $_POST['Petdata'];
+
 
        $length = strlen($pet_data);
        if($length > 10){
@@ -4229,9 +4230,6 @@ error_reporting(E_ALL);*/
 
         /* 'post_author'   =>  $user_id, 
                  */
-
-        $user_id = get_current_user_id();
-
 
             $args=array(
                 'post_type' => 'pet_profile',
@@ -8543,8 +8541,6 @@ require_once "functions/functions-aaha-api.php";
     $userRole   = $user_info->roles;
     $message = site_url()."/password-reset?action=rp&key=".$key."&login=".rawurlencode($user_login); 
     $twillo_sid = 'AC333b6c2c50f3445e067ff7caf8f895e7'; 
-    
-
         $number = preg_replace("/[^0-9]/", "", $account);
         $to  = '1'.$account;
         
@@ -8606,20 +8602,26 @@ add_action('admin_menu', 'register_functionlity_for_microchip_search');
 
 
 function _custom_menu_seach_page(){
-    ?><form method="post">
+    ?><form method="post" class="michrochip_range" id="MichroChip_range">
         <div class="form-group">
-            <label for="">MichroChip Range Start</label>
-                <input type="text" class="form-control" id="michrochip_start_range" aria-describedby="emailHelp" placeholder="Enter MichroChip number">
-                <span class="michrochip_start_range" style="display:none;">This field is required</span>
+            <div class="group-section">
+                <div class="range-haed">
+            <h3 for="" class="text-start">Search Microchip</h3>
+        </div>
+            <div class="form-contant">
+                <input type="text" class="form-control" id="michrochip_start_range" aria-describedby="emailHelp" placeholder="Enter Microchip number">
+                <span class="michrochip_start_range" style="display:none;"></span>
           <!--   <div class="form-group">
                 <label for="">MichroChip Range End</label>
                 <input type="text" class="form-control" id="michrochip_end_range" aria-describedby="emailHelp" placeholder="Enter MichroChip number">
                 <span class="michrochip_end_range" style="display:none;">This field is required</span>
             </div> -->
-        </div>    
-      <button type="submit" id="searchWithMicroChip" class="btn btn-primary">Submit</button>
+                <button type="submit" id="searchWithMicroChip" class="btn btn-primary">Submit</button>
+        </div>   
+    </div>
+        </div> 
+     
     </form>
-
     <div class="search-row"></div> 
                   <br/>
                   <br/>
@@ -8639,26 +8641,40 @@ function searchWithMichrochip() { ?>
     jQuery(document).ready(function($) {
         jQuery('#searchWithMicroChip').click(function(e){
             e.preventDefault();
-
             var michrochip_start_range = $('#michrochip_start_range').val();
             var michrochip_end_range = $('#michrochip_end_range').val();
-          
-
-            var dataVariable = {
-                'action': 'SeachWithMicrochip', // your action name
-                'michrochip_start_range': $('#michrochip_start_range').val(), // some additional data to send
-                'michrochip_end_range': $('#michrochip_end_range').val(),// some additional data to send
-            };
-
-            jQuery.ajax({
-                url: ajaxurl, // this will point to admin-ajax.php
-                type: 'POST',
-                data: dataVariable, 
-                success: function (response) {
-                    $('.search-row').html(response);
-                    return false;
-                }
-            });
+            if(michrochip_start_range == ''){
+                jQuery('.michrochip_start_range').fadeIn();
+                jQuery('.michrochip_start_range').text('This field is requires');
+                jQuery('.michrochip_start_range').css('color', 'red');
+                return false;
+            }else if(isNaN(michrochip_start_range)== true){
+                jQuery('.michrochip_start_range').fadeIn();
+                jQuery('.michrochip_start_range').text('Please enter Number only');
+                jQuery('.michrochip_start_range').css('color', 'red');
+            }else if(michrochip_start_range.length!=15){
+                jQuery('.michrochip_start_range').fadeIn();
+                jQuery('.michrochip_start_range').text('Please enter 15 digit Number');
+                jQuery('.michrochip_start_range').css('color', 'red');
+            }else{
+                jQuery('.michrochip_start_range').fadeOut();
+                var dataVariable = {
+                    'action': 'SeachWithMicrochip', // your action name
+                    'michrochip_start_range': $('#michrochip_start_range').val(), 
+                    'michrochip_end_range': $('#michrochip_end_range').val(),
+                };
+                $('.loader-wrap').fadeIn();
+                jQuery.ajax({
+                    url: ajaxurl, // this will point to admin-ajax.php
+                    type: 'POST',
+                    data: dataVariable, 
+                    success: function (response) {
+                        $('.loader-wrap').fadeOut();
+                        $('.search-row').html(response);
+                        return false;
+                    }
+                });
+           } 
         });    
     });
     </script> 
@@ -8670,27 +8686,11 @@ add_action("wp_ajax_SeachWithMicrochip" , "SeachWithMicrochip");
 //array('987000008578277' , '987000008578291')
 
 function SeachWithMicrochip(){
-
-
-
     $michrochip_start_range = $_POST['michrochip_start_range'];
     $michrochip_end_range = $_POST['michrochip_end_range'];
-   /* if(!empty($michrochip_start_range) && empty($michrochip_end_range) ){
-        $value =  $michrochip_start_range;
-        $compare = '=';
-    }elseif(!empty($michrochip_start_range) && !empty($michrochip_end_range)){
-        $value = array($michrochip_start_range, $michrochip_end_range);
-        $compare = 'BETWEEN';
-    }elseif(empty($michrochip_start_range) && !empty($michrochip_end_range) ){
-        $value =  $michrochip_end_range;
-        $compare = '=';
-    }*/
-
     $args = array(
         'post_type' => 'pet_profile',
         'posts_per_page' => 10, 
-      
-
         'meta_query' => array( 
          array(
              'key' => 'microchip_id_number',
@@ -8701,19 +8701,12 @@ function SeachWithMicrochip(){
          )
     ); 
 $loop = new WP_Query( $args );
-
     if($loop->have_posts()){
-
-
         while ( $loop->have_posts() ) : $loop->the_post();
                  $userId = get_post_field( 'post_author', get_the_ID() );
-
-                
-              /*Pet Information*/  
-
+                /*Pet Information*/  
                 $microchip_id_number = get_post_meta(get_the_ID(),"microchip_id_number",true);
                 $smarttag_id_number = get_post_meta(get_the_ID(),"smarttag_id_number",true);
-
                 $PetProsUser_ids = get_getProName_microchipName($microchip_id_number, $smarttag_id_number);
                 $PetProsUser_id = $PetProsUser_ids['user_id'];
                 $getMichroChipRange = getMichroChipRange($microchip_id_number, $PetProsUser_id); 
@@ -8726,7 +8719,6 @@ $loop = new WP_Query( $args );
                 $PetProfessional = get_userdata($PetProsUser_id);
                 $pet_name = get_post_meta(get_the_ID(),"pet_name",true);  
                 $pet_type = get_post_meta(get_the_ID(),"pet_type",true); 
-                        
                 if($pet_type == 587){
                   $pets_type = 'Cat';
                 }else if($pet_type == 1045){
@@ -8740,12 +8732,11 @@ $loop = new WP_Query( $args );
                 }else{
                   $pets_type = 'Rabbit';
                 }
-
                 $pet_type = (isset(get_term( $pet_type )->name));  
                 $primary_breed = get_post_meta(get_the_ID(),"primary_breed",true);  
                 $p_breed =   (isset(get_term( $primary_breed )->name)) ? get_term( $primary_breed )->name : "" ;
                 $secondary_breed = get_post_meta(get_the_ID(),"secondary_breed",true);
-                $b_breed =   (isset(get_term( $secondary_breed )->name)) ? get_term( $secondary_breed )->name : "" ;   
+                $b_breed =   (isset(get_term( $secondary_breed )->name)) ? get_term( $secondary_breed )->name : "" ;
                 $primary_color = get_post_meta(get_the_ID(),"primary_color",true);   
                 if($primary_color == '1'){
                   $primarycolor =  'Black';
@@ -8768,7 +8759,7 @@ $loop = new WP_Query( $args );
                 }else{
                   $primarycolor =  'Yellow';
                 }
-              $secondary_color = get_post_meta(get_the_ID(),"secondary_color",true);
+                $secondary_color = get_post_meta(get_the_ID(),"secondary_color",true);
               if($secondary_color == '1'){
                   $secoundarycolor =  'Black';
                 }else if($secondary_color == '2'){
@@ -8798,48 +8789,34 @@ $loop = new WP_Query( $args );
                 }else{
                     $size ='Large';
                 }
-
-              $gender = get_post_meta(get_the_ID(),"gender",true);   
-              $pet_date_of_birth = get_post_meta(get_the_ID(),"pet_date_of_birth",true);   
-              $petId = get_the_ID(); 
-               $pet_profile_link = site_url().'/my-account/show-profile?pet_id='.$petId;
-
+                $gender = get_post_meta(get_the_ID(),"gender",true);   
+                $pet_date_of_birth = get_post_meta(get_the_ID(),"pet_date_of_birth",true);   
+                $petId = get_the_ID(); 
+                $pet_profile_link = site_url().'/my-account/show-profile?pet_id='.$petId;
                 $user_profile = site_url().'/wp-admin/user-edit.php?user_id='.$userId;
-
-
-
-
-              /*userInfo*/
-              //900141000000002
-
-                  $user_info = get_userdata($userId);
-                  $user_login = $user_info->user_login;
-                  $email = $user_info->email;
-                  $first_name = $user_info->first_name;
-                  $last_name = $user_info->last_name;
-                  $primary_address_line1 = $user_info->primary_address_line1;
-                  $primary_city = $user_info->primary_city;
-                  $primary_state = $user_info->primary_state;
-                  $primary_postcode = $user_info->primary_postcode;
-                  $primary_home_number = $user_info->primary_home_number;
-                  $secondary_cell_number = $user_info->secondary_cell_number;
-                  $secondary_phone_country_code = $user_info->secondary_phone_country_code; 
-                  $primary_phone_country_code = $user_info->primary_phone_country_code; 
-                  $primary_country = $user_info->primary_country;
-                  $Owner = site_url().'/my-account/show-profile?pet_id='.$petId;
-
-
-                  $title = get_the_title(get_the_ID()); 
-                  if (has_post_thumbnail( get_the_ID())){
-
-
-                      $image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'single-post-thumbnail' );
-
-                      $image = $image[0];
-
-                  }else{
-                      $image = site_url().'/wp-content/uploads/2021/01/dog-placeholder.png';
-                  }
+                $pet_pros_profile = site_url().'/wp-admin/user-edit.php?user_id='.$PetProsUser_id;
+                    $user_info = get_userdata($userId);
+                    $user_login = $user_info->user_login;
+                    $email = $user_info->user_email;
+                    $first_name = $user_info->first_name;
+                    $last_name = $user_info->last_name;
+                    $primary_address_line1 = $user_info->primary_address_line1;
+                    $primary_city = $user_info->primary_city;
+                    $primary_state = $user_info->primary_state;
+                    $primary_postcode = $user_info->primary_postcode;
+                    $primary_home_number = $user_info->primary_home_number;
+                    $secondary_cell_number = $user_info->secondary_cell_number;
+                    $secondary_phone_country_code = $user_info->secondary_phone_country_code; 
+                    $primary_phone_country_code = $user_info->primary_phone_country_code; 
+                    $primary_country = $user_info->primary_country;
+                    $Owner = site_url().'/my-account/show-profile?pet_id='.$petId;
+                    $title = get_the_title(get_the_ID()); 
+                        if (has_post_thumbnail( get_the_ID())){
+                            $image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'single-post-thumbnail' );
+                            $image = $image[0];
+                        }else{
+                            $image = site_url().'/wp-content/uploads/2021/01/dog-placeholder.png';
+                        }
 
                       echo '<div class="col-sm-12">
                       <div class="acc-blue-box">
@@ -8849,27 +8826,26 @@ $loop = new WP_Query( $args );
                            <div class="acc-blue-content">
                            <div class="row" style="display:flex;">
                            <div class="col-lg-6">
-                           <strong>Microchip ID Number:</strong> <span>' .$microchip_id_number.'</span><br>
-                            <strong>ID Tag Serial Number:</strong><span>' .$smarttag_id_number.'</span><br>
-                            <strong>Pet Name:</strong> <span>' .$pet_name.'</span><br>
-                            <strong>Pet Type:</strong><span>' .$pets_type.'</span>
-                          <br><strong>Gender:</strong> <span>' .$gender.'</span><br><strong>Size:</strong> <span></span>
-                            ' .$size.'<br><strong>Pet Date of Birth:</strong> <span>' .$pet_date_of_birth.'</span><br>
-                          <strong>Primary Breed:</strong>' .$p_breed.'<span></span><br>
-                          <strong>Secondary Breed:</strong>' .$b_breed.'<span></span><br>
-                          <strong>Primary Color:</strong> <span>' .$primarycolor.'</span>
+                           <strong class="bold_area">Microchip ID Number:</strong> <span class="bold_child_sub">' .$microchip_id_number.'</span><br>
+                            <strong class="bold_area">ID Tag Serial Number:</strong><span class="bold_child_sub">' .$smarttag_id_number.'</span><br>
+                            <strong class="bold_area">Pet Name:</strong> <span class="bold_child_sub">' .$pet_name.'</span><br>
+                            <strong class="bold_area">Pet Type:</strong><span class="bold_child_sub">' .$pets_type.'</span>
+                          <br><strong class="bold_area">Gender:</strong> <span class="bold_child_sub">' .$gender.'</span><br><strong class="bold_area">Size:</strong> <span class="bold_child_sub">
+                            ' .$size.'</span><br><strong class="bold_area">Pet Date of Birth:</strong> <span class="bold_child_sub">' .$pet_date_of_birth.'</span><br>
+                          <strong class="bold_area">Primary Breed:</strong><span class="bold_child_sub">' .$p_breed.'</span><br>
+                          <strong class="bold_area">Secondary Breed:</strong><span class="bold_child_sub">' .$b_breed.'</span><br>
+                          <strong class="bold_area">Primary Color:</strong> <span class="bold_child_sub">' .$primarycolor.'</span>
                           <br>
-                          <strong>Secondary Color:</strong><span>' .$secoundarycolor.' </span><br>
-                         </div>
+                          <strong class="bold_area">Secondary Color:</strong><span  class="bold_area" >' .$secoundarycolor.' </span><br>
+                           <strong class="bold_area">Pet Profile Link:</strong><span  class="bold_area" > <a href="'.$pet_profile_link.'">Pet Profile</a </span>   
+                            </div>
                            <div class="col-lg-6">
                            <div class="pet-img">
                            <img src="'.$image.'" alt="" />
                            </div>
                            </div>
                            </div>
-
-                                            
-                          </div>
+                            </div>
                           </div>
                           <div class="acc-blue-box">
                            <div class="acc-blue-head">
@@ -8877,23 +8853,26 @@ $loop = new WP_Query( $args );
                             
                           </div>
                           <div class="acc-blue-content">
-                            <strong>Email:</strong> <span>'.$email.'</span>
+                            <strong class="bold_area">Email:</strong> <span class="bold_child_sub">'.$email.'</span>
                             <br>
-                            <strong>First Name:</strong> <span>'.$first_name.'</span>
+                            <strong class="bold_area">First Name:</strong> <span class="bold_child_sub">'.$first_name.'</span>
                             <br>
-                            <strong>Last Name:</strong> <span>'.$last_name.'</span>
+                            <strong class="bold_area">Last Name:</strong> <span class="bold_child_sub">'.$last_name.'</span>
                             <br>
-                            <strong>Address:</strong>
+                            <strong class="bold_area">Address:</strong>
                             <br>
-                            <span>'.$primary_address_line1.' <br>'.$primary_city.', '.$primary_state.' ,'.$primary_postcode.', <br>'.$primary_country.' </span>
+                            <span class="bold_child_sub">'.$primary_address_line1.' <br>'.$primary_city.', '.$primary_state.' ,'.$primary_postcode.', <br>'.$primary_country.' </span>
                           <br>
-                          <strong>Primary Phone Number:</strong> <span><span class="phone-country-code" data-val="in"></span>'.$primary_home_number.'</span>
+                          <strong class="bold_area">Primary Phone Number:</strong> <span class="bold_child_sub"><span class="phone-country-code" data-val="in"></span>'.$primary_home_number.'</span>
                           <br>
-                          <strong>Secondary Phone Number:</strong> <span><span class="phone-country-code" data-val="us"></span> '.$secondary_cell_number.'</span><br>
+                          <strong class="bold_area">Secondary Phone Number:</strong> <span class="bold_child_sub"><span class="phone-country-code" data-val="us"></span> '.$secondary_cell_number.'</span><br>
 
-                          <strong>Pet Professional Name:</strong> <span><span class="phone-country-code" data-val="us"></span> '.$PetProfessional->data->display_name.'</span><br>
-                             <strong>Pet Owner Profile Link:</strong><span> <a href="'.$user_profile.'">Owner Profile</a </span> <br>
-                               <strong>Range it belongs to:</strong><span>"'.str_replace('""', '', $range).'"</span> 
+                        
+                             <strong class="bold_area">Pet Professional Name:</strong><span class="bold_child_sub"> <a target="_blank" href="'.$pet_pros_profile.'">'.$PetProfessional->data->display_name.'</a> </span>
+                              <br>
+                             <strong class="bold_area">Pet Owner Profile Link:</strong><span class="bold_child_sub"> <a target="_blank"href="'.$user_profile.'">Owner Profile</a></span> <br>
+                               <strong class="bold_area">Range it belongs to:</strong><span >"'. $res = str_replace( array( '\'', '"',',' , ';', '<', '>' ), ' ', $range).'"</span> 
+                              
 
                           </div>
                           </div>
@@ -8902,8 +8881,9 @@ $loop = new WP_Query( $args );
             exit();
 
     }else{
-        echo 'Not Found Any Post';
-        exit();
+       echo '<span> <a target="_blank"href="'.site_url().'/wp-admin/post-new.php?post_type=pet_profile">Click to register a new microchip</a> </span> <br>';
+       exit();
+       
     }
 }
 
