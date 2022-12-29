@@ -3119,9 +3119,8 @@ function CreateSmartTag(){
         foreach ($user_meta as $key => $value) {
             update_user_meta($user_id, $key, $value);
         }
-        // update_user_meta( $user_id, 'sl_email_confirmation', 'false');
-
-        // salient_register_emails_filter_replace($_POST['p_email']);
+         update_user_meta( $user_id, 'sl_email_confirmation', 'false');
+        salient_register_emails_filter_replace($_POST['p_email']);
 
         echo json_encode(array("success"=>1,"title"=>"Success","message"=>"Account successfully created. Please click the link in your confirmation email to activate your account.","userid"=>$user_id));
 
@@ -3912,13 +3911,8 @@ function quantity_inputs_for_woocommerce_loop_add_to_cart_link( $html, $product 
 
     $geeks = $product->add_to_cart_url();
    $product_id = $product->get_ID();
+        preg_match_all('!\d+!', $geeks, $matches);
 
-
-    preg_match_all('!\d+!', $geeks, $matches);
-   
-      
-
-      
          echo  '<div class="product_desc" style="text-align:center;">'. get_the_title( $product_id ).'</div>';
         echo "<br/>"; 
        if(isset($matches[0][0])){
@@ -4204,271 +4198,225 @@ add_action("wp_ajax_PetDataSearch", "PetDataSearch");
 add_action("wp_ajax_nopriv_PetDataSearch", "PetDataSearch"); 
 
 function PetDataSearch(){
-/*
-    ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);*/
 
-
-   if(isset($_POST['action'])== 'PetDataSearch'){
-
-
-
-       $length = strlen($pet_data);
-       if($length > 10){
-
-         $phone = preg_replace("/[^0-9]*/",'',$pet_data);
-          if(strlen($phone) != 10) return(false);
-          $sArea = substr($phone,0,3);
-          $sPrefix = substr($phone,3,3);
-          $sNumber = substr($phone,6,4);
-          $phone = "(".$sArea.") ".$sPrefix."-".$sNumber;
-          $pet_data= $phone;
-
-        }
-
-
-        /* 'post_author'   =>  $user_id, 
-                 */
-
+    if(isset($_POST['action'])== 'PetDataSearch'){
+        $pet_data =  $_POST['Petdata'];
+         $length = strlen($pet_data);
+            if($length == 10){
+                $phone = preg_replace("/[^0-9]*/",'',$pet_data);
+                $sArea = substr($phone,0,3);
+                $sPrefix = substr($phone,3,3);
+                $sNumber = substr($phone,6,4);
+                $phone = "(".$sArea.") ".$sPrefix."-".$sNumber;
+                $key =  'primary_home_number';
+                $value =$phone;
+            }elseif($length == 8){
+                $key =  'smarttag_id_number';
+                $value =$pet_data;
+            }elseif($length == 15){
+                $key =  'microchip_id_number';
+                $value =$pet_data;
+            }elseif(email_exists($pet_data)){
+                $key =  'owner_email';
+                $value =$pet_data;
+            }else{
+                $key =  'owner_name';
+                $value =$pet_data;
+            }
+            $user_id =  get_current_user_id();
             $args=array(
                 'post_type' => 'pet_profile',
                 'post_status' => 'publish',
                 'posts_per_page' => -1,
                 'author' => $user_id,
-
-                 'meta_query' => array(
-                         'relation' => 'OR',
-                        array(
-                                'key'     => 'primary_home_number',
-                                'value'   => $pet_data,
-                                'compare' => '='
-                              ),
-                        array(
-                                'key'     => 'smarttag_id_number',
-                                'value'   => $_POST['Petdata'],
-                                'compare' => '='
-                             ),
-                        array(
-                                'key'     => 'microchip_id_number',
-                                'value'   => $_POST['Petdata'],
-                                'compare' => '='
+                'meta_query' => array(
+                    array(
+                            'key'     => $key,
+                            'value'   => $value,
+                            'compare' => '='
                         ),
-                         array(
-                                'key'     => 'owner_name',
-                                'value'   => $pet_data,
-                                'compare' => 'LIKE'
-                        ),
-                          array(
-                                'key'     => 'owner_email',
-                                'value'   => $pet_data,
-                                'compare' => 'LIKE'
-                        )
+                )
 
-                     )
-                );
-       
-
+            );
         $query = new WP_Query($args);
-         if( $query->have_posts() ){ 
-         while( $query->have_posts() ) : $query->the_post();
-          $userId = get_post_field( 'post_author', get_the_ID() );
-            /*Pet Information*/  
-            
-            $microchip_id_number = get_post_meta(get_the_ID(),"microchip_id_number",true);
-            $smarttag_id_number = get_post_meta(get_the_ID(),"smarttag_id_number",true);
-            
-              $pet_name = get_post_meta(get_the_ID(),"pet_name",true);  
-              $pet_type = get_post_meta(get_the_ID(),"pet_type",true); 
+            if( $query->have_posts() ){ 
+                while( $query->have_posts() ) : $query->the_post();
+                    $userId = get_post_field( 'post_author', get_the_ID() );
+                    $microchip_id_number = get_post_meta(get_the_ID(),"microchip_id_number",true);
+                    $smarttag_id_number = get_post_meta(get_the_ID(),"smarttag_id_number",true);
+                    $pet_name = get_post_meta(get_the_ID(),"pet_name",true);  
+                    $pet_type = get_post_meta(get_the_ID(),"pet_type",true); 
+                        if($pet_type == 587){
+                            $pets_type = 'Cat';
+                        }else if($pet_type == 1045){
+                            $pets_type = 'Dog';
+                        }else if($pet_type == 1046){
+                            $pets_type = 'Ferret';
+                        }else if($pet_type == 588){
+                            $pets_type = 'Horse';
+                        }else if($pet_type == 1048){
+                            $pets_type = 'Other';
+                        }else{
+                            $pets_type = 'Rabbit';
+                        }
+                    $pet_type = (isset(get_term( $pet_type )->name));  
+                    $primary_breed = get_post_meta(get_the_ID(),"primary_breed",true);  
+                    $p_breed =   (isset(get_term( $primary_breed )->name)) ? get_term( $primary_breed )->name : "" ;
+                    $secondary_breed = get_post_meta(get_the_ID(),"secondary_breed",true);
+                     $b_breed =   (isset(get_term( $secondary_breed )->name)) ? get_term( $secondary_breed )->name : "" ;   
+                    $primary_color = get_post_meta(get_the_ID(),"primary_color",true);   
+                        if($primary_color == '1'){
+                            $primarycolor =  'Black';
+                          }else if($primary_color == '2'){
+                            $primarycolor = 'Blue';
+                          }else if($primary_color == '3'){
+                            $primarycolor =  'Brown';
+                          }else if($primary_color == '4'){
+                            $primarycolor =  'Gold';
+                          }else if($primary_color == '5'){
+                            $primarycolor =  'Gray';
+                          }else if($primary_color == '6'){
+                            $primarycolor =  'Orange';
+                          }else if($primary_color == '7'){
+                            $primarycolor = 'Sliver';
+                          }else if($primary_color == '8'){
+                            $primarycolor = 'Tan';
+                          }else if($primary_color == '9'){
+                            $primarycolor =  'White';
+                          }else{
+                            $primarycolor =  'Yellow';
+                          }
+                        $secondary_color = get_post_meta(get_the_ID(),"secondary_color",true);
+                        if($secondary_color == '1'){
+                            $secoundarycolor =  'Black';
+                          }else if($secondary_color == '2'){
+                            $secoundarycolor = 'Blue';
+                          }else if($secondary_color == '3'){
+                            $secoundarycolor =  'Brown';
+                          }else if($secondary_color == '4'){
+                            $secoundarycolor =  'Gold';
+                          }else if($secondary_color == '5'){
+                            $secoundarycolor =  'Gray';
+                          }else if($secondary_color == '6'){
+                            $secoundarycolor =  'Orange';
+                          }else if($secondary_color == '7'){
+                            $secoundarycolor = 'Sliver';
+                          }else if($secondary_color == '8'){
+                            $secoundarycolor = 'Tan';
+                          }else if($secondary_color == '9'){
+                            $secoundarycolor =  'White';
+                          }else{
+                            $secoundarycolor =  'Yellow';
+                          }   
+                                $size = get_post_meta(get_the_ID(),"size",true); 
+                             if($size == 1){
+                              $size = 'Small';
+                            }elseif($size == 2){
+                              $size =  'Medium';
+                            }else{
+                              $size ='Large';
+
+                            }
+                        $gender = get_post_meta(get_the_ID(),"gender",true);   
+                        $pet_date_of_birth = get_post_meta(get_the_ID(),"pet_date_of_birth",true);   
+                        $petId = get_the_ID(); 
+                        $pet_profile_link = site_url().'/my-account/show-profile?pet_id='.$petId;
+
+                        $user_info = get_userdata($userId);
+                        $user_login = $user_info->user_login;
+                        $email = $user_info->email;
+                        $first_name = $user_info->first_name;
+                        $last_name = $user_info->last_name;
+                        $primary_address_line1 = $user_info->primary_address_line1;
+                        $primary_city = $user_info->primary_city;
+                        $primary_state = $user_info->primary_state;
+                        $primary_postcode = $user_info->primary_postcode;
+                        $primary_home_number = $user_info->primary_home_number;
+                        $secondary_cell_number = $user_info->secondary_cell_number;
+                        $secondary_phone_country_code = $user_info->secondary_phone_country_code; 
+                        $primary_phone_country_code = $user_info->primary_phone_country_code; 
+                        $primary_country = $user_info->primary_country;
+                        $Owner = site_url().'/my-account/show-profile?pet_id='.$petId;
+
+                        $title = get_the_title(get_the_ID()); 
+                        if (has_post_thumbnail( get_the_ID())){
 
 
+                            $image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'single-post-thumbnail' );
 
-                      if($pet_type == 587){
-                        $pets_type = 'Cat';
-                      }else if($pet_type == 1045){
-                        $pets_type = 'Dog';
-                      }else if($pet_type == 1046){
-                        $pets_type = 'Ferret';
-                      }else if($pet_type == 588){
-                        $pets_type = 'Horse';
-                      }else if($pet_type == 1048){
-                        $pets_type = 'Other';
-                      }else{
-                        $pets_type = 'Rabbit';
-                      }
-            
-            $pet_type = (isset(get_term( $pet_type )->name));  
-             $primary_breed = get_post_meta(get_the_ID(),"primary_breed",true);  
+                            $image = $image[0];
 
-             $p_breed =   (isset(get_term( $primary_breed )->name)) ? get_term( $primary_breed )->name : "" ;
+                        }else{
+                            $image = site_url().'/wp-content/uploads/2021/01/dog-placeholder.png';
+                        }
 
+                            echo '<div class="col-sm-12">
+                            <div class="acc-blue-box">
+                            <div class="acc-blue-head">
+                                    Pet Information
+                                 </div>
+                                 <div class="acc-blue-content">
+                                 <div class="row" style="display:flex;">
+                                 <div class="col-lg-6">
+                                 <strong>Microchip ID Number:</strong> <span>' .$microchip_id_number.'</span><br>
+                                  <strong>ID Tag Serial Number:</strong><span>' .$smarttag_id_number.'</span><br>
+                                  <strong>Pet Name:</strong> <span>' .$pet_name.'</span><br>
+                                  <strong>Pet Type:</strong><span>' .$pets_type.'</span>
+                                <br><strong>Gender:</strong> <span>' .$gender.'</span><br><strong>Size:</strong> <span></span>
+                                  ' .$size.'<br><strong>Pet Date of Birth:</strong> <span>' .$pet_date_of_birth.'</span><br>
+                                <strong>Primary Breed:</strong>' .$p_breed.'<span></span><br>
+                                <strong>Secondary Breed:</strong>' .$b_breed.'<span></span><br>
+                                <strong>Primary Color:</strong> <span>' .$primarycolor.'</span>
+                                <br>
+                                <strong>Secondary Color:</strong><span>' .$secoundarycolor.' </span><br>
+                                <strong>Pet Profile Link:</strong><span> <a href="'.$pet_profile_link.'">Pet Profile</a </span>  
+                                 </div>
+                                 <div class="col-lg-6">
+                                 <div class="pet-img">
+                                 <img src="'.$image.'" alt="" />
+                                 </div>
+                                 </div>
+                                 </div>
 
-             $secondary_breed = get_post_meta(get_the_ID(),"secondary_breed",true);
-             $b_breed =   (isset(get_term( $secondary_breed )->name)) ? get_term( $secondary_breed )->name : "" ;   
-           
-            $primary_color = get_post_meta(get_the_ID(),"primary_color",true);   
-
-            if($primary_color == '1'){
-                $primarycolor =  'Black';
-              }else if($primary_color == '2'){
-                $primarycolor = 'Blue';
-              }else if($primary_color == '3'){
-                $primarycolor =  'Brown';
-              }else if($primary_color == '4'){
-                $primarycolor =  'Gold';
-              }else if($primary_color == '5'){
-                $primarycolor =  'Gray';
-              }else if($primary_color == '6'){
-                $primarycolor =  'Orange';
-              }else if($primary_color == '7'){
-                $primarycolor = 'Sliver';
-              }else if($primary_color == '8'){
-                $primarycolor = 'Tan';
-              }else if($primary_color == '9'){
-                $primarycolor =  'White';
-              }else{
-                $primarycolor =  'Yellow';
-              }
-            $secondary_color = get_post_meta(get_the_ID(),"secondary_color",true);
-            if($secondary_color == '1'){
-                $secoundarycolor =  'Black';
-              }else if($secondary_color == '2'){
-                $secoundarycolor = 'Blue';
-              }else if($secondary_color == '3'){
-                $secoundarycolor =  'Brown';
-              }else if($secondary_color == '4'){
-                $secoundarycolor =  'Gold';
-              }else if($secondary_color == '5'){
-                $secoundarycolor =  'Gray';
-              }else if($secondary_color == '6'){
-                $secoundarycolor =  'Orange';
-              }else if($secondary_color == '7'){
-                $secoundarycolor = 'Sliver';
-              }else if($secondary_color == '8'){
-                $secoundarycolor = 'Tan';
-              }else if($secondary_color == '9'){
-                $secoundarycolor =  'White';
-              }else{
-                $secoundarycolor =  'Yellow';
-              }   
-                    $size = get_post_meta(get_the_ID(),"size",true); 
-                 if($size == 1){
-                  $size = 'Small';
-                }elseif($size == 2){
-                  $size =  'Medium';
+                                                  
+                                </div>
+                                </div>
+                                <div class="acc-blue-box">
+                                 <div class="acc-blue-head">
+                                  Owner Information
+                                  
+                                </div>
+                                <div class="acc-blue-content">
+                                  <strong>Email:</strong> <span>'.$email.'</span>
+                                  <br>
+                                  <strong>First Name:</strong> <span>'.$first_name.'</span>
+                                  <br>
+                                  <strong>Last Name:</strong> <span>'.$last_name.'</span>
+                                  <br>
+                                  <strong>Address:</strong>
+                                  <br>
+                                  <span>'.$primary_address_line1.' <br>'.$primary_city.', '.$primary_state.' ,'.$primary_postcode.', <br>'.$primary_country.' </span>
+                                <br>
+                                <strong>Primary Phone Number:</strong> <span><span class="phone-country-code" data-val="in"></span>'.$primary_home_number.'</span>
+                                <br>
+                                <strong>Secondary Phone Number:</strong> <span><span class="phone-country-code" data-val="us"></span> '.$secondary_cell_number.'</span><br>
+                                 <strong>Pet Profile Link:</strong><span> <a href="'.$pet_profile_link.'">Owner Profile</a </span>   
+                                </div>
+                                </div>
+                               
+                               
+                                </div>';
+                        endwhile;
+                        exit();
                 }else{
-                  $size ='Large';
-
-                }
-
-            $gender = get_post_meta(get_the_ID(),"gender",true);   
-            $pet_date_of_birth = get_post_meta(get_the_ID(),"pet_date_of_birth",true);   
-            $petId = get_the_ID(); 
-             $pet_profile_link = site_url().'/my-account/show-profile?pet_id='.$petId;
-
-            /*userInfo*/
-
-                $user_info = get_userdata($userId);
-
-
-
-
-                $user_login = $user_info->user_login;
-                $email = $user_info->email;
-                $first_name = $user_info->first_name;
-                $last_name = $user_info->last_name;
-                $primary_address_line1 = $user_info->primary_address_line1;
-                $primary_city = $user_info->primary_city;
-                $primary_state = $user_info->primary_state;
-                $primary_postcode = $user_info->primary_postcode;
-                $primary_home_number = $user_info->primary_home_number;
-                $secondary_cell_number = $user_info->secondary_cell_number;
-                $secondary_phone_country_code = $user_info->secondary_phone_country_code; 
-                $primary_phone_country_code = $user_info->primary_phone_country_code; 
-                $primary_country = $user_info->primary_country;
-                $Owner = site_url().'/my-account/show-profile?pet_id='.$petId;
-
-
-            $title = get_the_title(get_the_ID()); 
-            if (has_post_thumbnail( get_the_ID())){
-
-
-                $image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'single-post-thumbnail' );
-
-                $image = $image[0];
-
-            }else{
-                $image = site_url().'/wp-content/uploads/2021/01/dog-placeholder.png';
-            }
-
-                echo '<div class="col-sm-12">
-                <div class="acc-blue-box">
-                <div class="acc-blue-head">
-                        Pet Information
-                     </div>
-                     <div class="acc-blue-content">
-                     <div class="row" style="display:flex;">
-                     <div class="col-lg-6">
-                     <strong>Microchip ID Number:</strong> <span>' .$microchip_id_number.'</span><br>
-                      <strong>ID Tag Serial Number:</strong><span>' .$smarttag_id_number.'</span><br>
-                      <strong>Pet Name:</strong> <span>' .$pet_name.'</span><br>
-                      <strong>Pet Type:</strong><span>' .$pets_type.'</span>
-                    <br><strong>Gender:</strong> <span>' .$gender.'</span><br><strong>Size:</strong> <span></span>
-                      ' .$size.'<br><strong>Pet Date of Birth:</strong> <span>' .$pet_date_of_birth.'</span><br>
-                    <strong>Primary Breed:</strong>' .$p_breed.'<span></span><br>
-                    <strong>Secondary Breed:</strong>' .$b_breed.'<span></span><br>
-                    <strong>Primary Color:</strong> <span>' .$primarycolor.'</span>
-                    <br>
-                    <strong>Secondary Color:</strong><span>' .$secoundarycolor.' </span><br>
-                    <strong>Pet Profile Link:</strong><span> <a href="'.$pet_profile_link.'">Pet Profile</a </span>  
-                     </div>
-                     <div class="col-lg-6">
-                     <div class="pet-img">
-                     <img src="'.$image.'" alt="" />
-                     </div>
-                     </div>
-                     </div>
-
-                                      
-                    </div>
-                    </div>
-                    <div class="acc-blue-box">
-                     <div class="acc-blue-head">
-                      Owner Information
-                      
-                    </div>
-                    <div class="acc-blue-content">
-                      <strong>Email:</strong> <span>'.$email.'</span>
-                      <br>
-                      <strong>First Name:</strong> <span>'.$first_name.'</span>
-                      <br>
-                      <strong>Last Name:</strong> <span>'.$last_name.'</span>
-                      <br>
-                      <strong>Address:</strong>
-                      <br>
-                      <span>'.$primary_address_line1.' <br>'.$primary_city.', '.$primary_state.' ,'.$primary_postcode.', <br>'.$primary_country.' </span>
-                    <br>
-                    <strong>Primary Phone Number:</strong> <span><span class="phone-country-code" data-val="in"></span>'.$primary_home_number.'</span>
-                    <br>
-                    <strong>Secondary Phone Number:</strong> <span><span class="phone-country-code" data-val="us"></span> '.$secondary_cell_number.'</span><br>
-                     <strong>Pet Profile Link:</strong><span> <a href="'.$pet_profile_link.'">Owner Profile</a </span>   
-                    </div>
-                    </div>
-                   
-                   
-                    </div>';
-
-
-
-
-        endwhile;
-
-    }else{
-        echo "</br><div class='not-found width-100'>No Results Found</div>";
-        exit();
-    }  
+                    echo "</br><div class='not-found width-100'>No Results Found</div>";
+                     exit();
+                }  
      exit();
 
+   }else{
+    echo "dfd";
+    exit();
    }
 }
 
@@ -5032,6 +4980,9 @@ function get_session_custom_products(){
 
 if( !function_exists('salient_register_emails_filter_replace')):
     function  salient_register_emails_filter_replace( $email) {
+        echo $email;
+        die();
+
         $user = get_user_by( 'email', $email );
         $name = $user->user_login;
         $link = get_option('siteurl').'/?action=email_confirmation&user_id='.$user->ID.'&email='.$email;
@@ -8602,12 +8553,18 @@ add_action('admin_menu', 'register_functionlity_for_microchip_search');
 
 
 function _custom_menu_seach_page(){
-    ?><form method="post" class="michrochip_range" id="MichroChip_range">
+    ?>
+    <div class="loader-outer" style="display: none;">
+         <div class="loader" ></div>
+     </div>
+
+    <form method="post" class="michrochip_range" id="MichroChip_range">
         <div class="form-group">
             <div class="group-section">
                 <div class="range-haed">
-            <h3 for="" class="text-start">Search Microchip</h3>
-        </div>
+                    <h3 for="" class="text-start">Search Microchip</h3>
+                </div>
+
             <div class="form-contant">
                 <input type="text" class="form-control" id="michrochip_start_range" aria-describedby="emailHelp" placeholder="Enter Microchip number">
                 <span class="michrochip_start_range" style="display:none;"></span>
@@ -8663,13 +8620,13 @@ function searchWithMichrochip() { ?>
                     'michrochip_start_range': $('#michrochip_start_range').val(), 
                     'michrochip_end_range': $('#michrochip_end_range').val(),
                 };
-                $('.loader-wrap').fadeIn();
+                $('.loader-outer').fadeIn();
                 jQuery.ajax({
                     url: ajaxurl, // this will point to admin-ajax.php
                     type: 'POST',
                     data: dataVariable, 
                     success: function (response) {
-                        $('.loader-wrap').fadeOut();
+                        $('.loader-box').fadeOut();
                         $('.search-row').html(response);
                         return false;
                     }

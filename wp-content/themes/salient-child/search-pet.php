@@ -81,7 +81,7 @@ if ( is_user_logged_in() ){
                         <div class="search-flex">
                         <div class="field-div">
                             
-                            <input type="text" name="search-data" placeholder="Search Via Phone/Michrochip" class="search-data"/>
+                            <input type="text" name="search-data" placeholder="Search Via Phone/Michrochip/Name/Email" class="search-data"/>
                             <span class=" error error_searchBox"></span>
                         </div>
                         <div class="field-div wd-cus">
@@ -137,7 +137,9 @@ $(document).ready(function(){
     $('.submit').click(function(){
 
  $('.loader-wrap').fadeIn();
-      if(error_search == true){
+
+
+        if(error_search == true){
 
            var data = new FormData();
             data.append('action', 'PetDataSearch');

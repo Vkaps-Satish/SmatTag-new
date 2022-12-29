@@ -23,8 +23,6 @@ nectar_page_header(get_option('page_for_posts')); ?>
 							<?php
 							    if(has_post_thumbnail()) { ?>
 							        <div class="testi-img">
-
-							        
 										<a href="<?php echo get_permalink(get_the_id()); ?>"><?php echo get_the_post_thumbnail(); ?></a>
 									</div>
 								<?php } else { 

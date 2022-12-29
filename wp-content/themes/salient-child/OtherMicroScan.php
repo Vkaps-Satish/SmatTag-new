@@ -5,8 +5,9 @@
 //Redirect user if user not login or not petprofessional
 if ( is_user_logged_in() ){
   $current_user = wp_get_current_user();
-  $roles = $current_user->roles; 
-
+ 
+ $roles = $current_user->roles; 
+ 
   if( !$roles == 'pet_professional' || !in_array( 'pet_professional', $roles )){
     print('<script>window.location.href="/product-category/microchip-scanners/id-tags-products-microchips-and-scanners/"</script>');
     die();
@@ -44,8 +45,7 @@ get_header();
                 <div class="product-wrap 12">
                    <a href="<?php echo get_permalink( $loop->post->ID ) ?>" title="<?php echo esc_attr($loop->post->post_title ? $loop->post->post_title : $loop->post->ID); ?>">
                       <?php if (has_post_thumbnail( $loop->post->ID )) echo get_the_post_thumbnail($loop->post->ID, 'shop_catalog'); else echo '<img src="'.woocommerce_placeholder_img_src().'" alt="Placeholder" width="150" height="150" />'; ?>
-                      <h2 class="woocommerce-loop-product__title OCEAN"><?= the_title(); ?></h2>
-                      <span class="price"><span>Price: </span><span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol"></span><?php echo $product->get_price_html(); ?></span></span>
+                    
                    </a>
                    <?php woocommerce_template_loop_add_to_cart( $loop->post, $product); ?>
                 </div>
@@ -57,6 +57,12 @@ get_header();
 	</div><!--/row-->
 </div><!--/container-->
 	
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.woocommerce-Price-amount').before('<span>Price: </span>');
+        });
+    </script>
+
 </div><!--/container-wrap-->
 
 <?php get_footer(); ?>
