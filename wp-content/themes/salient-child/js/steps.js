@@ -6,52 +6,85 @@
 jQuery.validator.addMethod("checkSize", function (value, element) {
     if (value != "") {
         var size = element.files[0].size;
-        if (size > 2*1000000)// checks the file more than 1 MB
-        {
-            return false;
-        } else {
-           return true;
-        }
-    }else{
-        return true;
-    }
+        if (size > 2*1000000){ return false; } else { return true;}
+    }else{ return true;}
 
     }, "File must be less then 2MB");
 
 
-       jQuery.validator.addMethod("checkSpecialCharate", function (value, element) {
-                   var regExp = /[a-z]/i;
+jQuery.validator.addMethod("checkSpecialCharate", function (value, element) {
+    var regExp = /[a-z]/i;
+        if (regExp.test(value)) {
+            return false;
+        }
+            return true;
 
-                  if (regExp.test(value)) {
-                  
-                    return false;
-                  }
-              return true;
-
-              },"Please enter Only Number.");
+},"Please enter Only Number.");
 
 
 
-       jQuery.validator.addMethod("restric", function (value, element) {
-                      var length = value.length;
-                      console.log(length);
-                  if (length != 14) {
-                  
-                    return false;
-                  }
-              return true;
+jQuery.validator.addMethod("restric", function (value, element) {
+    var length = value.length;
+        if (length != 14) {
+            return false;
+        }
+            return true;
 
-              },"Please enter 10 digit Number.");
+},"Please enter 10 digit Number.");
+
+/*---------------------------------validation method for microchip id---------------------------------------*/ 
+var validMessage;
+jQuery.validator.addMethod("validMicrochip", function(value, element) {
+    
+    var regex = /^[0-9\s]*$/;
+    if(!regex.test(value)){
+        validMessage = "Please enter only digits";
+        return false;
+    }
+
+    var microchip_id = value.replace(/\s/g, '');
+    if(microchip_id.length != 15){
+        validMessage = "Microchip Id should be 15 digits";
+        return false;
+    }
+    
+    return true;
+   
+},function() { return validMessage; });
+
+/*-------------------------------custom rule for validate smarttag id tag------------------------------*/ 
+var validIdTagMessage;
+jQuery.validator.addMethod("validIdTag", function(value, element) {
+
+  var regex = /^[0-9\s]*$/;
+  if(!regex.test(value)){
+      validIdTagMessage = "Please enter only digits";
+      return false;
+  }
+
+  var smartTag_id = value.replace(/\s/g, '');
+  if(smartTag_id.length != 8){
+    validIdTagMessage = "SmartTag Id should be 8 digits";
+    return false;
+  }
+
+  return true;
+   
+},function() { return validIdTagMessage; });
 
 
+/*-------------------------------custom rule for alllow Space Number------------------------------*/ 
+jQuery.validator.addMethod("alllowSpaceAndNumber", function(value, element) {
+    var isValid = false;
+    var regex = /^[0-9\s]*$/;
+    isValid = regex.test(value);
+    return !isValid ? true : false;
 
+},"Please enter Only Number.");
 
-
-
-
-
-
-
+/*-------------------------------validation message------------------------------*/ 
+var micro_validation_msg = "Microchip is invalid.";
+var smarttag_validation_msg = "";
 
 var app = {
 
@@ -73,9 +106,8 @@ var app = {
         // jQuery(".multi-step-form").find("form#profileuser1").html();
         this.$formParent = jQuery(".multi-step-form");
         this.$form = this.$formParent.find("form#profileuser1");
-        this.$formStepParents = this.$form.find("fieldset"),
-
-            this.$nextButton = this.$form.find(".btn-next");
+        this.$formStepParents = this.$form.find("fieldset");
+        this.$nextButton = this.$form.find(".btn-next");
         this.$prevButton = this.$form.find(".btn-prev");
         this.$editButton = this.$form.find(".btn-edit");
         this.$resetButton = this.$form.find("[type='reset']");
@@ -309,11 +341,9 @@ var app = {
                     extension: "jpg|png|gif|bmp|jpeg",
                     checkSize: true
                 },
-                universal_microchip_id:
-                {
+                universal_microchip_id:{
                     required: true,
-                    minlength: 10,
-                    maxlength: 17,
+                    validMicrochip : true,
                     /*"remote":
                     {
                       url: ajaxurl,
@@ -330,134 +360,48 @@ var app = {
                 },
                 conf_universal_microchip_id: {
                     required: true,
+                    validMicrochip: true,
                     equalTo: "#sname_input",
-                    minlength: 10,
-                    maxlength: 17,
-                }
-                ,microchip_id:
-                {
+                   
+                },
+                microchip_id: {
                     required: true,
-                    minlength: 17,
-                    maxlength: 17,
-                    /*"remote":
-                    {
-                      url: ajaxurl,
-                      type: "post",
-                      data:
-                      {
-                        'action' : 'checkMicrochipIDValid1',
-                         smartTagID: function(res)
-                         {
-                            if(res)
-                            return $('#profileuser1 :input[name="microchip_id"]').val();
-                        }
-                      }
-                    }*/
-                    /*remote: {
+                    validMicrochip: true,
+                    remote: {
                         url: ajaxurl,
-                              type: "post",
-                        data: {
-                           'action' : 'checkMicrochipIDValid1',
-                        },
+                        type: "POST",
                         dataType: 'json',
-                         success: function(data) {
-                                  
-                                             
-                                if(data.status == '302'  && data.result == 'exist'){
-                                    console.log('1');
-
-                                    $('.valid_message').addClass('error');
-                                    $('.valid_message').removeClass('error_success');
-                                    $('.valid_message').css('color','red')
-                                    $('.valid_message').text(data.message);
-                                    $('.valid_message').show();
-                                    $('.show-atag').show();
-                                        return false;
-                                }else if(data.status == 406  && data.result == 'fail'){
-                                    console.log('2');
-                                   $('.valid_message').addClass('error');
-                                    $('.valid_message').removeClass('error_success');
-                                    $('.valid_message').css('color','red');
-                                    $('.valid_message').text(data.message);
-                                    $('.valid_message').show();
-                                    $('.show-atag').show();
-                                    
-
-                                }else if(data.status == '200'  && data.result == 'success'){
-                                    console.log('3');
-                                    
-                                    $('.valid_message').hide();
-                                    $('.show-atag').hide();
-                                        return true;
-                                }else{
-                                  console.log('4');
-                                    $('.valid_message').addClass('error');
-                                    $('.valid_message').removeClass('error_success');
-                                    $('.valid_message').text(data.message);
-                                    $('.show-atag').show();
-                                     $('.valid_message').show();
-
-                                        return false;
-                                }
-                            
-                        }
-                    }*/
+                        data: {'action':'isMicrochipIdValid'},
+                        dataFilter: function(response){
+                            var obj = jQuery.parseJSON(response);
+                            console.log("obj", obj);
+                            if(obj.status ==  false){
+                                micro_validation_msg = obj.message; 
+                                return false;
+                            }
+                            return true;
+                        } 
+                    }
                 },
                 conf_microchip_id: {
                     required: true,
                     equalTo: "#sname_input",
-                    minlength: 17,
-                    maxlength: 17,
                 },
                 smarttag_id_number: {
                     required: true,
-                    minlength: 9,
-                    maxlength: 9,
-                    /*"remote":
-                    {
-                      url: ajaxurl,
-                      type: "post",
-                      data:
-                      {
-                         'action' : 'checkSmartTagIDValid_testing',
-                         smartTagID: function()
-                         {
-                            console.log($('#profileuser1 :input[name="smarttag_id_number"]').val());
-                          //return $('#profileuser1 :input[name="smarttag_id_number"]').val();
-                         }
-                      }
-                    }*/
-
-                     /*remote: {
+                    validIdTag: true,
+                    remote: {
                         url: ajaxurl,
-                              type: "post",
-                        data: {
-                           'action' : 'checkSmartTagIDValid_testing',
-                        },
+                        type: "POST",
+                        data: {'action':'checkSmartTagIDValid_testing'},
                         dataType: 'json',
-
-                            success: function(data) {
-
-                           console.log(data);
-                                if(data.status == '200'  && data.result == 'exist'){
-                                    $('.valid_message').addClass('error');
-                                      $('.valid_message').removeClass('error_success');
-                                    $('.valid_message').text(data.message);
-                                     return false;
-                                }else if(data.status == '200'  && data.result == 'success'){
-                                     $('.valid_message').removeClass('error');
-                                      $('.valid_message').addClass('error_success');
-                                    $('.valid_message').text(data.message);
-                                     return true;
-                                }else{
-                                     $('.valid_message').addClass('error');
-                                       $('.valid_message').removeClass('error_success');
-                                    $('.valid_message').text(data.message);
-                                     return false;
-                                }
-                            
+                        dataFilter: function(data) {
+                            console.log(data);
+                            var obj = jQuery.parseJSON(data);
+                            console.log("object", obj);
+                            smarttag_validation_msg = obj.message ;
                         }
-                    }*/
+                    }
                 },p_fst_name:{
                     required: true,
                 },
@@ -475,25 +419,17 @@ var app = {
                 },
                 p_email:{
                     email: true,
-                     "remote":
-                    {
-                      url: ajaxurl,
-                      type: "post",
-                      data:
-                      {
-                         'action' : 'checkEmailExist',
-                         userEmail: function()
-                         {
-                          return $('#profileuser1 :input[name="p_email"]').val();
-                         }
-                      }
+                    remote:{
+                        url: ajaxurl,
+                        type: "post",
+                        data:{'action':'checkEmailExist',"userEmail":$('#profileuser1:input[name="p_email"]').val()}
                     }
                 },
                 conf_smarttag_id_number: {
                     required: true,
+                    validIdTag: true,
                     equalTo: "#sname_input",
-                    minlength: 9,
-                    maxlength: 9,
+                   
                 },
                 p_zipcode: {
                     required: true,
@@ -502,22 +438,19 @@ var app = {
                     maxlength: 5
                 },
                 p_prm_no: {
-                   checkSpecialCharate: true,
-                   restric: true,
+                    checkSpecialCharate: true,
+                    restric: true,
                     minlength : 13,
                     maxlength : 14,
-                    "remote":
-                    {
-                      url: ajaxurl,
-                      type: "post",
-                      data:
-                      {
-                         'action' : 'checkPrimaryExists',
-                         priary_phone: function()
-                         {
-                          return $('#profileuser1 :input[name="p_prm_no"]').val();
-                         }
-                      }
+                    remote:{
+                        url: ajaxurl,
+                        type: "post",
+                        data:{
+                            'action' : 'checkPrimaryExists',
+                            priary_phone: function(){
+                                return $('#profileuser1 :input[name="p_prm_no"]').val();
+                            }
+                        }
                     }
                 },
                 /*p_sec_no: {
@@ -527,14 +460,14 @@ var app = {
                     maxlength: 14
                 },*/
                 s_prm_no: {
-                  checkSpecialCharate: true,
-                  restric: true,
+                    checkSpecialCharate: true,
+                    restric: true,
                     minlength: 13,
                     maxlength: 14
                 },
                 s_sec_no: {
-                   checkSpecialCharate: true,
-                   restric: true,
+                    checkSpecialCharate: true,
+                    restric: true,
                     minlength: 13,
                     maxlength: 14
                 },
@@ -544,19 +477,18 @@ var app = {
                     maxlength: 5
                 },
                 vaterinarian_primary_phone_number: {
-                   checkSpecialCharate: true,
-                   restric: true,
+                    checkSpecialCharate: true,
+                    restric: true,
                     minlength: 13,
                     maxlength: 14
                 },
                 vaterinarian_secondary_phone_number: {
-                  checkSpecialCharate: true,
-                  restric: true,
+                    checkSpecialCharate: true,
+                    restric: true,
                     minlength: 13,
                     maxlength: 14
                 },
                 vaterinarian_zip_code :{
-                
                     minlength: 5,
                     maxlength: 5
                 },
@@ -568,10 +500,7 @@ var app = {
             },
             messages: {
                 microchip_id : {
-                    minlength : "The Microchip Id Number must be 15 digits.",
-                    maxlength : "The Microchip Id Number must be 15 digits.",
-                   // remote: "This ID is not valid",
-                     remote: jQuery.validator.format("{0} is already taken.")
+                    remote: function(){ return micro_validation_msg;}
                 },
                 conf_microchip_id : {
                     minlength : "The Microchip Id Number must be 15 digits.",
@@ -1666,122 +1595,110 @@ app.init();
 
 
 
-$('.sname_input-MC').blur(function(){
-      var ids = $(this).val();
-        var id = ids.replace(/\s/g, '');
-      console.log(id.length);
-      if(id.length == 8){
+// $('.sname_input-MC1').blur(function(){
+//     alert();
 
-          $.ajax({
-            url: ajaxurl,
-            method:"POST", 
-            dataType: 'json',
-            data:{
-              'smarttag_id_number': id, 
-              'action' : 'checkSmartTagIDValid_testing',
-            },
-            success: function(data) {
+//     var ids = $(this).val();
+//     var id = ids.replace(/\s/g, '');
+//     if(id.length == 8){
 
-            
-              
-            console.log(data);
-            console.log(data.message);
-                if(data.status == '302'  && data.result == 'exist'){
-                    console.log('1');
-                        $('.show-atag').hide();
-                   // $('.valid_message').addClass('error');
-                    $('.valid_message').removeClass('error_success');
-                    $('.valid_message').css('color','red')
-                    $('.valid_message').text(data.message);
-                    $('.valid_message').show();
-                    $('.show-atag').hide();
+//         $.ajax({
+//             url: ajaxurl,
+//             method:"POST", 
+//             dataType: 'json',
+//             data:{
+//               'smarttag_id_number': id, 
+//               'action' : 'checkSmartTagIDValid_testing',
+//             },
+//             success: function(data) {
+//                 console.log(data);
+//                 console.log(data.message);
+//                 if(data.status == '302'  && data.result == 'exist'){
+//                     console.log('1');
+//                     $('.show-atag').hide();
+//                     $('.valid_message').removeClass('error_success');
+//                     $('.valid_message').css('color','red')
+//                     $('.valid_message').text(data.message);
+//                     $('.valid_message').show();
+//                     $('.show-atag').hide();
                         
-                }else if(data.status == 406  && data.result == 'fail'){
-                    console.log('2');
+//                 }else if(data.status == 406  && data.result == 'fail'){
+//                     console.log('2');
                  
-                    $('.valid_message').removeClass('error_success');
-                    $('.valid_message').css('color','red');
-                    $('.valid_message').text(data.message);
-                    $('.valid_message').show();
-                    $('.show-atag').show();
+//                     $('.valid_message').removeClass('error_success');
+//                     $('.valid_message').css('color','red');
+//                     $('.valid_message').text(data.message);
+//                     $('.valid_message').show();
+//                     $('.show-atag').show();
                     
 
-                }else if(data.status == '200'  && data.result == 'success'){
-                    console.log('3');
+//                 }else if(data.status == '200'  && data.result == 'success'){
+//                     console.log('3');
                     
-                    $('.valid_message').hide();
-                    $('.show-atag').hide();
-                        return true;
-                }else{
-                  console.log('4');
-                    $('.valid_message').addClass('error');
-                    $('.valid_message').removeClass('error_success');
-                    $('.valid_message').text(data.message);
-                    $('.show-atag').hide();
-                     $('.valid_message').show();
+//                     $('.valid_message').hide();
+//                     $('.show-atag').hide();
+//                         return true;
+//                 }else{
+//                   console.log('4');
+//                     $('.valid_message').addClass('error');
+//                     $('.valid_message').removeClass('error_success');
+//                     $('.valid_message').text(data.message);
+//                     $('.show-atag').hide();
+//                     $('.valid_message').show();
 
-                        return false;
-                }
-               
-           }
-      
-    });
-}else if(id.length == 15){
-        console.log('checkMicrochipIDValid1');
-     $.ajax({
-            url: ajaxurl,
-            method:"POST", 
-            dataType: 'json',
-            data:{
-              'smarttag_id_number': id, 
-              'action' : 'checkMicrochipIDValid1',
-            },
-             success: function(data) {
-                                  
-                    if(data.status == '302'  && data.result == 'exist'){
-                        console.log('1');
+//                     return false;
+//                 }
+//             }
+//         });
+//     }else if(id.length == 15){
+//         console.log('checkMicrochipIDValid1');
+//         $.ajax({
+//             url: ajaxurl,
+//             method:"POST", 
+//             dataType: 'json',
+//             data:{
+//               'smarttag_id_number': id, 
+//               'action' : 'checkMicrochipIDValid1',
+//             },
+//             success: function(data) {
+//                 if(data.status == '302'  && data.result == 'exist'){
+                    
+//                     $('.valid_message').addClass('error');
+//                     $('.valid_message').removeClass('error_success');
+//                     $('.valid_message').css('color','red')
+//                     $('.valid_message').text(data.message);
+//                     $('.valid_message').show();
+//                     $('.show-atag').hide();
+//                     return false;
 
-                        $('.valid_message').addClass('error');
-                        $('.valid_message').removeClass('error_success');
-                        $('.valid_message').css('color','red')
-                        $('.valid_message').text(data.message);
-                        $('.valid_message').show();
-                        $('.show-atag').hide();
-                            return false;
-                    }else if(data.status == 406  && data.result == 'fail'){
-                        console.log('2');
+//                 }else if(data.status == 406  && data.result == 'fail'){
+                    
+//                     $('.valid_message').addClass('error');
+//                     $('.valid_message').removeClass('error_success');
+//                     $('.valid_message').css('color','red');
+//                     $('.valid_message').text(data.message);
+//                     $('.valid_message').show();
+//                     $('.show-atag').hide();
+//                     return false;
+                    
 
-                       $('.valid_message').addClass('error');
-                        $('.valid_message').removeClass('error_success');
-                        $('.valid_message').css('color','red');
-                        $('.valid_message').text(data.message);
-                        $('.valid_message').show();
-                        $('.show-atag').hide();
-                        
-
-                    }else if(data.status == '200'  && data.result == 'success'){
-                        console.log('3');
-                        
-                        $('.valid_message').hide();
-                        $('.show-atag').hide();
-                            return true;
-                    }else{
-                      console.log('4');
-                        $('.valid_message').addClass('error');
-                        $('.valid_message').removeClass('error_success');
-                        $('.valid_message').text(data.message);
-                        $('.show-atag').show();
-                        $('.valid_message').hide();
-
-                            return false;
-                    }
-                            
-                        }
-        });
-    }
-
-
-   });
+//                 }else if(data.status == '200'  && data.result == 'success'){
+                    
+//                     $('.valid_message').hide();
+//                     $('.show-atag').hide();
+//                     return true;
+//                 }else{
+//                     $('.valid_message').addClass('error');
+//                     $('.valid_message').removeClass('error_success');
+//                     $('.valid_message').text(data.message);
+//                     $('.show-atag').show();
+//                     $('.valid_message').hide();
+//                     return false;
+//                 }
+//             }
+//         });
+//     }
+// });
 
 
 
@@ -1858,7 +1775,7 @@ function checkSmartTagIDValid_on_webhook(){
      var id = ids.replace(/\s/g, '');
 
 
-        if(id.length== '8'){
+        if(id.length== '15'){
 
 
                   $.ajax({
@@ -1894,10 +1811,11 @@ function checkSmartTagIDValid_on_webhook(){
             });
 
 
-         }else{
-            alert('Invalid Temp Microchip Id Number');
-            window.reload();
-         }
+        }
+         // else{
+         //    alert('Invalid Temp Microchip Id Number');
+         //    window.reload();
+         // }
 
 
 
@@ -1909,124 +1827,124 @@ function checkSmartTagIDValid_on_webhook(){
 
 $(document).ready(function() {
  
-     var url = window.location.hostname+'/our-services/microchip-registry/';
-   var url1 = window.location.hostname+'/our-services/smarttag-registry/';
-        if (window.location.href.indexOf(url) > -1 || window.location.href.indexOf(url1) > -1 ) {
+    var url = window.location.hostname+'/our-services/microchip-registry/';
+    var url1 = window.location.hostname+'/our-services/smarttag-registry/';
+    if (window.location.href.indexOf(url) > -1 || window.location.href.indexOf(url1) > -1 ) {
+        console.log("ocean");
 
+    //     $('#pname_input').blur(function(){
+    //         var ids = $('.sname_input-MC').val();
+    //           var id = ids.replace(/\s/g, '');
+    //               if(id.length == 8){
 
-        $('#pname_input').blur(function(){
-            var ids = $('.sname_input-MC').val();
-              var id = ids.replace(/\s/g, '');
-                  if(id.length == 8){
-
-                      $.ajax({
-                        url: ajaxurl,
-                        method:"POST", 
-                        dataType: 'json',
-                        data:{
-                          'smarttag_id_number': id, 
-                          'action' : 'checkSmartTagIDValid_testing',
-                        },
-                        success: function(data) {
+    //                   $.ajax({
+    //                     url: ajaxurl,
+    //                     method:"POST", 
+    //                     dataType: 'json',
+    //                     data:{
+    //                       'smarttag_id_number': id, 
+    //                       'action' : 'checkSmartTagIDValid_testing',
+    //                     },
+    //                     success: function(data) {
 
                         
                           
-                        console.log(data);
-                        console.log(data.message);
-                            if(data.status == '302'  && data.result == 'exist'){
-                                console.log('1');
-                                    $('.show-atag').hide();
-                               // $('.valid_message').addClass('error');
-                                $('.valid_message').removeClass('error_success');
-                                $('.valid_message').css('color','red')
-                                $('.valid_message').text(data.message);
-                                $('.valid_message').show();
-                                $('.show-atag').hide();
+    //                     console.log(data);
+    //                     console.log(data.message);
+    //                         if(data.status == '302'  && data.result == 'exist'){
+    //                             console.log('1');
+    //                                 $('.show-atag').hide();
+    //                            // $('.valid_message').addClass('error');
+    //                             $('.valid_message').removeClass('error_success');
+    //                             $('.valid_message').css('color','red')
+    //                             $('.valid_message').text(data.message);
+    //                             $('.valid_message').show();
+    //                             $('.show-atag').hide();
                                     
-                            }else if(data.status == 406  && data.result == 'fail'){
-                                console.log('2');
+    //                         }else if(data.status == 406  && data.result == 'fail'){
+    //                             console.log('2');
                              
-                                $('.valid_message').removeClass('error_success');
-                                $('.valid_message').css('color','red');
-                                $('.valid_message').text(data.message);
-                                $('.valid_message').show();
-                                $('.show-atag').show();
+    //                             $('.valid_message').removeClass('error_success');
+    //                             $('.valid_message').css('color','red');
+    //                             $('.valid_message').text(data.message);
+    //                             $('.valid_message').show();
+    //                             $('.show-atag').show();
                                 
 
-                            }else if(data.status == '200'  && data.result == 'success'){
-                                console.log('3');
+    //                         }else if(data.status == '200'  && data.result == 'success'){
+    //                             console.log('3');
                                 
-                                $('.valid_message').hide();
-                                $('.show-atag').hide();
-                                    return true;
-                            }else{
-                              console.log('4');
-                                $('.valid_message').addClass('error');
-                                $('.valid_message').removeClass('error_success');
-                                $('.valid_message').text(data.message);
-                                $('.show-atag').hide();
-                                 $('.valid_message').show();
+    //                             $('.valid_message').hide();
+    //                             $('.show-atag').hide();
+    //                                 return true;
+    //                         }else{
+    //                           console.log('4');
+    //                             $('.valid_message').addClass('error');
+    //                             $('.valid_message').removeClass('error_success');
+    //                             $('.valid_message').text(data.message);
+    //                             $('.show-atag').hide();
+    //                              $('.valid_message').show();
 
-                                    return false;
-                            }
+    //                                 return false;
+    //                         }
                            
-                       }
+    //                    }
                   
-                });
-            }else if(id.length == 15){
-                    console.log('checkMicrochipIDValid1');
-                 $.ajax({
-                        url: ajaxurl,
-                        method:"POST", 
-                        dataType: 'json',
-                        data:{
-                          'smarttag_id_number': id, 
-                          'action' : 'checkMicrochipIDValid1',
-                        },
-                         success: function(data) {
+    //             });
+    //         }else if(id.length == 15){
+    //                 console.log('checkMicrochipIDValid1');
+    //              $.ajax({
+    //                     url: ajaxurl,
+    //                     method:"POST", 
+    //                     dataType: 'json',
+    //                     data:{
+    //                       'smarttag_id_number': id, 
+    //                       'action' : 'checkMicrochipIDValid1',
+    //                     },
+    //                      success: function(data) {
                                               
-                                if(data.status == '302'  && data.result == 'exist'){
-                                    console.log('1');
+    //                             if(data.status == '302'  && data.result == 'exist'){
+    //                                 console.log('1');
 
-                                    $('.valid_message').addClass('error');
-                                    $('.valid_message').removeClass('error_success');
-                                    $('.valid_message').css('color','red')
-                                    $('.valid_message').text(data.message);
-                                    $('.valid_message').show();
-                                    $('.show-atag').hide();
-                                        return false;
-                                }else if(data.status == 406  && data.result == 'fail'){
-                                    console.log('2');
+    //                                 $('.valid_message').addClass('error');
+    //                                 $('.valid_message').removeClass('error_success');
+    //                                 $('.valid_message').css('color','red')
+    //                                 $('.valid_message').text(data.message);
+    //                                 $('.valid_message').show();
+    //                                 $('.show-atag').hide();
+    //                                     return false;
+    //                             }else if(data.status == 406  && data.result == 'fail'){
+    //                                 console.log('2');
 
-                                   $('.valid_message').addClass('error');
-                                    $('.valid_message').removeClass('error_success');
-                                    $('.valid_message').css('color','red');
-                                    $('.valid_message').text(data.message);
-                                    $('.valid_message').show();
-                                    $('.show-atag').hide();
+    //                                $('.valid_message').addClass('error');
+    //                                 $('.valid_message').removeClass('error_success');
+    //                                 $('.valid_message').css('color','red');
+    //                                 $('.valid_message').text(data.message);
+    //                                 $('.valid_message').show();
+    //                                 $('.show-atag').hide();
                                     
 
-                                }else if(data.status == '200'  && data.result == 'success'){
-                                    console.log('3');
+    //                             }else if(data.status == '200'  && data.result == 'success'){
+    //                                 console.log('3');
                                     
-                                    $('.valid_message').hide();
-                                    $('.show-atag').hide();
-                                        return true;
-                                }else{
-                                  console.log('4');
-                                    $('.valid_message').addClass('error');
-                                    $('.valid_message').removeClass('error_success');
-                                    $('.valid_message').text(data.message);
-                                    $('.show-atag').show();
-                                    $('.valid_message').hide();
+    //                                 $('.valid_message').hide();
+    //                                 $('.show-atag').hide();
+    //                                     return true;
+    //                             }else{
+    //                               console.log('4');
+    //                                 $('.valid_message').addClass('error');
+    //                                 $('.valid_message').removeClass('error_success');
+    //                                 $('.valid_message').text(data.message);
+    //                                 $('.show-atag').show();
+    //                                 $('.valid_message').hide();
 
-                                        return false;
-                                }
+    //                                     return false;
+    //                             }
                                         
-                                    }
-                    });
-                }
-    });
+    //                                 }
+    //                 });
+    //             }
+    // });
 
 
  }

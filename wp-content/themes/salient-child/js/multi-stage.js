@@ -246,24 +246,47 @@ function zipcode(){
 
 function microchip_id(){
 
-      
-     
-        var microchip_id =  $('.microchip_id').val();
-        if(microchip_id == ''){
+      var microchip_id =  $('.microchip_id').val();
+      var regex = /^[0-9\s]*$/;
+
+      var microchip_ids = microchip_id.replace(/\s/g, '');
+    if(microchip_id == ''){
             $('.error_michrochip').text('This field is required');
             error_michrochip = false;
-        }else if(microchip_id.length != 15){
-               $('.error_michrochip').text('Please insert 15 digit value');
-                 error_michrochip = false; 
+        }else if(microchip_ids.length != 15){
+            $('.error_michrochip').text('Please insert 15 digit value');
+                error_michrochip = false; 
+        }else if(!regex.test(microchip_id)){
+            $('.error_michrochip').text('Please enter only digits');
+                error_michrochip = false; 
         }else{
             $('.error_michrochip').text('');
             error_michrochip = true;
         }
-            
-        
+ 
+          
+}
 
+$('.break_number').keyup(function(e) {
+        e.preventDefault();
+        limitText(this, 18)
+            var charCode = (e.which) ? e.which : event.keyCode    
+            var foo = $(this).val().split(" ").join("");
+                if (foo.length > 0) {
+                        foo = foo.match(new RegExp('.{1,5}', 'g')).join(" ");
+                }
+                    $(this).val(foo);
+});
 
-    
+function limitText(field, maxChar){
+    var ref = $(field),
+        val = ref.val();
+    if ( val.length >= maxChar ){
+        ref.val(function() {
+            console.log(val.substr(0, maxChar))
+            return val.substr(0, maxChar);       
+        });
+    }
 }
 
 $(document).find("body").on('blur', '.conf_microchip_id', function() { 
@@ -273,22 +296,26 @@ $(document).find("body").on('blur', '.conf_microchip_id', function() {
 
 function conf_microchip_id(){
       
-
-        var conf_microchip_id =  $('.conf_microchip_id').val();
-         var microchip_id =  $('.microchip_id').val();
-        if(conf_microchip_id == ''){
-            $('.error_con_michrochip').text('This field is required');
-            error_conf_microchip_id = false;
-        }else if(conf_microchip_id != microchip_id ){
-            $('.error_con_michrochip').text('Microchip Id Number and confirm Microchip Id number is not same');
-            error_conf_microchip_id = false;
-        }else{
-            $('.error_con_michrochip').text('');
-            error_conf_microchip_id = true;
-        }
-
-
-     
+    var conf_microchip_id =  $('.conf_microchip_id').val();
+    var regex = /^[0-9\s]*$/;
+    var microchip_id =  $('.microchip_id').val();
+    var conf_microchip_ids = conf_microchip_id.replace(/\s/g, '');
+    if(conf_microchip_id == ''){
+    $('.error_conf_microchip_id').text('This field is required');
+        error_conf_microchip_id = false;
+    }else if(conf_microchip_id != microchip_id ){
+        $('.error_con_michrochip').text('Microchip Id Number and confirm Microchip Id number is not same');
+        error_conf_microchip_id = false;
+    }else if(microchip_ids.length != 15){
+        $('.error_conf_microchip_id').text('Please insert 15 digit value');
+        error_conf_microchip_id = false; 
+    }else if(!regex.test(conf_microchip_ids)){
+        $('.error_conf_microchip_id').text('Please enter only digits');
+        error_conf_microchip_id = false; 
+    }else{
+        $('.error_conf_microchip_id').text('');
+        error_conf_microchip_id = true;
+    }
 }
 
      $(document).find("body").on('blur', '.pet_name', function() {

@@ -120,7 +120,7 @@ wp_enqueue_script('iosSlider'); ?>
 							?>
 						</td>
 
-						<td class="product-price">
+						<td class="product-price ">
 							<?php
 							
 /*echo apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_product ), $cart_item, $cart_item_key );
@@ -128,7 +128,13 @@ wp_enqueue_script('iosSlider'); ?>
 
 							
 							if (isset($cart_item['attribute_pa_plan']) && $cart_item['attribute_pa_plan'] == "lifetime") {
-								echo '<span class="woocommerce-Price-amount amount 1"><span class="woocommerce-Price-currencySymbol">$</span>'.$cart_item['line_total'].'</span>';
+								$get_dot = explode('.', $cart_item['line_total']);
+								
+								if($get_dot[1]== '00'){
+										echo '<span class="woocommerce-Price-amount amount 1"><span class="woocommerce-Price-currencySymbol">$</span>'.$get_dot[0].'</span>';
+								}else{
+									echo '<span class="woocommerce-Price-amount amount 1"><span class="woocommerce-Price-currencySymbol">$</span>'.$cart_item['line_total'].'</span>';
+								}
 							}else{
 								echo apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_product ), $cart_item, $cart_item_key );
 							}

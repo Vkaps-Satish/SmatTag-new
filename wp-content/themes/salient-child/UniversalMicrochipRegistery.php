@@ -3,6 +3,7 @@
  * Template Name:  Universal Mircochip registery
  */
 
+global $petColors;
 get_header();
 
 $getbreeds                    = get_top_parents('pet_type_and_breed');
@@ -67,7 +68,7 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                       <h3 style="color: #dc2727;"><center>Registration for as low as $6.95!</center></h3> 
                       
                       <div class="field-wrap three-fields-wrap universal-microchips-field-wrap">
-                        <form name="universalMicrochipForm"  method="POST" enctype="multipart/form-data">
+                        <form name="universalMicrochipForm"  id="universalMicrochipForm" method="POST" enctype="multipart/form-data">
                           <div class="field-div">
                             <label>Register Here:</label>
                               <input type="text" name="microchipNumber" placeholder="*Microchip ID Number" class="user-data break_number"  autocomplete="off" value="<?= (isset($_GET['id'])) ? $_GET['id']  : "";?>" id="MiroNumber"  />
@@ -181,34 +182,22 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                               	<label>*Primary Color: </label>
                                 <select name="primary_color" class="text-data" id="pcolor" required="" >
                                   <option value="">Select Color</option>
-                                  <option value="1">Black</option>
-                                  <option value="2">Blue</option>
-                                  <option value="3">Brown</option>
-                                  <option value="4">Gold</option>
-                                  <option value="5">Gray</option>
-                                  <option value="6">Orange</option>
-                                  <option value="7">Red</option>
-                                  <option value="8">Sliver</option>
-                                  <option value="9">Tan</option>
-                                  <option value="10">White</option>
-                                  <option value="11">Yellow</option>
+                                    <?php 
+                                        foreach ($petColors as $key => $color) {
+                                            echo '<option value="'.$key.'">'.$color.'</option>';
+                                        }
+                                    ?>  
                               </select>
                            	</div>
                               <div class="field-div">
                               <label>Secondary Color(s)</label>
                                  <select name="secondary_color" class="text-data" id="scolor">
                                     <option value="">Select Color</option>
-                                    <option value="1">Black</option>
-                                    <option value="2">Blue</option>
-                                    <option value="3">Brown</option>
-                                    <option value="4">Gold</option>
-                                    <option value="5">Gray</option>
-                                    <option value="6">Orange</option>
-                                    <option value="7">Red</option>
-                                    <option value="8">Sliver</option>
-                                    <option value="9">Tan</option>
-                                    <option value="10">White</option>
-                                    <option value="11">Yellow</option>
+                                    <?php 
+                                        foreach ($petColors as $key => $color) {
+                                            echo '<option value="'.$key.'">'.$color.'</option>';
+                                        }
+                                    ?>  
                                  </select>
                            </div>
                         </div>
@@ -1948,49 +1937,39 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
 
     });
 
+var validMessage;
+    jQuery.validator.addMethod("validMicrochip", function(value, element) {
+       
+    var regex = /^[0-9\s]*$/;
+        if(!regex.test(value)){
+            console.log(value+'ocean');
 
+            validMessage = "Please enter only digits";
+            return false;
+        }
+        var microchip_id = value.replace(/\s/g, '');
+        if(microchip_id.length != 15){
+            validMessage = "Microchip Id should be 15 digits";
+            return false;
+        }
+        return true;
+       
+    },function() { return validMessage; });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    $("form[name='universalMicrochipForm']").validate({
+    $("form[id='universalMicrochipForm']").validate({
         // Specify validation rules
         rules: {
-          microchipNumber: {
-              required: true,
-              minlength: 8  
+            microchipNumber: {
+                required: true,
+                validMicrochip : true,
             },
             conMicrochipNumber: {
-              required: true,
-              minlength: 8,
-              equalTo : "#MiroNumber"
+                required: true,
+                equalTo : "#MiroNumber"
             }
         },
-
         messages: {
-            password: {
-              required: "Please provide a microchipNumber",
-              minlength: "Your Microchip Id must be at least 8 characters long"
-              },
+          
             
         },
         submitHandler: function(form) {
@@ -2006,62 +1985,37 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
 	})
 </script>
 <script type="text/javascript">
-  
-        $(document).ready(function(){
-            $('#selectType').find('.pro-data').addClass('select_type');
-            $('#selectSize').find('.pro-data').addClass('select_size');
-
-             var select_list_select_size = jQuery('.select_size').children(".list").find('.selected').text();
-            if (select_list_select_size == 'Small (1 in / 2.54 cm)') {
-                $('.custom-radio-box bone, .custom-radio-img').each(function(i, j) {
-                    var select_list_height = jQuery('.select_type').children(".list").find('.selected').text();
-                   
-
-                    if (select_list_height == 'Brass Bone') {
-
-
-
-                        if (i == 13 || i == 14 || i == 15 || i == 16 || i == 17 || i == 18 || i == 19) {
-
-
-
-                            $(this).hide();
-                          
-                        }
-                    } else if (select_list_height == 'Brass Circle') {
-
-                        if (i == 7) {
-                            $(this).hide();
-                            
-                        }
+    $(document).ready(function(){
+        $('#selectType').find('.pro-data').addClass('select_type');
+        $('#selectSize').find('.pro-data').addClass('select_size');
+        var select_list_select_size = jQuery('.select_size').children(".list").find('.selected').text();
+        if (select_list_select_size == 'Small (1 in / 2.54 cm)') {
+            $('.custom-radio-box bone, .custom-radio-img').each(function(i, j) {
+                var select_list_height = jQuery('.select_type').children(".list").find('.selected').text();
+                if (select_list_height == 'Brass Bone') {
+                    if (i == 13 || i == 14 || i == 15 || i == 16 || i == 17 || i == 18 || i == 19) {
+                        $(this).hide();
+                      
                     }
+                }else if (select_list_height == 'Brass Circle') {
+                    if (i == 7) {
+                        $(this).hide();
+                        
+                    }
+                }
 
-                });
-            } 
-
-
-
-
-            $('.select_size, .list').change(function() {
-
+            });
+        } 
+        $('.select_size, .list').change(function() {
             var select_list_select_size = jQuery('.select_size').children(".list").find('.selected').text();
             if (select_list_select_size == 'Small (1 in / 2.54 cm)') {
                 $('.custom-radio-box bone, .custom-radio-img').each(function(i, j) {
                     var select_list_height = jQuery('.select_type').children(".list").find('.selected').text();
-                   
-
-                    if (select_list_height == 'Brass Bone') {
-
-
-                        if (i == 13 || i == 14 || i == 15 || i == 16 || i == 17 || i == 18 || i == 19) {
-
-
-
+                        if (select_list_height == 'Brass Bone') {
+                            if (i == 13 || i == 14 || i == 15 || i == 16 || i == 17 || i == 18 || i == 19) {
                             $(this).hide();
-                           
                         }
-                    } else if (select_list_height == 'Brass Circle') {
-
+                    }else if (select_list_height == 'Brass Circle') {
                         if (i == 7) {
                             $(this).hide();
                          
@@ -2069,10 +2023,8 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                     }
 
                 });
-            } else {
-
+            }else{
                 var select_list_height = jQuery('.select_type').children(".list").find('.selected').text();
-
                 $('.custom-radio-box bone, .custom-radio-img').each(function(i, j) {
                     var select_list_height = jQuery('.select_type').children(".list").find('.selected').text();
                     if (select_list_height == 'Brass Bone') {
@@ -2080,65 +2032,45 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                             $(this).show();
                             $('.large-tag').show();
                         }
-                    } else if (select_list_height == 'Brass Circle') {
-
+                    }else if (select_list_height == 'Brass Circle') {
                         if (i == 7) {
-
                             $(this).show();
-                           
                         }
                     }
 
                 });
-
             }
 
-            });
-
-
-
         });
-   
-</script>
-<script type="text/javascript">
-    
 
-$(document).ready(function(){
+
+
+
+
     if($('.primary_checkbox').is(':checked')){
         localStorage.setItem("cart_checkbox", "yes");
     }else{
         localStorage.setItem("cart_checkbox", "no");
     }
+    /*hide website name on tag if we choose small style*/
 
-
-
-/*hide website name on tag if we choose small style*/
-
- var size = $('.select_size').val();
-
-    if(size == 'small'){
-        $('.back_line_text2').hide();
-    }else{
-        $('.back_line_text2').show();
-        
+    var size = $('.select_size').val();
+        if(size == 'small'){
+            $('.back_line_text2').hide();
+        }else{
+            $('.back_line_text2').show();
     }
 
-$('.select_size').change(function(){
-
+    $('.select_size').change(function(){
     var size = $(this).val();
-    if(size == 'small'){
-        $('.back_line_text2').hide();
-    }else{
-        $('.back_line_text2').show();
-        
-    }
-    
+        if(size == 'small'){
+            $('.back_line_text2').hide();
+        }else{
+            $('.back_line_text2').show();
+        }
+
+    });
 });
-
-
-
-});
-
 
 </script>
 <?php get_footer(); ?>

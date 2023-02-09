@@ -262,26 +262,39 @@ if(isset($_GET['switch-subscription'])){
                         <i class="fa fa-check"></i>
                       </td>
                     </tr>
-                    <tr>
-                      <td class="pp-benefits pp-benefits6">
-                        <span class="pp-benefit-icon"></span>
-                        <i class="fa fa-plus pet-pro-sign"></i>
-                        <div class="pet-pro-plus-content">
-                          Your pet protection plan includes 30 days of pet insurance provided by our pet insurance Partner. You must abide by all requirements to activate and must call to them to initiate pet insurance coverage. No credit card required, its fast and easy. Activate it today, please check your emails for details!
-                        </div>
-                       <!--  Free Pet Medical Insurance (30 Days) -->
-                         Pawp Offer
-                      </td>
-                      <td>
-                        <i class="fa fa-check"></i>
-                      </td>
-                      <td>
-                        <i class="fa fa-check"></i>
-                      </td>
-                      <td>
-                        <i class="fa fa-check"></i>
-                      </td>
-                    </tr>
+                     <tr>
+            <td class="pp-benefits pp-benefits9">
+              <span class="pp-benefit-icon"></span>
+          
+              <div class="pet-pro-plus-content">
+              </div>
+             Free Month of Flea and Tick Prevention*
+            </td>
+        <td class=""></td>
+        <td>
+          <i class="fa fa-check"></i>
+        </td>
+        <td>
+          <i class="fa fa-check"></i>
+        </td>
+      </tr>
+              <tr>
+        <td class="pp-benefits pp-benefits9">
+          <span class="pp-benefit-icon"></span>
+          <span class="pet-pro-sign fa fa-plus"></span>
+          <div class="pet-pro-plus-content">
+            3 free months of being able to contact a veterinarian 24/7 via text, video call and phone calls with any questions or concerns you have about your pets.
+          </div>
+         3 Free Months of Veterinary Tela Health*
+        </td>
+        <td class=""></td>
+        <td>
+          <i class="fa fa-check"></i>
+        </td>
+        <td>
+          <i class="fa fa-check"></i>
+        </td>
+      </tr>
                     <tr>
                       <td class="pp-benefits pp-benefits7">
                         <span class="pp-benefit-icon"></span>
@@ -401,39 +414,7 @@ if(isset($_GET['switch-subscription'])){
                         <i class="fa fa-check"></i>
                       </td>
                     </tr>
-                      <tr>
-        <td class="pp-benefits pp-benefits9">
-          <span class="pp-benefit-icon"></span>
-      
-          <div class="pet-pro-plus-content">
-          </div>
-         Free Month of Flea and Tick Prevention*
-        </td>
-        <td class=""></td>
-        <td>
-          <i class="fa fa-check"></i>
-        </td>
-        <td>
-          <i class="fa fa-check"></i>
-        </td>
-      </tr>
-              <tr>
-        <td class="pp-benefits pp-benefits9">
-          <span class="pp-benefit-icon"></span>
-          <span class="pet-pro-sign fa fa-plus"></span>
-          <div class="pet-pro-plus-content">
-            3 free months of being able to contact a veterinarian 24/7 via text, video call and phone calls with any questions or concerns you have about your pets.
-          </div>
-         3 Free Months of Veterinary Tela Health*
-        </td>
-        <td class=""></td>
-        <td>
-          <i class="fa fa-check"></i>
-        </td>
-        <td>
-          <i class="fa fa-check"></i>
-        </td>
-      </tr>
+                         
                   </tbody>
                   <tfoot>
                     <tr>

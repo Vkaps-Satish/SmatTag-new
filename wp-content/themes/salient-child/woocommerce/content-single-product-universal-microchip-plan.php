@@ -18,12 +18,6 @@ $subscription   = wcs_get_subscription($_GET['switch-subscription']);
 //foreach( $subscription->get_items() as $item_id => $product_subscription ){
 foreach( $subscription as $item_id => $product_subscription ){
   $variationId  = $product_subscription['variation_id'];
-
-
-print_r($variationsId);
-die();
-
-
 }
 
 //Microchip Pet Protection Plan Parent Id 7804

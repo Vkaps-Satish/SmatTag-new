@@ -4959,7 +4959,7 @@ $countries = $countries_obj->__get('countries');
                 <div class="field-wrap two-fields-wrap">
                     <div class="field-div">
                         <label>*Serial Number: </label>
-                        <input type="text" placeholder="Serial Number" name="smarttag_id_number" class="text-data sereal-number-1" id="sname_input" required="" />
+                        <input type="text" placeholder="Serial Number" name="smarttag_id_number" class="text-data sereal-number-1 break_number" id="sname_input" required="" />
                         <span class="error" id="error"></span>
                     </div>
                     <div class="field-div">

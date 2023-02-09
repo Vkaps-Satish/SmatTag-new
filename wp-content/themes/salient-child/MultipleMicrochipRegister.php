@@ -298,13 +298,13 @@ if ( is_user_logged_in() ){
 		                <div class="field-wrap two-fields-wrap"><span class="remove-genrate-div"></span>
 		                  <div class="field-div">
 		                    <label>*Microchip Id Number</label>
-		                    <input type="text" placeholder="Microchip Id Number" name="microchip_id" class="text-data sname_input-MC microchip_id change-pet-cont reivew_pet_info microchip_number pet-data" id="sname_input" value="<?=(isset($_GET['id'])) ? $_GET['id'] : "" ?>" />	 <span class="valid_message "></span><span class="error" id="error"></span>
+		                    <input type="text" placeholder="Microchip Id Number" name="microchip_id" class="text-data sname_input-MC microchip_id change-pet-cont reivew_pet_info microchip_number pet-data break_number" id="sname_input" value="<?=(isset($_GET['id'])) ? $_GET['id'] : "" ?>" />	 <span class="valid_message "></span><span class="error" id="error"></span>
 		                    <a href="<?php echo get_site_url() . '/our-services/universal-microchip-register-new/'; ?>" class="show-atag error"style="display: none;">Click here</a>
 		                    <span class="error_michrochip error"></span>
 		                  </div>
 		                  <div class="field-div">
 		                    <label></label>
-		                    <input type="text" name="conf_microchip_id" placeholder="Confirm Microchip Id Number" class="text-data conf_microchip_id pet-data"  value="<?=(isset($_GET['id'])) ? $_GET['id'] : "" ?>" />
+		                    <input type="text" name="conf_microchip_id" placeholder="Confirm Microchip Id Number" class="text-data conf_microchip_id pet-data break_number"  value="<?=(isset($_GET['id'])) ? $_GET['id'] : "" ?>" />
 		                      <span class="error_con_michrochip error"></span>
 		                  </div>
 		                </div>

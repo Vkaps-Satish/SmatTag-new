@@ -116,3 +116,48 @@
     align-items: center;
     background-color: rgba(0,0,0,0.3);
 }
+
+
+#customers td, #customers  th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#customers tr:nth-child(even)
+{background-color: #f2f2f2;}
+
+#customers tr:hover 
+{background-color: #ddd;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #71a3c0
+  color: white;
+}
+
+table#customers > tbody > tr > td > a {
+    color: #161515;
+}
+.table-section {
+    width: 100% !important;
+}
+
+
+input#searchCustom {
+    width: 80%;
+    padding: 8px;
+    margin-top: 30px;
+}
+.search-row {
+    margin-top: 50px;
+}
+button#searchCustomfunctionality {
+    background: #1e83d3;
+    padding: 13px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 17px;
+}

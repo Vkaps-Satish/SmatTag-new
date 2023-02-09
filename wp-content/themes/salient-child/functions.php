@@ -3,19 +3,19 @@
 
 //flush_rewrite_rules(true);
 
-
-
-//ini_set('display_errors','Off');
-//ini_set('error_reporting', E_ALL );
-/*define('WP_DEBUG', false);
-define('WP_DEBUG_DISPLAY', false);*/
+// ini_set('display_errors','on');
+// ini_set('error_reporting', E_ALL );
+// define('WP_DEBUG', true);
+// define('WP_DEBUG_DISPLAY', true);
+// error_reporting(E_ALL);
+// ini_set('display_errors', '1');
 
 //https://prelaunch.idtag.com/wp-admin/post.php?post=7804&action=edit
 /* ..............................................................................................*/
 /*....................................Pet Protection Plans id ...................................*/
 /*...............................................................................................*/
-// error_reporting(E_ALL);
-//  ini_set('display_errors', '1');
+
+
 global $micoPrntId,$plholderImg,$loginUrl;
     $plholderImg = 82739; 
     $loginUrl = site_url('/login-to-smarttag/?login=1');
@@ -97,14 +97,33 @@ $printLostPoster = 83410;
 
 /*Define Global serial Number Prefix*/
 global $serialNumberPrefix1, $serialNumberPrefix2 ,$serialNumberPrefix3;
+
 $serialNumberPrefix1 = 900139;
 $serialNumberPrefix2 = 900141;
 $serialNumberPrefix3 = 900074;
 $serialNumberPrefix4 = 987000;
-    
-    
 
+/*----------------------------------global arrays----------------------------------------------*/
 
+//prefix for microchip
+global $microchipPrefixArray;
+$microchipPrefixArray = [900139, 900141, 900074, 987000];  
+
+//pet colors
+global $petColors;
+$petColors = array(
+        "Black" => "Black",
+        "Brown" => "Brown",
+        "Gold" => "Gold",
+        "Gray" => "Gray",
+        "Orange" => "Orange",
+        "Red" => "Red",
+        "Sliver" => "Sliver",
+        "Tan" => "Tan",
+        "White" => "White",
+        "Yellow" => "Yellow"
+    );
+//
 
 
 /*Make first later in upper case of posts title*/
@@ -214,7 +233,7 @@ function load_admin_style() {
     wp_enqueue_style( 'jquery-ui-style', get_stylesheet_directory_uri().'wp-content/themes/salient-child/css/jquery-ui.css', false,00);
  /*custom jquery code end--added by satish*/
     wp_enqueue_style(  'phone-code-style',  get_stylesheet_directory_uri(). '/css/intlTelInput.css', array(), '1', 'screen' );
-     wp_enqueue_style(  'custome-style',  get_stylesheet_directory_uri(). '/css/custom.css', array(), '1', 'screen' );
+     wp_enqueue_style(  'custome-style',  get_stylesheet_directory_uri(). '/css/custom.css', array(), rand(), 'screen' );
 }
 add_action( 'admin_enqueue_scripts', 'load_admin_style' );
 
@@ -628,9 +647,9 @@ function createPost($post,$file){
     $userID             = get_current_user_id();
     
     $new_post = array(
-     'post_title'   => $title,
-     'post_status'  => 'publish',
-     'post_type'    => 'pet_profile',
+        'post_title'   => $title,
+        'post_status'  => 'publish',
+        'post_type'    => 'pet_profile',
     );
  
     $post_id = wp_insert_post($new_post);
@@ -2281,134 +2300,98 @@ function Create_Multiple_Pet_profile(){
 
 }
 
-
-
-
-
-
-
-
-
  /*This function for create a pet profile by a new customer*/
 // Allow front-end submission 
 add_action('wp_ajax_Create_Pet_profile', 'cvf_upload_files');
 add_action('wp_ajax_nopriv_Create_Pet_profile', 'cvf_upload_files'); // Allow front-end submission 
 
 function cvf_upload_files(){
-    /*Code for creating a pet's profile*/
-// global $post;
-
-    /*ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-*/
-
-
-
-    
-        
     if(empty($_POST['post_id'])){
         $title   = $_POST['pet_name'];
         $user_id = $_POST['userId'];
         $user_info = get_userdata($user_id);
          
-       
-
-
-
-
         // Add the content of the form to $post as an array
-
-        $new_post = array(
-            'post_title'    => $title,
-            'post_status'   => 'publish',           // Choose: publish, 
-            'post_type'     => 'pet_profile',
-            'post_author'   =>  $user_id,
-        );
-
         if (isset($_POST['universal_microchip_id']) && !empty($_POST['universal_microchip_id'])) {
             $new_post = array(
                 'post_title'    => $title,
-                'post_status'   => 'pending',           // Choose: publish, 
+                'post_status'   => 'pending', // Choose: pending, 
                 'post_type'     => 'pet_profile',
                 'post_author'   =>  $user_id, 
             );
+        }else{
+            $new_post = array(
+                'post_title'    => $title,
+                'post_status'   => 'publish',   // Choose: publish, 
+                'post_type'     => 'pet_profile',
+                'post_author'   =>  $user_id,
+            );
         }
         
-     
+        $postid = wp_insert_post($new_post, true);
 
-      $postid = wp_insert_post($new_post, true);
-
-    
         if(isset($_POST['microchip_id'])){
-                $id = $_POST['microchip_id'];
-                
-                $serialNumberExist = checkSerialNumberFromDatabase($id);
+            $id = $_POST['microchip_id'];
+            $serialNumberExist = checkSerialNumberFromDatabase($id);
 
-                if($serialNumberExist == 0){
-                     add_post_meta( $postid, 'michrochip_status', 'Unassigned Microchip', true );
-                }else{
-                    update_post_meta($postid, 'michrochip_status', 'Assigned Microchip');
-                }
+            if($serialNumberExist == 0){
+                 add_post_meta( $postid, 'michrochip_status', 'Unassigned Microchip', true );
+            }else{
+                update_post_meta($postid, 'michrochip_status', 'Assigned Microchip');
             }
+        }
 
 
-
-        /*$serialNumberExist = checkSerialNumberFromDatabase($id);
-
-        if($serialNumberExist == 0){
-             add_post_meta( $postid, 'michrochip_status', 'Unassigned Microchip', true );
-        }else{
-            update_post_meta($postid, 'michrochip_status', 'Assigned Microchip');
-        }*/
         $first_name = get_user_meta($user_id, 'first_name',true );
         $last_name = get_user_meta($user_id, 'last_name',true );
-         $primary_home_number = get_user_meta( $user_id, 'primary_home_number', true ); 
+        $primary_home_number = get_user_meta( $user_id, 'primary_home_number', true ); 
         $owner_name = $first_name." ".$last_name;
         
-        update_post_meta($postid, 'pet_name', $owner_name);
+    
         update_post_meta($postid, 'owner_name', $owner_name);
         update_post_meta($postid, 'owner_email', $user_info->user_email);
         update_post_meta($postid, 'source_system', 'SMARTTAG');
         update_post_meta($postid, 'pet_owner', $user_id);
         update_post_meta($postid, 'primary_home_number', $primary_home_number);
 
-
-
         update_post_meta($postid, 'pet_name', $_POST['pet_name']);
+        update_post_meta($postid, 'pet_type', $_POST['pet_type']);
+        update_post_meta($postid, 'primary_breed', $_POST['primary_breed']);
+        update_post_meta($postid, 'secondary_breed', $_POST['secondary_breed']);
+        update_post_meta($postid, 'primary_breed', $_POST['primary_breed']);
+        update_post_meta($postid, 'primary_breed', $_POST['primary_breed']);
         update_post_meta($postid, 'primary_color', $_POST['primary_color']);
+        update_post_meta($postid, 'secondary_color', $_POST['secondary_color']);
+        update_post_meta($postid, 'gender', $_POST['gender']);
+        update_post_meta($postid, 'size', $_POST['size']);
         update_post_meta($postid, 'pet_date_of_birth', $_POST['pet_date_of_birth']);
-
-
+        
+        update_post_meta($postid, 'vaterinarian_first_name', $_POST['vaterinarian_first_name']);
+        update_post_meta($postid, 'vaterinarian_last_name', $_POST['vaterinarian_last_name']);
+        update_post_meta($postid, 'vaterinarian_email', $_POST['vaterinarian_email']);
+        update_post_meta($postid, 'vaterinarian_address_line_1', $_POST['vaterinarian_address_line_1']);
+        update_post_meta($postid, 'vaterinarian_address_line_2', $_POST['vaterinarian_address_line_2']);
+        update_post_meta($postid, 'vaterinarian_city', $_POST['vaterinarian_city']);
+        update_post_meta($postid, 'vaterinarian_state', $_POST['vaterinarian_state']);
+        update_post_meta($postid, 'vaterinarian_zip_code', $_POST['vaterinarian_zip_code']);
+        update_post_meta($postid, 'vaterinarian_primary_phone_number', $_POST['vaterinarian_primary_phone_number']);
+        update_post_meta($postid, 'vaterinarian_primary_phone_number_code', $_POST['vaterinarian_primary_phone_number_code']);
+        update_post_meta($postid, 'vaterinarian_secondary_phone_number', $_POST['vaterinarian_secondary_phone_number']);
+        update_post_meta($postid, 'vaterinarian_secondary_phone_number_code', $_POST['vaterinarian_secondary_phone_number_code']);
+       
+        $microchip_id_number = preg_replace('/\s+/', '', $_POST['microchip_id']);
+        update_post_meta($postid, 'microchip_id_number', $microchip_id_number);
+    
         $pet_name =  get_post_meta( $postid, 'pet_name' ,true ); 
         $pet_date_of_birth =  get_post_meta( $postid, 'pet_date_of_birth' ,true ); 
         $color = get_post_meta( $postid, 'primary_color' ,true ); 
-
-
-  if($color ==1 ){
-     $pet_color = 'Black';
-  }elseif($color ==2){
-   $pet_color = 'Blue';}elseif($color ==3){$pet_color = 'Brown';}elseif($color ==4){$pet_color = 'Gold';}elseif($color ==5){$pet_color = 'Gray';}elseif($color ==6){$pet_color = 'Orange';}elseif($color ==7){$pet_color='Red';}elseif($color ==8){$pet_color = 'Sliver';}elseif($color ==9){$pet_color = 'Tan';}elseif($color ==10){$pet_color = 'White';}elseif($color ==11){$pet_color = 'Yellow';}
-
-           
-
-
-
-        foreach ($_POST as $key => $value) {
-            if ($key == "microchip_id") {
-                $key = "microchip_id_number";
-            }
-            $value =  str_replace(' ','',$value);
-            update_post_meta($postid,$key,$value);
-        }
+    
         
-        
+        $_SESSION['pet_name'] = $pet_name;
+        $_SESSION['pa_color'] = $color;
+        $_SESSION['pet_date_of_birth'] = $pet_date_of_birth;
 
-              $_SESSION['pet_name'] = $pet_name;
-             $_SESSION['pa_color'] = $pet_color;
-             $_SESSION['pet_date_of_birth'] = $pet_date_of_birth;
-
-
+        /*image upload as assign to the pet profile*/    
         $parent_post_id = $postid;  // The parent ID of our attachments
         $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg"); // Supported file types
         $max_file_size =  2*1000000; // in kb
@@ -2424,119 +2407,113 @@ function cvf_upload_files(){
             'exclude'           => get_post_thumbnail_id() // Exclude post thumbnail to the attachment count
         ) );
 
-    // Image upload handler
-    if( $_SERVER['REQUEST_METHOD'] == "POST" ){
-        if(isset($_FILES['files']['name'])){
-        // Check if user is trying to upload more than the allowed number of images for the current post
-        if( ( count( $attachments ) + count( $_FILES['files']['name'] ) ) > $max_image_upload ) {
-            $upload_message[] = "Sorry you can only upload " . $max_image_upload . " images for each Ad";
-        } else {
-            
-            foreach ( $_FILES['files']['name'] as $f => $name ) {
-                $extension = pathinfo( $name, PATHINFO_EXTENSION );
-                // Generate a randon code for each file name
-                $new_filename = cvf_td_generate_random_code( 20 )  . '.' . $extension;
-                
-                if ( $_FILES['files']['error'][$f] == 4 ) {
-                    continue; 
-                }
-                
-                if ( $_FILES['files']['error'][$f] == 0 ) {
-                    // Check if image size is larger than the allowed file size
-                    if ( $_FILES['files']['size'][$f] > $max_file_size ) {
-                        $upload_message[] = "$name is too large!.";
-                        continue;
+        // Image upload handler
+        if( $_SERVER['REQUEST_METHOD'] == "POST" ){
+            if(isset($_FILES['files']['name'])){
+            // Check if user is trying to upload more than the allowed number of images for the current post
+                if( ( count( $attachments ) + count( $_FILES['files']['name'] ) ) > $max_image_upload ) {
+                    $upload_message[] = "Sorry you can only upload " . $max_image_upload . " images for each Ad";
+                } else {
                     
-                    // Check if the file being uploaded is in the allowed file types
-                    } 
-                    elseif( ! in_array( strtolower( $extension ), $valid_formats ) ){
-                        $upload_message[] = "$name is not a valid format";
-                        continue; 
-                    
-                    } else{ 
-                        // If no errors, upload the file...
-                        if( move_uploaded_file( $_FILES["files"]["tmp_name"][$f], $path.$new_filename ) ) {
-                            
-                            $count++; 
-
-                            $filename = $path.$new_filename;
-                            $filetype = wp_check_filetype( basename( $filename ), null );
-                            $wp_upload_dir = wp_upload_dir();
-                            $attachment = array(
-                                'guid'           => $wp_upload_dir['url'] . '/' . basename( $filename ), 
-                                'post_mime_type' => $filetype['type'],
-                                'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $filename ) ),
-                                'post_content'   => '',
-                                'post_status'    => 'inherit'
-                            );
-                            // Insert attachment to the database
-                           
-                            require_once( ABSPATH . 'wp-admin/includes/image.php' );
-                            
-                            // Generate meta data
-                            $attach_data = wp_generate_attachment_metadata( $attach_id, $filename ); 
-                            wp_update_attachment_metadata( $attach_id, $attach_data );
-                            $attach_id = wp_insert_attachment( $attachment, $filename, $parent_post_id );
-                             $all_images_id_array[] = $attach_id;
-
+                    foreach ( $_FILES['files']['name'] as $f => $name ) {
+                        $extension = pathinfo( $name, PATHINFO_EXTENSION );
+                        // Generate a randon code for each file name
+                        $new_filename = cvf_td_generate_random_code( 20 )  . '.' . $extension;
+                        
+                        if ( $_FILES['files']['error'][$f] == 4 ) {
+                            continue; 
                         }
+                        
+                        if ( $_FILES['files']['error'][$f] == 0 ) {
+                            // Check if image size is larger than the allowed file size
+                            if ( $_FILES['files']['size'][$f] > $max_file_size ) {
+                                $upload_message[] = "$name is too large!.";
+                                continue;
+                            
+                            // Check if the file being uploaded is in the allowed file types
+                            } 
+                            elseif( ! in_array( strtolower( $extension ), $valid_formats ) ){
+                                $upload_message[] = "$name is not a valid format";
+                                continue; 
+                            
+                            } else{ 
+                                // If no errors, upload the file...
+                                if( move_uploaded_file( $_FILES["files"]["tmp_name"][$f], $path.$new_filename ) ) {
+                                    
+                                    $count++; 
 
+                                    $filename = $path.$new_filename;
+                                    $filetype = wp_check_filetype( basename( $filename ), null );
+                                    $wp_upload_dir = wp_upload_dir();
+                                    $attachment = array(
+                                        'guid'           => $wp_upload_dir['url'] . '/' . basename( $filename ), 
+                                        'post_mime_type' => $filetype['type'],
+                                        'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $filename ) ),
+                                        'post_content'   => '',
+                                        'post_status'    => 'inherit'
+                                    );
+                                    // Insert attachment to the database
+                                   
+                                    require_once( ABSPATH . 'wp-admin/includes/image.php' );
+                                    
+                                    // Generate meta data
+                                    $attach_data = wp_generate_attachment_metadata( $attach_id, $filename ); 
+                                    wp_update_attachment_metadata( $attach_id, $attach_data );
+                                    $attach_id = wp_insert_attachment( $attachment, $filename, $parent_post_id );
+                                    $all_images_id_array[] = $attach_id;
+                                }   
+                            }
+                        }
                     }
                 }
             }
-            
         }
+
+        if ( isset( $upload_message ) ) :
+            echo json_encode(array("success"=>0,"message"=>'<div class="alert alert-danger alert-dismissible" style="margin-top:18px;"><strong>Error!</strong> '.implode(',',$upload_message).'</div>'));
+            exit();
+        endif;
+        
+        // If no error, show success message
+        if( $count != 0 ){ 
+            set_post_thumbnail($postid, $all_images_id_array[0] ); 
+            update_post_meta($postid,'pet_images',implode(',', $all_images_id_array));
+        }
+
+        if (isset($_POST['universal_microchip_id']) && !empty($_POST['universal_microchip_id'])) {
+            echo json_encode(array("success"=>1,"message"=>'<div class="alert alert-success alert-dismissible" style="margin-top:18px;"><strong>Success!</strong> Pet Profile Successfully Added and currently it\'s in pending status, If you purchase universal microchip subscription plan then it\'s automatically update pending to publish.</div>',"petId"=>$postid));
+            exit();
+        }
+
+        echo json_encode(array("success"=>1,"message"=>'<div class="alert alert-success alert-dismissible" style="margin-top:18px;"><strong>Success!</strong> Pet Profile Successfully Added</div>',"petId"=>$postid));
+    }else{
+        echo json_encode(array("success"=>0,"message"=>"Undefind Error","petId"=> 0));
+    }    
+
+
+    $serialNumberExist = checkSerialNumberFromDatabase($id);
+
+    if($serialNumberExist == 0){
+        $client_name = get_post_meta($postid, 'owner_name', true);
+        $client_email = get_post_meta($postid, 'owner_email', true);
+        $pet_name = get_post_meta($postid, 'pet_name', true);
+        $microchip_id_number = get_post_meta($postid, 'microchip_id_number', true);
+        $michrochip_status = get_post_meta($postid, 'michrochip_status', true);
+        $to = get_option('admin_email');
+        $subject = "Unassigned SmartTag Microchip";
+        $heading = "Unassigned SmartTag Microchip";
+        $message = "Hello Admin,"."\r\n\r\n";
+        $message .= " An Unassigned SmartTag microchip has been registered. Please investigate to resolve the issue."."\r\n\r\n";
+        $message .= " The User Info and MicroChip Info are Listed below:- "."\r\n\r\n";
+        $message .= "<b>Owner Name:-</b> ".$client_name."\r\n\r\n";
+        $message .= "<b>Owner Email:- </b>".$client_email."\r\n\r\n";
+        $message .= "<b>Pet Name:- </b>".$pet_name."\r\n\r\n";
+        $message .= "<b>MichroChip Id:- </b>".$microchip_id_number."\r\n\r\n";
+        $message .= "<b>MichroChip Status:-</b> ".$michrochip_status."\r\n\r\n";
+        //send_email_woocommerce_style($to , $subject , $heading , $message );
+        //send_email_woocommerce_style('satish@vkaps.com' , $subject , $heading , $message );
     }
-    }
-
-    
-
-    if ( isset( $upload_message ) ) :
-        echo json_encode(array("success"=>0,"message"=>'<div class="alert alert-danger alert-dismissible" style="margin-top:18px;"><strong>Error!</strong> '.implode(',',$upload_message).'</div>'));
-        exit();
-    endif;
-    
-    // If no error, show success message
-    if( $count != 0 ){ 
-        set_post_thumbnail($postid, $all_images_id_array[0] ); 
-        update_post_meta($postid,'pet_images',implode(',', $all_images_id_array));
-
-    }
-
-    if (isset($_POST['universal_microchip_id']) && !empty($_POST['universal_microchip_id'])) {
-        echo json_encode(array("success"=>1,"message"=>'<div class="alert alert-success alert-dismissible" style="margin-top:18px;"><strong>Success!</strong> Pet Profile Successfully Added and currently it\'s in pending status, If you purchase universal microchip subscription plan then it\'s automatically update pending to publish.</div>',"petId"=>$postid));
-        exit();
-    }
-    echo json_encode(array("success"=>1,"message"=>'<div class="alert alert-success alert-dismissible" style="margin-top:18px;"><strong>Success!</strong> Pet Profile Successfully Added</div>',"petId"=>$postid));
- }else{
-     echo json_encode(array("success"=>0,"message"=>"Undefind Error","petId"=>0));
- }    
-
-
- $serialNumberExist = checkSerialNumberFromDatabase($id);
-
- if($serialNumberExist == 0){
-      $client_name = get_post_meta($postid, 'owner_name', true);
-      $client_email = get_post_meta($postid, 'owner_email', true);
-      $pet_name = get_post_meta($postid, 'pet_name', true);
-      $microchip_id_number = get_post_meta($postid, 'microchip_id_number', true);
-      $michrochip_status = get_post_meta($postid, 'michrochip_status', true);
-      $to = get_option('admin_email');
-      $subject = "Unassigned SmartTag Microchip";
-         $heading = "Unassigned SmartTag Microchip";
-      $message = "Hello Admin,"."\r\n\r\n";
-      $message .= " An Unassigned SmartTag microchip has been registered. Please investigate to resolve the issue."."\r\n\r\n";
-      $message .= " The User Info and MicroChip Info are Listed below:- "."\r\n\r\n";
-      $message .= "<b>Owner Name:-</b> ".$client_name."\r\n\r\n";
-      $message .= "<b>Owner Email:- </b>".$client_email."\r\n\r\n";
-      $message .= "<b>Pet Name:- </b>".$pet_name."\r\n\r\n";
-      $message .= "<b>MichroChip Id:- </b>".$microchip_id_number."\r\n\r\n";
-      $message .= "<b>MichroChip Status:-</b> ".$michrochip_status."\r\n\r\n";
-  //send_email_woocommerce_style($to , $subject , $heading , $message );
-  //send_email_woocommerce_style('satish@vkaps.com' , $subject , $heading , $message );
- }
-
-     exit();
+    exit();
 }
 
 // Random code generator used for file names.
@@ -3217,18 +3194,14 @@ add_action("wp_ajax_nopriv_LoginWithEmailPassword", "loginWithUserEmail");
 
 function loginWithUserEmail(){
 
-                            //   ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
-                 //error_reporting(E_ALL);
-
     //Redirect My-account if user is login
     if(is_user_logged_in()){
         echo json_encode(array('success'=>0,'message'=>'The User Already login'));
         exit();
     }else{
-        $user = get_user_by_email($_POST['email']);
+        //$user = get_user_by_email($_POST['email']);
         // print_r(get_user_meta($user->ID));die;
-        $status = get_user_meta($user->ID, "member_status", true);
+        //$status = get_user_meta($user->ID, "member_status", true);
         
         /*this is the condition to check user active or inactive*/
         /*if(!$status && !empty($user->ID)){
@@ -3239,54 +3212,94 @@ function loginWithUserEmail(){
         if(!empty($_POST['SrialId'])){
 
             $smarTagID = $_POST['SrialId']; 
-           
-            $args=array(
-        'post_type' => 'pet_profile',
-        'post_status' => 'publish',
-        'posts_per_page' => -1,
-        'meta_query'=>array(
-            'relation' => 'AND',
-                array(
-                    'key' => 'smarttag_id_number',
-                    'value' => $smarTagID,
-                ),
-            )
-        
-    );
-               $query = new WP_Query($args);
-                 $login_michrochip =  $query->have_posts();
+            
+            $args = array(
+                'meta_key' => 'smarttag_id_number',
+                'meta_value' => $smarTagID,
+                'post_type' => 'pet_profile',
+                'post_status' => 'publish',
+                'posts_per_page' => 1,
+            );
 
-                 if($login_michrochip){
-                      while ($query->have_posts()) : $query->the_post(); 
-                             
-                              $id = get_the_ID(); 
-                            
-                                $email =  get_post_meta($id, 'owner_email', true);
-                                $user = get_user_by( 'email', $email );
-                                 $userId = $user->ID;   
-                                 $user_info = get_userdata($userId);
-                               //  print_r($user_info);
-                                    $user_roles = $user_info->roles;
-                                   $roles = $user_roles[0];
-                                 
-
+            $profile = get_posts($args);
+            if(!empty($profile)){
+                
+                $profile_id = $profile[0]->ID;
+                $email =  get_post_meta($profile_id, 'owner_email', true);
+                
+                if(empty($email)){
+                    echo json_encode(array('success'=>0,'message'=>'Pet owner is not valid'));  
+                    exit();  
+                }else{
+                    $user = get_user_by( 'email', $email );
+                    if(!$user){
+                        echo json_encode(array('success'=>0,'message'=>'User not found.'));  
+                        exit();  
+                    }else{
+                        $userId = $user->ID;
+                        $user_info = get_userdata($userId);
+                        $user_roles = $user_info->roles;
+                        $roles = $user_roles[0];
                         
-                             if( $roles == 'pet_professional'){
-                                echo json_encode(array('success'=>0,'message'=>'Please Login Pet Professional Login Form.'));  
-                                 exit();  
-                              
-                             }else {
-                                     wp_set_auth_cookie($userId,$_POST['remember']);
-                                     echo json_encode(array('success'=>1,'message'=>'You are login'));
-                                     exit();
-                             }
-
-                 endwhile;
-               
-                 }else{
-                        echo json_encode(array('success'=>0,'message'=>'Invalid Serial Id'));
-                             exit;
+                        if( $roles == 'pet_professional'){
+                            echo json_encode(array('success'=>0,'message'=>'Please Login Pet Professional Login Form.'));  
+                            exit();  
+                      
+                        }else {
+                            wp_set_auth_cookie($userId,$_POST['remember']);
+                            echo json_encode(array('success'=>1,'message'=>'You are login','userid'=>$userId));
+                            exit();
                         }
+                    }
+                }
+            }else{
+                echo json_encode(array('success'=> 0,'message'=>'Smarttag Id is not valid.'));  
+                exit();  
+            }
+
+            // $args=array(
+            //     'post_type' => 'pet_profile',
+            //     'post_status' => 'publish',
+            //     'posts_per_page' => -1,
+            //     'meta_query'=>array(
+            //             array(
+            //                 'key' => 'smarttag_id_number',
+            //                 'value' => $smarTagID,
+            //             ),
+            //         )
+                
+            // );
+            // $query = new WP_Query($args);
+            // $login_michrochip =  $query->have_posts();
+
+            // if($login_michrochip){
+            //     while ($query->have_posts()) : $query->the_post(); 
+                         
+            //         echo $id = get_the_ID(); 
+            //         echo $email =  get_post_meta($id, 'owner_email', true);
+            //         $user = get_user_by( 'email', $email );
+            //         echo $userId = $user->ID;   
+            //         $user_info = get_userdata($userId);
+            //         //  print_r($user_info);
+            //         $user_roles = $user_info->roles;
+            //         $roles = $user_roles[0];
+                    
+            //         if( $roles == 'pet_professional'){
+            //             echo json_encode(array('success'=>0,'message'=>'Please Login Pet Professional Login Form.'));  
+            //             exit();  
+                  
+            //         }else {
+            //             wp_set_auth_cookie($userId,$_POST['remember']);
+            //             echo json_encode(array('success'=>1,'message'=>'You are login','userid'=>$userId));
+            //             exit();
+            //         }
+
+            //     endwhile;
+           
+            // }else{
+            //     echo json_encode(array('success'=>0,'message'=>'Invalid Serial Id'));
+            //     exit;
+            // }
 
 
 
@@ -3382,7 +3395,7 @@ function loginWithUserEmail(){
             echo json_encode(array('success'=>0,'message'=>'You have not activated your account, for activate your account please check your email.'));
             exit();
         }*/
-              $user_roles = $user_meta->roles;
+        $user_roles = $user_meta->roles;
         if(  in_array('pet_professional', $user_roles)){
 
             echo json_encode(array('success'=>0,'message'=>'This is Pet Professional username. Please login from Pet-Professional'));
@@ -3916,8 +3929,14 @@ function quantity_inputs_for_woocommerce_loop_add_to_cart_link( $html, $product 
          echo  '<div class="product_desc" style="text-align:center;">'. get_the_title( $product_id ).'</div>';
         echo "<br/>"; 
        if(isset($matches[0][0])){
-    echo  '<p class="price" style="text-align:center;"><span class="woocommerce-Price-amount amount testing"><bdi><span class="woocommerce-Price-currencySymbol">$</span>'.$product->get_price().'</bdi></span></p>';
+            $product_price = $product->get_price();
+            $get_dot_from_price = explode('.', $product_price);
+            if($get_dot_from_price[1] == '00' ){
+                echo  '<p class="price" style="text-align:center;"><span class="woocommerce-Price-amount amount testing"><bdi><span class="woocommerce-Price-currencySymbol">$</span>'.$get_dot_from_price[0].'</bdi></span></p>';
+            }else{
+                    echo  '<p class="price" style="text-align:center;"><span class="woocommerce-Price-amount amount testing"><bdi><span class="woocommerce-Price-currencySymbol">$</span>'.$product->get_price().'</bdi></span></p>';
 
+            }   
 
     }
     
@@ -4721,6 +4740,35 @@ function checkSerialNumberFromDatabase($id){
      return $res;
 }
 
+
+
+add_action("wp_ajax_isMicrochipIdValid", "isMicrochipIdValidCallback");
+add_action("wp_ajax_nopriv_isMicrochipIdValid", "isMicrochipIdValidCallback");
+function isMicrochipIdValidCallback(){
+    global $microchipPrefixArray;
+    if (isset($_POST['action']) && $_POST['action']=='isMicrochipIdValid') {
+
+        $microchip_id = $_POST['microchip_id'];
+        $microchip_id = str_replace(' ', '', $microchip_id);
+        $microchip_id_prefix = substr($microchip_id, 0, 6);
+        
+        if(!in_array($microchip_id_prefix, $microchipPrefixArray)){ //validate predefined prefix of michrochip id
+            echo json_encode(array("status"=>false, "message"=> "This id is not a microchip id, <a target='_blank' href='/our-services/universal-microchip-register-new/?id=".$microchip_id."'>Click Here</a> to register Universal microchip id.</span>"));
+
+        }else if(checkSerialNumberFromDatabase($microchip_id) == 1){ // check microchip id is exsists or not
+            echo json_encode(array("status"=>false, "message"=> "Microchip is already used."));
+
+        }else if(checkMicrochipIDPetProfile($microchip_id) != true){ // check microchip id is used by pet profile
+            echo json_encode(array("status"=>false, "message"=> "This Microchip id is already assigned to the pet." ));
+        }else{
+            $msg = 'Valid SmartTag MichroChip';
+            $myarray = array("status"=>true,"message"=> $msg );
+            echo json_encode($myarray);
+        }
+        
+        exit();        
+    }
+}
 //test start
 add_action("wp_ajax_checkMicrochipIDValid1", "checkMicrochipIDValid1");
 add_action("wp_ajax_nopriv_checkMicrochipIDValid1", "checkMicrochipIDValid1");
@@ -4729,55 +4777,55 @@ function checkMicrochipIDValid1(){
     if (isset($_POST['action'])=='checkMicrochipIDValid1') {
 
        global $serialNumberPrefix1,$serialNumberPrefix2,$serialNumberPrefix3,$serialNumberPrefix4;
-            $result = substr($_POST['smarttag_id_number'], 0, 6);
-            $validSerialPrefix = array($serialNumberPrefix1, $serialNumberPrefix2, $serialNumberPrefix3,$serialNumberPrefix4);
-              $id = $_POST['smarttag_id_number'];
+        $result = substr($_POST['smarttag_id_number'], 0, 6);
+        $validSerialPrefix = array($serialNumberPrefix1, $serialNumberPrefix2, $serialNumberPrefix3,$serialNumberPrefix4);
+        $id = $_POST['smarttag_id_number'];
 
-               $serialNumberExist = checkSerialNumberFromDatabase($id);
-               if (in_array( $result, $validSerialPrefix)){
-                 
-                     $result = 1;
-                    $msg    = '';
-               /*if ($serialNumberExist) {*/
-               
-                    if(checkMicrochipIDPetProfile($id) != true){
-                             $result = 0;
-                           $msg    = 'This ID Already Registered';
-                           $myarray = array("status"=>"302","result"=>"exist", "message"=> $msg );
-                           echo json_encode($myarray);
-                    }else{
-                           $msg    = 'Valid SmartTag MichroChip';
-                           $myarray = array("status"=>"200","result"=>"success", "message"=> $msg );
-                           echo json_encode($myarray);
-                   }
-               /*}else{
-    
-                         $msg = "This is not a valid SmartTag microchip. If it is another company's microchip,For Universal Microchip Registration";
-                        $myarray = array("status"=>"406","result"=>"fail","message"=> $msg);
-                           echo json_encode($myarray);
-                    }*/
-
-           }else if($serialNumberExist){
-                     if(checkMicrochipIDPetProfile($id) != true){
-                              $result = 0;
-                            $msg    = 'This ID Already Registered';
-                            $myarray = array("status"=>"302","result"=>"exist", "message"=> $msg );
-                            echo json_encode($myarray);
-                     }else{
-                            $msg    = 'Valid SmartTag MichroChip';
-                            $myarray = array("status"=>"200","result"=>"success", "message"=> $msg );
-                            echo json_encode($myarray);
-                    }
-           }else{
-           
-                 $msg    = "This is not a valid SmartTag microchip. If it is another company's microchip,For Universal Microchip Registration";
-                $myarray = array("status"=>"406 ","result"=>"fail", "message"=> $msg );
+       $serialNumberExist = checkSerialNumberFromDatabase($id);
+       if (in_array( $result, $validSerialPrefix)){
+         
+            $result = 1;
+            $msg = '';
+            /*if ($serialNumberExist) {*/
+            if(checkMicrochipIDPetProfile($id) != true){
+                $result = 0;
+                $msg = 'This ID Already Registered';
+                $myarray = array("status"=>"302","result"=>"exist", "message"=> $msg );
+                echo json_encode($myarray);
+            }else{
+                $msg = 'Valid SmartTag MichroChip';
+                $myarray = array("status"=>"200","result"=>"success", "message"=> $msg );
                 echo json_encode($myarray);
            }
+       /*}else{
+
+                 $msg = "This is not a valid SmartTag microchip. If it is another company's microchip,For Universal Microchip Registration";
+                $myarray = array("status"=>"406","result"=>"fail","message"=> $msg);
+                   echo json_encode($myarray);
+            }*/
+
+        }else if($serialNumberExist){
+            if(checkMicrochipIDPetProfile($id) != true){
+                $result = 0;
+                $msg    = 'This ID Already Registered';
+                $myarray = array("status"=>"302","result"=>"exist", "message"=> $msg );
+                echo json_encode($myarray);
+             }else{
+                $msg = 'Valid SmartTag MichroChip';
+                $myarray = array("status"=>"200","result"=>"success", "message"=> $msg );
+                echo json_encode($myarray);
+            }
+        }else{
+            
+            $msg = "This is not a valid SmartTag microchip. If it is another company's microchip,For Universal Microchip Registration";
+            $myarray = array("status"=>"406 ","result"=>"fail", "message"=> $msg );
+            echo json_encode($myarray);
+        }
+
     }else{
-           $msg    = 'Please Enter Smart MichroChip';
-           $myarray = array("status"=>"406","result"=>"fail", "message"=> $msg );
-           echo json_encode($myarray);
+       $msg    = 'Please Enter Smart MichroChip';
+       $myarray = array("status"=>"406","result"=>"fail", "message"=> $msg );
+       echo json_encode($myarray);
     }
         
            exit();
@@ -4853,22 +4901,6 @@ function checkSmartTagIDValid_on_webhook(){
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 add_action("wp_ajax_checkSmartTagIDValid_testing", "checkSmartTagIDValid_test");
 add_action("wp_ajax_nopriv_checkSmartTagIDValid_testing", "checkSmartTagIDValid_test");
 function checkSmartTagIDValid_test(){
@@ -4882,38 +4914,35 @@ function checkSmartTagIDValid_test(){
 
 if (!function_exists ('phone_exists')) {
     function phone_exists($phone){
+        $phones  = preg_replace('~.*(\d{3})[^\d]{0,7}(\d{3})[^\d]{0,7}(\d{4}).*~', '($1) $2-$3', $phone). "\n";
+        if($phones){
+            $args = array(
+                'meta_key' => 'primary_home_number',
+                'meta_value' => trim($phones),
+                'number' => 1,
+                'count_total' => true,
+                'operator' => 'LIKE',
+            );
 
+        }else{
+            $args = array(
+                'meta_key' => 'primary_home_number',
+                'meta_value' => trim($phone),
+                'number' => 1,
+                'count_total' => true,
+                 'operator' => 'LIKE',
+            );
+        }
 
-$phones  = preg_replace('~.*(\d{3})[^\d]{0,7}(\d{3})[^\d]{0,7}(\d{4}).*~', '($1) $2-$3', $phone). "\n";
-
-    if($phones){
-
-        $args = array(
-            'meta_key' => 'primary_home_number',
-            'meta_value' => trim($phones),
-            'number' => 1,
-            'count_total' => true,
-            'operator' => 'LIKE',
-        );
-    }else{
-
-        $args = array(
-            'meta_key' => 'primary_home_number',
-            'meta_value' => trim($phone),
-            'number' => 1,
-            'count_total' => true,
-             'operator' => 'LIKE',
-        );
-    }
         $user = reset(get_users($args)); 
-            if ($user) {
-                $result['success'] = 1;
-                $result['user']    = $user;
-                return $result;
-            }else{
-                $result['success'] = 0;
-                return $result;
-            }
+        if ($user) {
+            $result['success'] = 1;
+            $result['user'] = $user;
+            return $result;
+        }else{
+            $result['success'] = 0;
+            return $result;
+        }
     }
 }
 
@@ -4956,7 +4985,7 @@ die;
 }
  
  //unserialize data 
-  function unserializeForm($str) {
+function unserializeForm($str) {
     $returndata = array();
     $strArray = explode("&", $str);
     $i = 0;
@@ -4980,9 +5009,6 @@ function get_session_custom_products(){
 
 if( !function_exists('salient_register_emails_filter_replace')):
     function  salient_register_emails_filter_replace( $email) {
-        echo $email;
-        die();
-
         $user = get_user_by( 'email', $email );
         $name = $user->user_login;
         $link = get_option('siteurl').'/?action=email_confirmation&user_id='.$user->ID.'&email='.$email;
@@ -5012,13 +5038,6 @@ endif;
 add_action( 'init', 'sl_email_confirmation_callback' );
 if( !function_exists('sl_email_confirmation_callback') ):
     function sl_email_confirmation_callback(){
-
-        // if(mail("rohit@geeksperhour.com","test","test")){
-        //     die("send mail");
-        // }else{
-        //     echo "ocean1";
-        // }
-        
 
         if( isset( $_GET['action'] ) && ( $_GET['action'] == 'email_confirmation' ) ){
             $user_id    = $_GET['user_id']; //
@@ -5093,7 +5112,7 @@ add_action('wp_ajax_nopriv_checkUserPhoneExiststeps','checkUserPhoneExiststeps')
 
 function checkUserPhoneExiststeps(){
     $res = phone_exists($_POST['primary_phone_number']);
-     $userID             = get_current_user_id();
+     $userID = get_current_user_id();
      $primary_home_number = get_user_meta( $userID,'primary_home_number', true); 
      if ($res['success'] == 1) {
         $id = $res['user']->ID;
@@ -5115,7 +5134,7 @@ add_action('wp_ajax_nopriv_checkSerialNumberExist','checkSerialNumberExist');
 
 function checkSerialNumberExist(){
     $serial = $_POST['serialNumber'];
-    $rs     = hasBoughtIDTag($serial);
+    $rs = hasBoughtIDTag($serial);
     if ($rs) {
         if (strlen((string)$serial) == 8) {
             $smarTagID = $serial;
@@ -5744,20 +5763,20 @@ function get_pet_breeds_by_tagId(){
             'hide_empty' => false,
             'parent' => $parentId,
         ) );
-        // print_r($terms);
-        $option = "<option value=''>Select</option>";
-
+        
+        $option = "";
+        if(!empty($terms)){
+            $option .= "<option value=''>Select</option>";
             foreach ($terms as $key => $value) {
                 $selected = "";
-
                 if(!empty($_POST['primary_breed']) && ( $value->term_taxonomy_id == $_POST['primary_breed']) ){
                     $selected = "selected";
                 }
-
                 $option .= "<option ".$selected." value='". $value->term_taxonomy_id ."'>".$value->name."</option>";
               
             }
-        // print_r($option);die;
+        }
+        
         echo json_encode(array("res"=>"success","data"=>$option));
         
     }
@@ -5797,7 +5816,7 @@ function trigger_pet_insurence_Reminder(){
         $user = get_userdata($post->post_author);
         if($user){
             $email = $user->user_email;
-            complimentary_petfirst_insurance_confirmation($email);
+           // complimentary_petfirst_insurance_confirmation($email);
         }
     }
 
@@ -6367,25 +6386,25 @@ function thankYouMail($order_id) {
     }
 
     $carts = WC()->cart->cart_contents;
-    if(!empty($carts)){
+ /*   if(!empty($carts)){
         foreach ( $carts as $cart ) {
 
             $product_id = $cart['product_id'];
             
-            if ($product_id == 6137 || $product_id == 7804) {
+            if ($product_id == 6137 || $product_id == 7804) {*/
 
-                $msg = "Hello Valued SmartTag Customer,\r\n\r\nEvery SmartTag customer will be receiving a FREE 30 days of Pet Medical\r\nInsurance, provided by PetFirst, as part of your SmartTag benefits.\r\n\r\nYou must call 855-454-7387 to activate this 30 day complimentary insurance, so don't wait.\r\n\r\nVeterinary costs continue to rise, and at SmartTag we want to provide you with an introductory pet insurance plan to help reimburse you for your pet's veterinary expenses. We are the only ID Tag company to include pet insurance with our membership.\r\n\r\nPet Medical Insurance Plan details:\r\n\r\nAggregate Benefit Limit: $1,000\r\n\r\nPer Incident Limit: $500\r\n\r\nPer Incident Deductible: $50\r\n\r\nReimbursement: 90%\r\n\r\nYou must call to activate this FREE pet insurance and to confirm your pet's details. Please call 855-454-7387 today, for your FREE 30 day Pet Medical Insurance.\r\n\r\nSmartTag Benefits:\r\n\r\nInstant Pet “Amber Alert” with a full pet profile, sent to all shelter and rescue groups within a 50-mile radius of the pet’s last known location.\r\n24/7 Live lost pet call center to field and directly connect all calls, to reunite pets with their owners.\r\nA metal collar ID tag.\r\nFree pet and owner profile updates anytime.\r\nAll SmartTag microchips are registered with national AAHA registry.\r\nAll ID tags and microchips are searchable in online search.\r\nFree Pet Medical Insurance (30 days of pet insurance – accidents and illnesses covered) Must call to activate, PetFirst at 855-454-7387.\r\nInstant Lost Pet Posters generated with a click of a button.\r\nLost pets are posted on Facebook.\r\nWarm Regards,\r\n\r\nSmartTag Customer Service";
+              /*  $msg = "Hello Valued SmartTag Customer,\r\n\r\nEvery SmartTag customer will be receiving a FREE 30 days of Pet Medical\r\nInsurance, provided by PetFirst, as part of your SmartTag benefits.\r\n\r\nYou must call 855-454-7387 to activate this 30 day complimentary insurance, so don't wait.\r\n\r\nVeterinary costs continue to rise, and at SmartTag we want to provide you with an introductory pet insurance plan to help reimburse you for your pet's veterinary expenses. We are the only ID Tag company to include pet insurance with our membership.\r\n\r\nPet Medical Insurance Plan details:\r\n\r\nAggregate Benefit Limit: $1,000\r\n\r\nPer Incident Limit: $500\r\n\r\nPer Incident Deductible: $50\r\n\r\nReimbursement: 90%\r\n\r\nYou must call to activate this FREE pet insurance and to confirm your pet's details. Please call 855-454-7387 today, for your FREE 30 day Pet Medical Insurance.\r\n\r\nSmartTag Benefits:\r\n\r\nInstant Pet “Amber Alert” with a full pet profile, sent to all shelter and rescue groups within a 50-mile radius of the pet’s last known location.\r\n24/7 Live lost pet call center to field and directly connect all calls, to reunite pets with their owners.\r\nA metal collar ID tag.\r\nFree pet and owner profile updates anytime.\r\nAll SmartTag microchips are registered with national AAHA registry.\r\nAll ID tags and microchips are searchable in online search.\r\nFree Pet Medical Insurance (30 days of pet insurance – accidents and illnesses covered) Must call to activate, PetFirst at 855-454-7387.\r\nInstant Lost Pet Posters generated with a click of a button.\r\nLost pets are posted on Facebook.\r\nWarm Regards,\r\n\r\nSmartTag Customer Service";
                 $subject = "PetFirst Insurance Reminder";
                 $heading = "";   
                // send_email_woocommerce_style("gaurav@vkaps.com" , $subject , $heading , $msg );
                 send_email_woocommerce_style($email , $subject , $heading , $msg );   
-                break;
-            }
+                break;*/
+       /*     }
         }
     }
 
 
-    
+    */
 
 
 
@@ -7045,14 +7064,14 @@ echo '</pre>';
       wp_enqueue_script('custom_js_script', 'https://cdn.datatables.net/1.12.0/js/dataTables.bootstrap4.min.js', array('jquery'));
       ?>
         <script type="text/javascript">
-             jQuery(document).ready(function(){
+           /*  jQuery(document).ready(function(){
                 alert();
                 jQuery('#example').DataTable({
                     "language": {
                         "emptyTable": "No Fosters"
                 }
             });
-        });
+        });*/
 
         </script>
       <?php
@@ -7321,15 +7340,7 @@ add_action('wp_ajax_nopriv_Create_Pet_profile_For_Webhook', 'cvf_upload_files_we
 
 function cvf_upload_files_webhook(){
     /*Code for creating a pet's profile*/
-
-    
     if(empty($_POST['post_id'])){
-
-
-      
-
-
-
         $title   = $_POST['pet_name'];
         $user_id = $_POST['userId'];
         $user_info = get_userdata($user_id);
@@ -7344,64 +7355,62 @@ function cvf_upload_files_webhook(){
             'post_author'   =>  $user_id,
         );
 
-       /* if (isset($_POST['universal_microchip_id']) && !empty($_POST['universal_microchip_id'])) {
-            $new_post = array(
-                'post_title'    => $title,
-                'post_status'   => 'pending',           // Choose: publish, 
-                'post_type'     => 'pet_profile',
-                'post_author'   =>  $user_id, 
-            );
-        }
-        */
+      
         
- $postid = wp_insert_post($new_post);
+     $postid = wp_insert_post($new_post);
 
         $first_name = get_user_meta($user_id, 'first_name',true );
         $last_name = get_user_meta($user_id, 'last_name',true );
         $owner_name = $first_name." ".$last_name;
-
-          $primary_home_number = get_user_meta( $user_id, 'primary_home_number', true ); 
-
-
-
+        $primary_home_number = get_user_meta( $user_id, 'primary_home_number', true ); 
         
-        update_post_meta($postid, 'owner_name', $owner_name);
+     update_post_meta($postid, 'owner_name', $owner_name);
         update_post_meta($postid, 'owner_email', $user_info->user_email);
         update_post_meta($postid, 'source_system', 'SMARTTAG');
         update_post_meta($postid, 'pet_owner', $user_id);
-        update_post_meta($postid, 'primary_home_number', $user_id);
+        update_post_meta($postid, 'primary_home_number', $primary_home_number);
 
-        foreach ($_POST as $key => $value) {
-            if ($key == "microchip_id") {
-                $key = "microchip_id_number";
-            }
-            update_post_meta($postid,$key,$value);
-        }
+        update_post_meta($postid, 'pet_name', $_POST['pet_name']);
+        update_post_meta($postid, 'pet_type', $_POST['pet_type']);
+        update_post_meta($postid, 'primary_breed', $_POST['primary_breed']);
+        update_post_meta($postid, 'secondary_breed', $_POST['secondary_breed']);
+        update_post_meta($postid, 'primary_breed', $_POST['primary_breed']);
+        update_post_meta($postid, 'primary_breed', $_POST['primary_breed']);
+        update_post_meta($postid, 'primary_color', $_POST['primary_color']);
+        update_post_meta($postid, 'secondary_color', $_POST['secondary_color']);
+        update_post_meta($postid, 'gender', $_POST['gender']);
+        update_post_meta($postid, 'size', $_POST['size']);
+        update_post_meta($postid, 'pet_date_of_birth', $_POST['pet_date_of_birth']);
+        
+        update_post_meta($postid, 'vaterinarian_first_name', $_POST['vaterinarian_first_name']);
+        update_post_meta($postid, 'vaterinarian_last_name', $_POST['vaterinarian_last_name']);
+        update_post_meta($postid, 'vaterinarian_email', $_POST['vaterinarian_email']);
+        update_post_meta($postid, 'vaterinarian_address_line_1', $_POST['vaterinarian_address_line_1']);
+        update_post_meta($postid, 'vaterinarian_address_line_2', $_POST['vaterinarian_address_line_2']);
+        update_post_meta($postid, 'vaterinarian_city', $_POST['vaterinarian_city']);
+        update_post_meta($postid, 'vaterinarian_state', $_POST['vaterinarian_state']);
+        update_post_meta($postid, 'vaterinarian_zip_code', $_POST['vaterinarian_zip_code']);
+        update_post_meta($postid, 'vaterinarian_primary_phone_number', $_POST['vaterinarian_primary_phone_number']);
+        update_post_meta($postid, 'vaterinarian_primary_phone_number_code', $_POST['vaterinarian_primary_phone_number_code']);
+        update_post_meta($postid, 'vaterinarian_secondary_phone_number', $_POST['vaterinarian_secondary_phone_number']);
+        update_post_meta($postid, 'vaterinarian_secondary_phone_number_code', $_POST['vaterinarian_secondary_phone_number_code']);
+       
+        $microchip_id_number = preg_replace('/\s+/', '', $_POST['microchip_id']);
+        update_post_meta($postid, 'microchip_id_number', $microchip_id_number);
+    
+        
 
-         $pet_name =  get_post_meta( $postid, 'pet_name' ,true ); 
-         $pet_date_of_birth =  get_post_meta( $postid, 'pet_date_of_birth' ,true ); 
+        $pet_name =  get_post_meta( $postid, 'pet_name' ,true ); 
+        $pet_date_of_birth =  get_post_meta( $postid, 'pet_date_of_birth' ,true ); 
         $color = get_post_meta( $postid, 'primary_color' ,true ); 
 
-        if($color ==1 ){
-           $pet_color = 'Black';
-        }elseif($color ==2){
-         $pet_color = 'Blue';}elseif($color ==3){$pet_color = 'Brown';}elseif($color ==4){$pet_color = 'Gold';}elseif($color ==5){$pet_color = 'Gray';}elseif($color ==6){$pet_color = 'Orange';}elseif($color ==7){$pet_color='Red';}elseif($color ==8){$pet_color = 'Sliver';}elseif($color ==9){$pet_color = 'Tan';}elseif($color ==10){$pet_color = 'White';}elseif($color ==11){$pet_color = 'Yellow';}
+        /*Store pet infomration in session variable*/
+        $_SESSION['pet_name'] = $pet_name;
+        $_SESSION['pa_color'] = $color;
+        $_SESSION['pet_date_of_birth'] = $pet_date_of_birth;
 
+    // Image upload handler
 
-
-            /*Store pet infomration in session variable*/
-            $_SESSION['pet_name'] = $pet_name;
-            $_SESSION['pa_color'] = $pet_color;
-            $_SESSION['pet_date_of_birth'] = $pet_date_of_birth;
-
-
-
-
-
-
-
-
-        
         $parent_post_id = $postid;  // The parent ID of our attachments
         $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg"); // Supported file types
         $max_file_size =  2*1000000; // in kb
@@ -7417,72 +7426,66 @@ function cvf_upload_files_webhook(){
             'exclude'           => get_post_thumbnail_id() // Exclude post thumbnail to the attachment count
         ) );
 
-    // Image upload handler
+    
     if( $_SERVER['REQUEST_METHOD'] == "POST" ){
         if(isset($_FILES['files']['name'])){
-        // Check if user is trying to upload more than the allowed number of images for the current post
-        if( ( count( $attachments ) + count( $_FILES['files']['name'] ) ) > $max_image_upload ) {
-            $upload_message[] = "Sorry you can only upload " . $max_image_upload . " images for each Ad";
-        } else {
-            
-            foreach ( $_FILES['files']['name'] as $f => $name ) {
-                $extension = pathinfo( $name, PATHINFO_EXTENSION );
-                // Generate a randon code for each file name
-                $new_filename = cvf_td_generate_random_code( 20 )  . '.' . $extension;
+            // Check if user is trying to upload more than the allowed number of images for the current post
+            if( ( count( $attachments ) + count( $_FILES['files']['name'] ) ) > $max_image_upload ) {
+                $upload_message[] = "Sorry you can only upload " . $max_image_upload . " images for each Ad";
+            } else {
                 
-                if ( $_FILES['files']['error'][$f] == 4 ) {
-                    continue; 
-                }
-                
-                if ( $_FILES['files']['error'][$f] == 0 ) {
-                    // Check if image size is larger than the allowed file size
-                    if ( $_FILES['files']['size'][$f] > $max_file_size ) {
-                        $upload_message[] = "$name is too large!.";
-                        continue;
+                foreach ( $_FILES['files']['name'] as $f => $name ) {
+                    $extension = pathinfo( $name, PATHINFO_EXTENSION );
+                    // Generate a randon code for each file name
+                    $new_filename = cvf_td_generate_random_code( 20 )  . '.' . $extension;
                     
-                    // Check if the file being uploaded is in the allowed file types
-                    } 
-                    elseif( ! in_array( strtolower( $extension ), $valid_formats ) ){
-                        $upload_message[] = "$name is not a valid format";
+                    if ( $_FILES['files']['error'][$f] == 4 ) {
                         continue; 
+                    }
                     
-                    } else{ 
-                        // If no errors, upload the file...
-                        if( move_uploaded_file( $_FILES["files"]["tmp_name"][$f], $path.$new_filename ) ) {
-                            
-                            $count++; 
+                    if ( $_FILES['files']['error'][$f] == 0 ) {
+                        // Check if image size is larger than the allowed file size
+                        if ( $_FILES['files']['size'][$f] > $max_file_size ) {
+                            $upload_message[] = "$name is too large!.";
+                            continue;
+                        
+                        // Check if the file being uploaded is in the allowed file types
+                        }elseif( ! in_array( strtolower( $extension ), $valid_formats ) ){
+                            $upload_message[] = "$name is not a valid format";
+                            continue; 
+                        
+                        }else{ 
+                            // If no errors, upload the file...
+                            if( move_uploaded_file( $_FILES["files"]["tmp_name"][$f], $path.$new_filename ) ) {
+                                
+                                $count++; 
 
-                            $filename = $path.$new_filename;
-                            $filetype = wp_check_filetype( basename( $filename ), null );
-                            $wp_upload_dir = wp_upload_dir();
-                            $attachment = array(
-                                'guid'           => $wp_upload_dir['url'] . '/' . basename( $filename ), 
-                                'post_mime_type' => $filetype['type'],
-                                'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $filename ) ),
-                                'post_content'   => '',
-                                'post_status'    => 'inherit'
-                            );
-                            // Insert attachment to the database
-                           
-                            require_once( ABSPATH . 'wp-admin/includes/image.php' );
-                            
-                            // Generate meta data
-                            $attach_data = wp_generate_attachment_metadata( $attach_id, $filename ); 
-                            wp_update_attachment_metadata( $attach_id, $attach_data );
-                            $attach_id = wp_insert_attachment( $attachment, $filename, $parent_post_id );
-                             $all_images_id_array[] = $attach_id;
-
+                                $filename = $path.$new_filename;
+                                $filetype = wp_check_filetype( basename( $filename ), null );
+                                $wp_upload_dir = wp_upload_dir();
+                                $attachment = array(
+                                    'guid'           => $wp_upload_dir['url'] . '/' . basename( $filename ), 
+                                    'post_mime_type' => $filetype['type'],
+                                    'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $filename ) ),
+                                    'post_content'   => '',
+                                    'post_status'    => 'inherit'
+                                );
+                                // Insert attachment to the database
+                               
+                                require_once( ABSPATH . 'wp-admin/includes/image.php' );
+                                
+                                // Generate meta data
+                                $attach_data = wp_generate_attachment_metadata( $attach_id, $filename ); 
+                                wp_update_attachment_metadata( $attach_id, $attach_data );
+                                $attach_id = wp_insert_attachment( $attachment, $filename, $parent_post_id );
+                                $all_images_id_array[] = $attach_id;
+                            }
                         }
-
                     }
                 }
             }
-            
         }
     }
-    }
-
-    
 
     if ( isset( $upload_message ) ) :
         echo json_encode(array("success"=>0,"message"=>'<div class="alert alert-danger alert-dismissible" style="margin-top:18px;"><strong>Error!</strong> '.implode(',',$upload_message).'</div>'));
@@ -7528,8 +7531,8 @@ function cvf_upload_files_webhook(){
       $message .= "<b>Owner Name:-</b> ".$client_name."\r\n\r\n";
       $message .= "<b>Owner Email:- </b>".$client_email."\r\n\r\n";
       $message .= "<b>Pet Name:- </b>".$pet_name."\r\n\r\n";
-      $message .= "<b>MichroChip Id:- </b>".$microchip_id_number."\r\n\r\n";
-      $message .= "<b>MichroChip Status:-</b> ".$michrochip_status."\r\n\r\n";
+      $message .= "<b>SmartTag Id:- </b>".$microchip_id_number."\r\n\r\n";
+      $message .= "<b>SmartTag Status:-</b> ".$michrochip_status."\r\n\r\n";
   send_email_woocommerce_style($to , $subject , $heading , $message );
   //send_email_woocommerce_style('satish@vkaps.com' , $subject , $heading , $message );
  }
@@ -7661,10 +7664,11 @@ add_action( 'rest_api_init', function(){
     );
 });
 function michrochip_registring(WP_REST_Request $request) {
+    global $serialNumberPrefix1,$serialNumberPrefix2,$serialNumberPrefix3,$serialNumberPrefix4;
 
 
-     $check     = checkAuthentication();
-     $checkAuth = json_decode($check,true);
+    $check     = checkAuthentication();
+    $checkAuth = json_decode($check,true);
 
     if (!$checkAuth['success']) {
         return $checkAuth;
@@ -7672,10 +7676,7 @@ function michrochip_registring(WP_REST_Request $request) {
         $accountId = $checkAuth['userID'];
     }
 
-global $serialNumberPrefix1,$serialNumberPrefix2,$serialNumberPrefix3,$serialNumberPrefix4;
-
     $response = array();
-    
     $parameters = $request->get_params();
 
 /*user info*/
@@ -7685,7 +7686,6 @@ global $serialNumberPrefix1,$serialNumberPrefix2,$serialNumberPrefix3,$serialNum
    // $Password = $parameters['Password'];
 
     $PrimaryPhone = trim($parameters['PrimaryPhone']);
-   
     $Address = $parameters['Address'];
     $City = $parameters['City'];
     $State = $parameters['State'];
@@ -7696,248 +7696,244 @@ global $serialNumberPrefix1,$serialNumberPrefix2,$serialNumberPrefix3,$serialNum
 
 /*Pet Info*/
 
-        $MicrochipId   = $parameters['Pet']['MicrochipId'];
-        $PetName        = $parameters['Pet']['PetName'];
-        $PetType        = $parameters['Pet']['PetType'];
-        $PrimaryColor   = $parameters['Pet']['PrimaryColor'];
-        $Gender         = $parameters['Pet']['Gender'];
-        $Size           = $parameters['Pet']['Size'];
-        $DOB            = $parameters['Pet']['Dob'];
-        $SecoundaryColor          = $parameters['Pet']['SecoundaryColor'];
-   
+    $MicrochipId    = $parameters['Pet']['MicrochipId'];
+    $PetName        = $parameters['Pet']['PetName'];
+    $PetType        = $parameters['Pet']['PetType'];
+    $PrimaryColor   = $parameters['Pet']['PrimaryColor'];
+    $Gender         = $parameters['Pet']['Gender'];
+    $Size           = $parameters['Pet']['Size'];
+    $DOB            = $parameters['Pet']['Dob'];
+    $SecondaryColor = $parameters['Pet']['SecondaryColor'];
+    
+    // var_dump(email_exists($Email));die;
     /*save User information*/
-         if(email_exists($Email)){
-            $user = get_user_by( 'email', $Email );
-            $newUserId = $user->ID;
+     if(email_exists($Email)){
+        $user = get_user_by( 'email', $Email );
+        $newUserId = $user->ID;
+    }
+
+    if($PetName == ""){
+
+        $response['status'] = "error";
+        $response['message'] = "Pet Name is required.";  
+        return new WP_REST_Response( $response, 400 ); 
+
+    }
+
+    if($MicrochipId == ""){
+
+        $response['status'] = "error";
+        $response['message'] = "Microchip Id is required.";  
+        return new WP_REST_Response( $response, 400 ); 
+
     }
 
 
+    if($FirstName == ""){
 
-
-    if($FirstName==""){
-
-        $response['status'] = 404;
+        $response['status'] = "error";
         $response['message'] = "First name is required.";  
-        return new WP_REST_Response( $response ); 
+        return new WP_REST_Response( $response, 400 ); 
 
-    }elseif($LastName==""){
+    }elseif($LastName == ""){
 
-        $response['status'] = 404;
+        $response['status'] = "error";
         $response['message'] = "Last name is required..";  
-        return new WP_REST_Response( $response ); 
+        return new WP_REST_Response( $response, 400 );  
 
-    }else if($Email== ""){
+    }else if($Email == ""){
 
-        $response['status'] = 404;
+        $response['status'] = "error";
         $response['message'] = "Email addresss is required.";  
-        return new WP_REST_Response( $response ); 
+        return new WP_REST_Response( $response, 400 );  
 
     }else if (!filter_var($Email, FILTER_VALIDATE_EMAIL)) {
 
-        $response['status'] = 404;
+        $response['status'] = "error";
         $response['message'] = "Invalid Email format.";  
-        return new WP_REST_Response( $response ); 
+        return new WP_REST_Response( $response, 400 );  
 
     }else if($PrimaryPhone == ""){
 
-        $response['status'] = 404;
+        $response['status'] = "error";
         $response['message'] = "Primary Phone is required.";  
-        return new WP_REST_Response( $response ); 
+        return new WP_REST_Response( $response, 400 );  
 
     }else if(strlen($PrimaryPhone) != 10){
 
-        $response['status'] = 404;
-        $response['message'] = "Please Insert 10 digit Number";  
-        return new WP_REST_Response( $response ); 
+        $response['status'] = "error";
+        $response['message'] = "Primary phone number should be 10 digits";  
+        return new WP_REST_Response( $response, 400 );  
 
     }else if(is_numeric($PrimaryPhone)!=1){
 
-        $response['status'] = 404;
+        $response['status'] = "error";
         $response['message'] = "Please Enter only number";  
-        return new WP_REST_Response( $response ); 
+        return new WP_REST_Response( $response, 400 );  
 
     }else if(trim($Size) != "small" && trim($Size) != "large" && !empty(trim($Size))){
 
-        $response['status'] = 404;
+        $response['status'] = "error";
         $response['message'] = "The size field accepts only small or large.";  
-        return new WP_REST_Response( $response ); 
+        return new WP_REST_Response( $response, 400 );  
 
-    }else if(trim($Gender) != "Male" && trim($Gender) != "Female" && !empty(trim($Gender))){
+    }else if(trim($Gender) != "male" && trim($Gender) != "female" && !empty(trim($Gender))){
 
-        $response['status'] = 404;
-        $response['message'] = "The Gender field accepts only Male or Female.";  
-        return new WP_REST_Response( $response ); 
+        $response['status'] = "error";
+        $response['message'] = "The Gender field accepts only male or female.";  
+        return new WP_REST_Response( $response, 400 ); 
 
     }else if(trim($DOB) == ''){
 
-        $response['status'] = 404;
+        $response['status'] = "error";
         $response['message'] = "Date Field is required";  
-        return new WP_REST_Response( $response ); 
+        return new WP_REST_Response( $response, 400 ); 
 
     }else if (!preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$DOB)) {
 
-        $response['status'] = 404;
+        $response['status'] = "error";
         $response['message'] = "Please user this formate YYYY-MM-DD";  
-        return new WP_REST_Response( $response ); 
+        return new WP_REST_Response( $response, 400 ); 
 
     }else if($newUserId){
-
-            if(strlen($MicrochipId) == '15'){
-                $result = substr($MicrochipId, 0, 6);
-                 $validSerialPrefix = array($serialNumberPrefix1, $serialNumberPrefix2, $serialNumberPrefix3,$serialNumberPrefix4);
-                if (in_array( $result, $validSerialPrefix)){
-                    if(checkMicrochipIDPetProfile($MicrochipId) != false){
-                         $new_post = array(
-                              'post_title'    => $PetName,
-                              'post_status'   => 'publish',           // Choose: 
-                              'post_type'     => 'pet_profile',
-                              'post_author'   =>  $newUserId,
-                          );
-                        
-                         $postId = wp_insert_post($new_post, true);
-                     
-
-                    }else{
-                        global $wpdb;
-                         $postId = $wpdb->get_var( $wpdb->prepare("SELECT `post_id` FROM `wp_postmeta` WHERE `meta_value` = ".$MicrochipId." AND `meta_key` = 'microchip_id_number'") );
-                        }
-                            if($PetType == 'Cat'){
-                                $petCode = '587';
-                            }else if($PetType == 'Dog'){
-                                $petCode = '1045';
-                            }else if($PetType == 'Ferret'){
-                                $petCode = '1046';
-                            }else if($PetType == 'Horse'){
-                                $petCode = '588';
-                            }else if($PetType == 'Other'){
-                                $petCode = '1048';
-                            }else{
-                                $petCode =  '1047';
-                            }   
-                            //$postId = wp_insert_post($new_post, true);
-
-                            update_post_meta($postId , 'pet_name', $PetName);
-                            update_post_meta($postId , 'pet_type', $petCode);
-                            update_post_meta($postId , 'gender', $Gender);
-                            update_post_meta($postId , 'primary_color', $PrimaryColor);
-                            update_post_meta($postId , 'secondary_color', $SecoundaryColor);
-                            update_post_meta($postId , 'Size', $Size);
-                            update_post_meta($postId,'microchip_id_number',$MicrochipId);
-                            update_post_meta($postId,'user_id',$newUserId);
-
-
-                            /*Update user Information*/
-
-                            if (isset($FirstName) && !empty(trim($FirstName))) {
-                                update_user_meta($newUserId,'first_name',$FirstName);
-                            }
-                            if (isset($LastName) && !empty(trim($LastName))) {
-                                update_user_meta($newUserId,'last_name',$LastName);
-                            }
-                            if (isset($Address) && !empty(trim($Address))) {
-                                update_user_meta($newUserId,'primary_address_line1',$Address);
-                            }
-                            if (isset($City) && !empty(trim($City))) {
-                                update_user_meta($newUserId,'primary_city',$City);
-                            }
-                            if (isset($State) && !empty(trim($State))) {
-                                update_user_meta($newUserId,'primary_state',$State);
-                            }
-                            if (isset($Country) && !empty(trim($Country))) {
-                                update_user_meta($newUserId,'primary_country',$Country);
-                            }
-                            if (isset($PostalCode) && !empty(trim($PostalCode))) {
-                                update_user_meta($newUserId,'primary_postcode',$PostalCode);
-                            }
-
-                            update_user_meta($newUserId,'primary_home_number',$PrimaryPhone);
-                            update_user_meta($newUserId, 'source', 'api');
-
-                                if(email_exists($Email)){
-                                    $message = "User Information is Update and Pet Profile Registered Successfully";  
-                                }else{
-                                    $message = "User and Pet profile registered successfully";  
-                                }    
-                                
-                                         $response['status']       = 200;
-                                    $response['message']      = $message;
-                                    $response['userId']       = $newUserId;
-                                    $response['petProfileId'] = $postId;
-                                 return new WP_REST_Response( $response ); 
-
-
-                   /* }else{
-                            $response['status'] = 404;
-                            $response['message'] = "This ID Already Registered";  
-                            return new WP_REST_Response( $response ); 
-                        }
-*/
-
-                  
+        if(strlen($MicrochipId) == '15'){
+            $result = substr($MicrochipId, 0, 6);
+            $validSerialPrefix = array($serialNumberPrefix1, $serialNumberPrefix2, $serialNumberPrefix3,$serialNumberPrefix4);
+            if (in_array( $result, $validSerialPrefix)){
+                if(checkMicrochipIDPetProfile($MicrochipId) != false){
+                    $new_post = array(
+                        'post_title'    => $PetName,
+                        'post_status'   => 'publish',   
+                        'post_type'     => 'pet_profile',
+                        'post_author'   =>  $newUserId,
+                    );
+                    
+                    $postId = wp_insert_post($new_post, true);
                 }else{
-                        $response['status'] = 404;
-                        $response['message'] = "This is not an MicroChip";  
-                        return new WP_REST_Response( $response ); 
-                    }   
+                    global $wpdb;
+                    $postId = $wpdb->get_var( $wpdb->prepare("SELECT `post_id` FROM `wp_postmeta` WHERE `meta_value` = ".$MicrochipId." AND `meta_key` = 'microchip_id_number'") );
+                }
+
+
+                if($PetType == 'Cat'){
+                    $petCode = '587';
+                }else if($PetType == 'Dog'){
+                    $petCode = '1045';
+                }else if($PetType == 'Ferret'){
+                    $petCode = '1046';
+                }else if($PetType == 'Horse'){
+                    $petCode = '588';
+                }else if($PetType == 'Other'){
+                    $petCode = '1048';
+                }else{
+                    $petCode =  '1047';
+                }   
+                //$postId = wp_insert_post($new_post, true);
+
+                update_post_meta($postId , 'pet_name', $PetName);
+                update_post_meta($postId , 'pet_type', $petCode);
+                update_post_meta($postId , 'gender', $Gender);
+                update_post_meta($postId , 'primary_color', $PrimaryColor);
+                update_post_meta($postId , 'secondary_color', $SecondaryColor);
+                update_post_meta($postId , 'Size', $Size);
+                update_post_meta($postId,'microchip_id_number',$MicrochipId);
+                update_post_meta($postId,'user_id',$newUserId);
+
+
+                /*Update user Information*/
+
+                if (isset($FirstName) && !empty(trim($FirstName))) {
+                    update_user_meta($newUserId,'first_name',$FirstName);
+                }
+                if (isset($LastName) && !empty(trim($LastName))) {
+                    update_user_meta($newUserId,'last_name',$LastName);
+                }
+                if (isset($Address) && !empty(trim($Address))) {
+                    update_user_meta($newUserId,'primary_address_line1',$Address);
+                }
+                if (isset($City) && !empty(trim($City))) {
+                    update_user_meta($newUserId,'primary_city',$City);
+                }
+                if (isset($State) && !empty(trim($State))) {
+                    update_user_meta($newUserId,'primary_state',$State);
+                }
+                if (isset($Country) && !empty(trim($Country))) {
+                    update_user_meta($newUserId,'primary_country',$Country);
+                }
+                if (isset($PostalCode) && !empty(trim($PostalCode))) {
+                    update_user_meta($newUserId,'primary_postcode',$PostalCode);
+                }
+
+                update_user_meta($newUserId,'primary_home_number',$PrimaryPhone);
+                update_user_meta($newUserId, 'source', 'api');
+
+                if(email_exists($Email)){
+                    $message = "User Information has Updated and Pet Profile Registered Successfully";  
+                }else{
+                    $message = "User and Pet profile registered successfully";  
+                }    
+                
+                
+                $response['status']       = "success";
+                $response['message']      = $message;
+                $response['userId']       = $newUserId;
+                $response['petProfileId'] = $postId;
+                return new WP_REST_Response( $response, 200 ); 
+
 
             }else{
 
-                    $response['status'] = 404;
-                    $response['message'] = "Please Insert 15 digit.";  
-                    return new WP_REST_Response( $response ); 
-                }
+                $response['status'] = "error";
+                $response['message'] = "Please enter a valid MicroChip Id";  
+                return new WP_REST_Response( $response, 400 ); 
+            }   
+
+        }else{
+
+            $response['status'] = "error";
+            $response['message'] = "Microchip Id should be 15 digits only";  
+            return new WP_REST_Response( $response , 400 ); 
+        }
+
     }else{
 
              
-            $subject = 'Congratulations on Registering'. $PetName.' with SmartTag <br>';
+        $subject = 'Congratulations on Registering'. $PetName.' with SmartTag <br>';
 
-            $message = 'Dear Valued SmartTag Customer,<br>
-<br>
-                Congratulations on registering your pet '. $PetName.' with SmartTag. We have activated your microchip with [subscriptions:value]. If you would like to get premium pet protection services please go to our website and review the added protection you can get with premium protection plans.<br><br>
-                Microchip ID:'.$MicrochipId.' <br>
-                </br>
-                </br>
-                Please place your metal ID Tag  collar. If '. $PetName.' loses his or her SmartTag, you can get a replacement at IDtag.com<br>
-                </br>
-                There are over 30 styles and colors, with engraving options too.<br><br>
-                Please note, your microchip is activated! For added safety, you should log into your account and complete '. $PetName.'/owner profile.<br><br>
-                Go to our website <a href="www.IDtag.com"> www.IDtag.com</a><br>
-                Click on the ‘Account Login’ which is on the upper right corner of our homepage and enter your email address and password.<br>
-                Click on EDIT and fill [node:title]’s information, veterinarian doctor’s information, and the secondary contact information.<br>
-                Upload a picture of our pet (you can upload up to 5 pictures)<br>
-                Click on ‘Save Changes’ at the bottom of the page.
-                You can edit, add, and update the information at any time from any computer, for free! Also if [node:title] loses his or her ID tag you can get a replacement at IDtag.com.<br><br><br>
-                SmartTag Benefits:<br><br>
-                Instant Pet “Amber Alert” with a full pet profile, sent to all shelter and rescue groups within a 50-mile radius of the pet’s last known location.</br>
-                24/7 Live lost pet call center to field and directly connect all calls, to reunite pets with their owners.<br>
-                A metal collar ID tag.<br>
-                Free pet and owner profile updates anytime.<br>
-                All SmartTag microchips are registered with national AAHA registry.<br>
-                All ID tags and microchips are searchable in online search.<br>
-                Free Pet Medical Insurance (30 days of pet insurance – accidents and illnesses covered) Must call to activate, PetFirst at 855-454-7387.<br>
-                Instant Lost Pet Posters generated with a click of a button.<br>
-                Lost pets are posted on Facebook.<br>
-                Sincerely,<br><br>
-                SmartTag Customer Care Department';
+        $message = 'Dear Valued SmartTag Customer,<br><br>';
+        $message .= 'Congratulations on registering your pet '. $PetName.' with SmartTag. We have activated your microchip with [subscriptions:value]. If you would like to get premium pet protection services please go to our website and review the added protection you can get with premium protection plans.<br><br>
+            Microchip ID:'.$MicrochipId.' <br>
+            </br>
+            </br>
+            Please place your metal ID Tag  collar. If '. $PetName.' loses his or her SmartTag, you can get a replacement at IDtag.com<br>
+            </br>
+            There are over 30 styles and colors, with engraving options too.<br><br>
+            Please note, your microchip is activated! For added safety, you should log into your account and complete '. $PetName.'/owner profile.<br><br>
+            Go to our website <a href="www.IDtag.com"> www.IDtag.com</a><br>
+            Click on the ‘Account Login’ which is on the upper right corner of our homepage and enter your email address and password.<br>
+            Click on EDIT and fill [node:title]’s information, veterinarian doctor’s information, and the secondary contact information.<br>
+            Upload a picture of our pet (you can upload up to 5 pictures)<br>
+            Click on ‘Save Changes’ at the bottom of the page.
+            You can edit, add, and update the information at any time from any computer, for free! Also if [node:title] loses his or her ID tag you can get a replacement at IDtag.com.<br><br><br>
+            SmartTag Benefits:<br><br>
+            Instant Pet “Amber Alert” with a full pet profile, sent to all shelter and rescue groups within a 50-mile radius of the pet’s last known location.</br>
+            24/7 Live lost pet call center to field and directly connect all calls, to reunite pets with their owners.<br>
+            A metal collar ID tag.<br>
+            Free pet and owner profile updates anytime.<br>
+            All SmartTag microchips are registered with national AAHA registry.<br>
+            All ID tags and microchips are searchable in online search.<br>
+            Free Pet Medical Insurance (30 days of pet insurance – accidents and illnesses covered) Must call to activate, PetFirst at 855-454-7387.<br>
+            Instant Lost Pet Posters generated with a click of a button.<br>
+            Lost pets are posted on Facebook.<br>
+            Sincerely,<br><br>
+            SmartTag Customer Care Department';
 
-
-
-             wp_mail($Email, $subject, $message);
-             
-
-
-                    $response['status'] = 200;
-                    $response['message'] = "Please check your mail";  
-                    return new WP_REST_Response( $response ); 
-                }           
-
-
-
-
-
-
-
-
+        wp_mail($Email, $subject, $message);
+        
+        $response['status'] = "success";
+        $response['message'] = "Please check your mail";  
+        return new WP_REST_Response( $response , 200); 
+    }           
 }
 
 /*Register pet with UniversalMicheochip*/
@@ -8473,6 +8469,7 @@ require_once "functions/functions-subscription-link.php";
 require_once "functions/functions-BabelBark-api.php";
 require_once "functions/function-import-csv.php";
 require_once "functions/functions-aaha-api.php";
+require_once "helper-function.php";
 
 
  function getSMSByTwillo($account,$userId, $action){
@@ -8626,7 +8623,7 @@ function searchWithMichrochip() { ?>
                     type: 'POST',
                     data: dataVariable, 
                     success: function (response) {
-                        $('.loader-box').fadeOut();
+                        $('.loader-outer').fadeOut();
                         $('.search-row').html(response);
                         return false;
                     }
@@ -8798,7 +8795,7 @@ $loop = new WP_Query( $args );
                             </div>
                            <div class="col-lg-6">
                            <div class="pet-img">
-                           <img src="'.$image.'" alt="" />
+                           <img src="'.$image.'" alt="" height="250px" width="250px" />
                            </div>
                            </div>
                            </div>
@@ -8894,3 +8891,365 @@ function getMichroChipRange($microchip_id_number, $PetProsUser_id){
                     } 
             }           die();
 }
+
+
+
+/* Functionlity for custom search */
+
+
+function register_functionlity_for_custom_microchip_search() {
+    add_menu_page('Custom Search', 'Custom Microchip', 'add_users','Custom_search', '_custom_menu_seach_page_for_petpros', null, 6); 
+}
+
+add_action('admin_menu', 'register_functionlity_for_custom_microchip_search');  
+
+
+function _custom_menu_seach_page_for_petpros(){
+    ?>
+    <div class="loader-outer" style="display: none;">
+         <div class="loader" ></div>
+     </div>
+
+    <form method="post" class="searchCustomfunctionality" id="custom_michrochip_search">
+        <div class="form-group">
+            <div class="group-section">
+                <div class="range-haed">
+                    <h3 for="" class="text-start">Search Microchip</h3>
+                </div>
+
+            <div class="form-contant">
+                <input type="text" class="form-control" id="searchCustom" aria-describedby="emailHelp" placeholder="Enter Microchp number/Id tag serial number/First Name/Last Name/phone number">
+                <span class="michrochip_start_range" style="display:none;"></span>
+    
+                <button type="submit" id="searchCustomfunctionality" class="btn btn-primary">Search</button>
+        </div>   
+    </div>
+        </div> 
+     
+    </form>
+    <div class="search-row"></div> 
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+                  <br/>
+        </div>
+
+<?php  
+
+}
+add_action( 'admin_footer', 'customsearchWithMichrochip' );
+function customsearchWithMichrochip(){ ?>
+
+
+    <script type="text/javascript" >
+    jQuery(document).ready(function($) {
+        jQuery('#searchCustomfunctionality').click(function(e){
+            e.preventDefault();
+
+            var searchCustom = $('#searchCustom').val();
+           
+            if(searchCustom == ''){
+                jQuery('.michrochip_start_range').fadeIn();
+                jQuery('.michrochip_start_range').text('This field is required');
+                jQuery('.michrochip_start_range').css('color', 'red');
+                return false;
+            }else{
+                jQuery('.michrochip_start_range').fadeOut();
+                var dataVariable = {
+                    'action': 'customeSearchFunctionality', // your action name
+                    'searchCustom': $('#searchCustom').val(), 
+                   
+                };
+                $('.loader-outer').fadeIn();
+                jQuery.ajax({
+                    url: ajaxurl, // this will point to admin-ajax.php
+                    type: 'POST',
+                    data: dataVariable, 
+                    success: function (response) {
+                        $('.loader-outer').fadeOut();
+                        $('.search-row').html(response);
+                        return false;
+                    }
+                });
+           } 
+        });    
+    });
+    </script> 
+    <?php
+}
+
+
+add_action('wp_ajax_customeSearchFunctionality', 'customeSearchFunctionality');
+add_action('wp_ajax_nopriv_customeSearchFunctionality', 'customeSearchFunctionality');
+
+function customeSearchFunctionality(){
+    
+   if(isset($_POST['action'])== 'customeSearchFunctionality'){
+    //$pet_data = $_POST['searchCustom'];
+    //$length = strlen($pet_data);
+    // if($length == 10){
+    //           $phone = preg_replace("/[^0-9]*/",'',$pet_data);
+    //           $sArea = substr($phone,0,3);
+    //           $sPrefix = substr($phone,3,3);
+    //           $sNumber = substr($phone,6,4);
+    //           $phone = "(".$sArea.") ".$sPrefix."-".$sNumber;
+    //           $key =  'primary_home_number';
+    //           $value =$phone;
+    //       }elseif($length == 8){
+    //           $key =  'smarttag_id_number';
+    //           $value =$pet_data;
+    //           $compare = '=';
+    //       }elseif($length == 15){
+    //           $key =  'microchip_id_number';
+    //           $value =$pet_data;
+    //            $compare = '=';
+    //       }elseif(email_exists($pet_data)){
+    //             $key =  'owner_email';
+    //             $value =$pet_data;
+    //             $compare = '=';
+    //       }else{
+
+    //             $key =  'owner_name';
+    //             $value = $pet_data;
+    //             $compare = '=';
+               
+    //       }
+
+    // $args =  array(
+    //         'post_type' => 'pet_profile',
+    //         'post_status' => 'publish',
+    //         'posts_per_page' => -1,
+    //         'meta_query' => array(
+    //             array(
+    //                 'key'     => $key,
+    //                 'value'   => $value,
+    //                 'compare' => $compare
+    //             )
+    //       )
+    // );
+
+
+    // rohit
+    $search_string = $_POST['searchCustom'];
+    $meta_array = [];
+    $searchBy = ["primary_home_number", "smarttag_id_number", "microchip_id_number","owner_email","owner_name"];
+    foreach ($searchBy as $meta_key) {
+        $fields = array(
+                "key" => $meta_key,
+                "value" => trim($search_string),
+                "compare" => "=",
+            );
+        array_push($meta_array,$fields);
+    }
+    $meta_array['relation'] = 'OR';
+        
+    // print_r($meta_array);
+    $args =  array(
+        'post_type' => 'pet_profile',
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+        'meta_query' => array($meta_array)
+    );
+
+    $query = new WP_Query($args);
+            if( $query->have_posts() ){ ?>
+
+            <table id="customers" class="table-section">
+                <tr>
+                    <th>S.NO</th>   
+                    <th>MicroChip Number</th>
+                    <th>Serial Number</th>
+                    <th>Email Address</th>
+                    <th>Phone Number</th>
+                    <th>Owner First Name</th>
+                    <th>Owner Last Name</th>
+                </tr>
+                <?php
+                $i=1;
+                while( $query->have_posts() ) : $query->the_post();
+                ?>
+                <tr>
+                <?php
+                    $post_id = get_the_ID();
+                    $userId = get_post_field( 'post_author', get_the_ID() );
+                    $microchip_id_number = get_post_meta(get_the_ID(),"microchip_id_number",true);
+                    $smarttag_id_number = get_post_meta(get_the_ID(),"smarttag_id_number",true);
+                    $pet_name = get_post_meta(get_the_ID(),"pet_name",true);  
+                    $pet_type = get_post_meta(get_the_ID(),"pet_type",true); 
+
+                    if($pet_type == 587){
+                        $pets_type = 'Cat';
+                    }else if($pet_type == 1045){
+                        $pets_type = 'Dog';
+                    }else if($pet_type == 1046){
+                        $pets_type = 'Ferret';
+                    }else if($pet_type == 588){
+                        $pets_type = 'Horse';
+                    }else if($pet_type == 1048){
+                        $pets_type = 'Other';
+                    }else{
+                        $pets_type = 'Rabbit';
+                    }
+
+                    $pet_type = (isset(get_term( $pet_type )->name));  
+                    $primary_breed = get_post_meta(get_the_ID(),"primary_breed",true);  
+                    $p_breed =   (isset(get_term( $primary_breed )->name)) ? get_term( $primary_breed )->name : "" ;
+                    $secondary_breed = get_post_meta(get_the_ID(),"secondary_breed",true);
+                    $b_breed =   (isset(get_term( $secondary_breed )->name)) ? get_term( $secondary_breed )->name : "" ;   
+                    $primary_color = get_post_meta(get_the_ID(),"primary_color",true);   
+                      if($primary_color == '1'){
+                          $primarycolor =  'Black';
+                        }else if($primary_color == '2'){
+                          $primarycolor = 'Blue';
+                        }else if($primary_color == '3'){
+                          $primarycolor =  'Brown';
+                        }else if($primary_color == '4'){
+                          $primarycolor =  'Gold';
+                        }else if($primary_color == '5'){
+                          $primarycolor =  'Gray';
+                        }else if($primary_color == '6'){
+                          $primarycolor =  'Orange';
+                        }else if($primary_color == '7'){
+                          $primarycolor = 'Sliver';
+                        }else if($primary_color == '8'){
+                          $primarycolor = 'Tan';
+                        }else if($primary_color == '9'){
+                          $primarycolor =  'White';
+                        }else{
+                          $primarycolor =  'Yellow';
+                        }
+                      $secondary_color = get_post_meta(get_the_ID(),"secondary_color",true);
+                      if($secondary_color == '1'){
+                          $secoundarycolor =  'Black';
+                        }else if($secondary_color == '2'){
+                          $secoundarycolor = 'Blue';
+                        }else if($secondary_color == '3'){
+                          $secoundarycolor =  'Brown';
+                        }else if($secondary_color == '4'){
+                          $secoundarycolor =  'Gold';
+                        }else if($secondary_color == '5'){
+                          $secoundarycolor =  'Gray';
+                        }else if($secondary_color == '6'){
+                          $secoundarycolor =  'Orange';
+                        }else if($secondary_color == '7'){
+                          $secoundarycolor = 'Sliver';
+                        }else if($secondary_color == '8'){
+                          $secoundarycolor = 'Tan';
+                        }else if($secondary_color == '9'){
+                          $secoundarycolor =  'White';
+                        }else{
+                          $secoundarycolor =  'Yellow';
+                        }   
+                        $size = get_post_meta(get_the_ID(),"size",true); 
+                           if($size == 1){
+                            $size = 'Small';
+                          }elseif($size == 2){
+                            $size =  'Medium';
+                          }else{
+                            $size ='Large';
+
+                          }
+                        $gender = get_post_meta(get_the_ID(),"gender",true);   
+                        $pet_date_of_birth = get_post_meta(get_the_ID(),"pet_date_of_birth",true);   
+                        $petId = get_the_ID(); 
+                        /*$pet_profile_link = site_url().'/my-account/show-profile?pet_id='.$petId;
+*/
+                        $pet_profile_link = site_url().'/wp-admin/post.php?post='.$petId.'&action=edit';
+                        $user_info = get_userdata($userId);
+                        $email = $user_info->user_email;
+                        $user_login = $user_info->user_login;
+                        $first_name = $user_info->first_name;
+                        $last_name = $user_info->last_name;
+                        $primary_address_line1 = $user_info->primary_address_line1;
+                        $primary_city = $user_info->primary_city;
+                        $primary_state = $user_info->primary_state;
+                        $primary_postcode = $user_info->primary_postcode;
+                        $primary_home_number = $user_info->primary_home_number;
+                        $secondary_cell_number = $user_info->secondary_cell_number;
+                        $secondary_phone_country_code = $user_info->secondary_phone_country_code; 
+                        $primary_phone_country_code = $user_info->primary_phone_country_code; 
+                        $primary_country = $user_info->primary_country;
+                        $Owner = site_url().'/wp-admin/user-edit.php?user_id='.$userId;
+                        $title = get_the_title(get_the_ID()); 
+                            if (has_post_thumbnail( get_the_ID())){
+                                $image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'single-post-thumbnail' );
+                                $image = $image[0];
+
+                            }else{
+                                $image = site_url().'/wp-content/uploads/2021/01/dog-placeholder.png';
+                            } ?>
+                            
+                            <td><?php echo $i; ?></td>
+                            <td><a  target="_blank" href="<?php echo $pet_profile_link;?>"><?php echo $microchip_id_number ?></td>
+                            <td><a  target="_blank" href="<?php echo $pet_profile_link;?>"><?php echo $smarttag_id_number; ?></td>
+                            <td><a  target="_blank" href="<?php echo $Owner;?>"><?php echo $email; ?></td>
+                            <td><a  target="_blank" href="<?php echo $Owner;?>"><?php echo $primary_home_number; ?></td>
+                            <td><a  target="_blank" href="<?php echo $Owner;?>"><?php echo $first_name; ?></td>
+                            <td><a  target="_blank" href="<?php echo $Owner;?>"><?php echo $last_name; ?></td>
+                         </tr>
+                     <?php
+                        $i++;
+                          endwhile;
+                       ?>  </table>
+                       <?php   
+                          exit();
+                }else{
+                    echo "</br><div class='not-found width-100'>No Results Found</div>";
+                }  
+        exit();
+    }
+}
+
+
+add_action("init", function(){
+
+    if(isset($_GET['test'])){
+        
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => 'https://staging.idtag.com/idtag-api/pet-register-microchip/add',
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS =>'{
+            "FirstName": "demo_first_name",
+            "LastName": "demo_last_name",
+            "Email": "demo@idtag.com",
+            "PrimaryPhone": "1234567890",
+            "Address": "",
+            "City": "",
+            "State": "",
+            "Country": "",
+            "PostalCode": "",
+            "Pet": {
+                "MicrochipId": "987000221144567",
+                "PetName": "Spot",
+                "PetType": "Dog",
+                "PrimaryColor": "Blue",
+                "Gender": "male",
+                "Size": "small", 
+                "Dob": "2022-03-30",
+                "SecoundaryColor": "brown"
+            }
+        }',
+          CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json'
+          ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        echo $response;
+        die;
+        
+
+    }
+});

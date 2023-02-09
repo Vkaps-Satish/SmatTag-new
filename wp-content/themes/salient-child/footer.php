@@ -14,8 +14,7 @@
 	jQuery(document).ready(function(){
 	var current_pag = "<?php echo $pageid; ?>";
 	console.log(current_pag + 'dagdhahghg');
-	if(current_pag != '88329')
-	{
+	if(current_pag != '88329'){
 		$(".user_login_message").hide();
 	}
 	$("form[name='remove_pet']").validate({
@@ -827,44 +826,33 @@ if($sideWidgetArea == '1') {
 
 					
 					$("#"+name).text(localStorage.getItem(name));
-
 					if( name == "primary_breed"){
-						
 							var petTypeID = localStorage.getItem("pet_type");
 							var primary_breed = localStorage.getItem("primary_breed");
 								$('.loader-wrap').fadeIn();
 								$.ajax({
-				                    type: 'POST',
-				                    url: ajaxurl,
-				                    data: {
-							                action : 'get_pet_breeds',
-							                 typeId:  petTypeID,
-							                 primary_breed : primary_breed
-							            },
-				                    success: function(response) {
-				                    		$('.loader-wrap').fadeOut();
-
-				                    	
-				                    	var Obj = jQuery.parseJSON(response);
-				                    	$("#breedid").html(Obj.data);
-				                    	$("#sbreedid").html(Obj.data);
-				                    	
-				                    }
-							        
-				                });
+                  type: 'POST',
+                  url: ajaxurl,
+                  data: {
+		                action : 'get_pet_breeds',
+		                 typeId:  petTypeID,
+		                 primary_breed : primary_breed
+		            	},
+                  success: function(response) {
+                		$('.loader-wrap').fadeOut();
+                  	var Obj = jQuery.parseJSON(response);
+                  	$("#breedid").html(Obj.data);
+                  	$("#sbreedid").html(Obj.data);
+                  }
+			        
+                });
 						
 					}
 					else if(name == "pet_type" || name == "primary_breed" || name == "gender" || name == "size" ||name == "primary_color" || name == "secondary_color"  ){
 						$('.Pet_Type_Breed').show();
 						if($("#profileuser1 select[name='"+name+"']").hasClass('text-data')){
-
 							var optionValue  = localStorage.getItem(name);
-						
-
 							$('#profileuser1 select[name="'+name+'"] option[value="'+optionValue+'"]').attr('selected', true);
-						
-
-
 						}					
 					}else{
 						
@@ -2019,21 +2007,26 @@ $(".petpro-edits").on("click",function(){
 			var petTypeID = $(this).children("option:selected").val();
 			$(".loader-wrap").fadeIn();
 				$.ajax({
-                    type: 'POST',
-                    url: ajaxurl,
-                    data: {
-			                action : 'get_pet_breeds',
-			                 typeId:  petTypeID
-			            },
-                    success: function(response) {
-											$(".loader-wrap").fadeOut();
-	                    	var Obj = jQuery.parseJSON(response);
-	                    	$("#breedid").html(Obj.data);
-	                    	$("#sbreedid").html(Obj.data);
-	                    	
-	                    }
-				        
-                });
+            type: 'POST',
+            url: ajaxurl,
+            data: {
+              action : 'get_pet_breeds',
+               typeId:  petTypeID
+          	},
+            success: function(response) {
+							$(".loader-wrap").fadeOut();
+              	var Obj = jQuery.parseJSON(response);
+              	var options = Obj.data;
+              	if( options != ""){
+                	$("#breedid").attr("required", "required");
+                }else{
+              		$("#breedid").removeAttr("required");;
+              		options = "<option value=''>Breed</option>";
+              	}
+              	$("#breedid").html(options);
+                $("#sbreedid").html(options);
+            }
+				});
 		});
 
 	});
@@ -2173,541 +2166,341 @@ $(".petpro-edits").on("click",function(){
 			}
 		});
 /*custom jquery code end--added by satish*/
+<?php } ?>
+$(document).ready(function(){
 
-
-	<?php } ?>
 	$("body").on("click", "a.custom-reset-variation", function(){
-		
 		$("select#pa_ttype").val("bone").change();
 			jQuery(".select-option.swatch-wrapper[data-value='bone'").addClass('selected');
 	})
-
-	$(document).ready(function(e){
-		if($("select.address-country").val() == "" || $("select.address-country").val() == undefined){
-			$("select.address-country").val("US").trigger("change");
-		}
-		if($("select#billing_country").val() == "" || $("select#billing_country").val() == undefined){
-			$("select#billing_country").val("US").trigger("change");
-		}
-
-
-/*
-document.getElementById("place_order").onclick = function() {
-  let allAreFilled = true;
-  document.getElementById("validate_checkout").hasClass("required").forEach(function(i) {
-    if (!allAreFilled) return;
-    if (i.type === "radio") {
-      let radioValueCheck = false;
-document.getElementById("validate_checkout").querySelectorAll(`[name=${i.name}]`).forEach(function(r) {
-        if (r.checked) radioValueCheck = true;
-      })
-      allAreFilled = radioValueCheck;
-      return;
-    }
-    if (!i.value) { allAreFilled = false;  return; }
-  })
-  if (!allAreFilled) {
-    alert('Fill all the fields');
-  }
-};
-
-
-
-*/
-
-
-
-
-
-
-
-	});
 	
-/*	$('#place_order').on('click', function(event) {
-    event.preventDefault();
-    if ( $('form.checkout.woocommerce-checkout').valid() ) {
+	if($("select.address-country").val() == "" || $("select.address-country").val() == undefined){
+		$("select.address-country").val("US").trigger("change");
+	}
 
-        $(".loader-wrap").fadeIn();
-         $('form.checkout.woocommerce-checkout').submit();
-    }
-});*/
+	if($("select#billing_country").val() == "" || $("select#billing_country").val() == undefined){
+		$("select#billing_country").val("US").trigger("change");
+	}
 
-$(document).ready(function(){
+
 	var from = document.referrer;
-
-		$('.shipping_information_redirect').click(function(){
-
-			setTimeout(function() {
-				console.log('this is for testing');
-				window.location.href = window.location.origin+'/our-services/order-a-replacement-id-tag/';
-
-			}, 100);
-
-		});
-/*allow 10 character fr search form*/
-
-
+	$('.shipping_information_redirect').click(function(){
+		setTimeout(function() {
+			console.log('this is for testing');
+			window.location.href = window.location.origin+'/our-services/order-a-replacement-id-tag/';
+		}, 100);
+	});
+	/*allow 10 character fr search form*/
 	$('.search-form-2').keypress(function(e) {
-		
-	    var tval = $('.search-form-2').val();
-	        tlength = tval.length,
-	        set = 256,
-	        remain = parseInt(set - tlength);
-
-	    if (remain <= 0 && e.which !== 0 && e.charCode !== 0) {
+		var tval = $('.search-form-2').val();
+  	tlength = tval.length,
+	  set = 256,
+	  remain = parseInt(set - tlength);
+	   	if (remain <= 0 && e.which !== 0 && e.charCode !== 0) {
 	        $('.search-form-2').val((tval).substring(0, tlength - 1));
 	        alert('not allowed. Please allow enter less than 256 character');
 	        return false;
 	    }
 	});
-});
 
-
-
-
-
-
-
-/*add/change brass url on sidebar*/
-$(document).ready(function(){
+	/*add/change brass url on sidebar*/
 	$('.ced_ocor_atb').hide();
-	 $('.cat-item-27').each(function(){
-	       var clickedURL = $('.cat-item-27').text();
-	       if(clickedURL == 'Brass ID Tags'){
-	         $(this).find('a').attr("href", window.location.origin+"/product/brass-id-tag/");
-	       }    
+ 	$('.cat-item-27').each(function(){
+  	var clickedURL = $('.cat-item-27').text();
+   	if(clickedURL == 'Brass ID Tags'){
+    	$(this).find('a').attr("href", window.location.origin+"/product/brass-id-tag/");
+   	}    
 	});
 
-	 $('.cat-item-16').each(function(){
-	       var clickedURL = $('.cat-item-16').text();
-	       if(clickedURL == 'Aluminum ID Tags'){
-	         $(this).find('a').attr("href", window.location.origin+"/product/aluminum-id-tag/");
-	       }    
+	$('.cat-item-16').each(function(){
+	  var clickedURL = $('.cat-item-16').text();
+	  if(clickedURL == 'Aluminum ID Tags'){
+	  	$(this).find('a').attr("href", window.location.origin+"/product/aluminum-id-tag/");
+	  }    
+	});
+	/*Floting cart image is not showing*/
+	var src=window.location.origin+"/wp-content/plugins/one-click-order-reorder/assets/images/shopping-bag.png"
+	$('.ced_ocor_floating_basket_wrapper img').attr('src',src);
+
+
+	/*hide breed option*/
+	$("#pettype").change(function(){
+	  $(this).find("option:selected").each(function(){
+	  	var optionValue = $(this).val(); 
+	    if(optionValue){
+	    	$('.Pet_Type_Breed').show();
+			} else{
+	    	$('.Pet_Type_Breed').hide();
+			}
+	  });
 	});
 
-
-/*Floting cart image is not showing*/
-var src= window.location.origin+"/wp-content/plugins/one-click-order-reorder/assets/images/shopping-bag.png"
-$('.ced_ocor_floating_basket_wrapper img').attr('src',src);
-
-
-});
-
-
-/*hide breed option*/
-
-$("#pettype").change(function(){
-        $(this).find("option:selected").each(function(){
-         var optionValue = $(this).val(); 
-            if(optionValue){
-              $('.Pet_Type_Breed').show();
-            } else{
-                 $('.Pet_Type_Breed').hide();
-            }
-        });
-    });
-
-
-
-
-/*allow this phone formate  1ps-phone */
-$(document).ready(function(){
-
+	/*allow this phone formate  1ps-phone */
 	
-	  $("input[name='p_prm_no']").keyup(function() {
-	  				console.log("value", $(this).val());
-            $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-        });
- 		$("input[name='p_sec_no']").keyup(function() {
-            $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-        });
- 
+  $("input[name='p_prm_no']").keyup(function() {
+			console.log("value", $(this).val());
+      $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+  });
+
+		$("input[name='p_sec_no']").keyup(function() {
+    $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+  });
+
   $("input[name='s_prm_no']").keyup(function() {
-            $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-        });
-    $("input[name='s_sec_no']").keyup(function() {
-            $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-        });
+    $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+  });
 
-$("input[name='vaterinarian_primary_phone_number']").keyup(function() {
-				           $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-				       });
-$("input[name='vaterinarian_secondary_phone_number']").keyup(function() {
-				          $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-				      });
+  $("input[name='s_sec_no']").keyup(function() {
+    $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+	});
 
- 			$("input[name='primary_home_number']").keyup(function() {
-            $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-        });
+	$("input[name='vaterinarian_primary_phone_number']").keyup(function() {
+		$(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+	});
 
+	$("input[name='vaterinarian_secondary_phone_number']").keyup(function() {
+		$(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+	});
 
-				$("input[name='primary_cell_number']").keyup(function() {
-            $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-        });
-        	$("input[name='secondary_home_number']").keyup(function() {
-            $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-        });
- 
+	$("input[name='primary_home_number']").keyup(function() {
+		$(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+  });
+
+	$("input[name='primary_cell_number']").keyup(function() {
+      $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+  });
+  
+  $("input[name='secondary_home_number']").keyup(function() {
+  	$(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+  });
+
 	$("input[name='secondary_cell_number']").keyup(function() {
-            $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-        });
-
-
-
-
-
+		$(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+  });
 
 	$("input[name='phone_number']").keyup(function() {
-            $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-        });
- 
- $("input[name='phone']").keyup(function() {
-            $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-        });
+		$(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+	});
+
+	$("input[name='phone']").keyup(function() {
+		$(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+	});
+
   $("input[name='ps-phone']").keyup(function() {
-            $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-        });
+  	$(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+  });
 
   $("input[name='org_prm_no']").keyup(function() {
-            $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-        });
-    $("input[name='org_sec_no']").keyup(function() {
-            $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-        });
+  	$(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+  });
+
+  $("input[name='org_sec_no']").keyup(function() {
+  	$(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+	});
   
-   $("input[name='billing_phone']").keyup(function() {
-            $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-        });
- 
- 
- 
- 
-		
+  $("input[name='billing_phone']").keyup(function() {
+  	$(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+  });
+ 	/*If already inserted then convert phone no formate into International formate*/
 
-
-
-/*If already inserted then convert phone no formate into International formate*/
-
-setTimeout(function () {
-	console.log('dsds');
-                     
-
-		  
-			if($('#p-phone').length > 0 && $('#p-phone').val()!=""){
-				var phone = $('#p-phone').val();
-				$('#p-phone').val(phone.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-			}
-
-				
-			if($('#ps-phone').length > 0 && $('#ps-phone').val()!=""){
-				var ps_phone = $('#ps-phone').val();
-				$('#ps-phone').val(ps_phone.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+	setTimeout(function () {
+			
+		if($('#p-phone').length > 0 && $('#p-phone').val()!=""){
+			var phone = $('#p-phone').val();
+			$('#p-phone').val(phone.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
 		}
 
+		if($('#ps-phone').length > 0 && $('#ps-phone').val()!=""){
+			var ps_phone = $('#ps-phone').val();
+			$('#ps-phone').val(ps_phone.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+		}
 
 		if($('#billing_phone').length > 0 && $('#billing_phone').val()!=""){	
-				var billing_phone = $('#billing_phone').val();
-			//if(billing_phone!=""){
-				$('#billing_phone').val(billing_phone.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+			var billing_phone = $('#billing_phone').val();
+			$('#billing_phone').val(billing_phone.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
 		}
 
+		if($('#primary_cell_number').length >0 && $('#primary_cell_number').val()!=""){
+		 	var primary_cell_number = $('#primary_cell_number').val();
+			$('#ps-phone').val(primary_cell_number.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+		}
 
+		if($('#secondary_home_number').length >0 && $('#secondary_home_number').val()!=""){
+			var secondary_home_number = $('#secondary_home_number').val();
+			$('#secondary_home_number').val(secondary_home_number.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+		}
 
-
-
-
+		if($('#secondary_cell_number').length >0 && $('#secondary_cell_number').val()!=""){
+			var secondary_cell_number = $('#secondary_cell_number').val();
+			$('#secondary_cell_number').val(secondary_cell_number.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+		}
 			
-				 if($('#primary_cell_number').length >0 && $('#primary_cell_number').val()!=""){
-				 	var primary_cell_number = $('#primary_cell_number').val();
-				$('#ps-phone').val(primary_cell_number.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-					
-			 }
-
-		
-			if($('#secondary_home_number').length >0 && $('#secondary_home_number').val()!=""){
-				var secondary_home_number = $('#secondary_home_number').val();
-				$('#secondary_home_number').val(secondary_home_number.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-			}
-
-	 	
-			if($('#secondary_cell_number').length >0 && $('#secondary_cell_number').val()!=""){
-				var secondary_cell_number = $('#secondary_cell_number').val();
-				$('#secondary_cell_number').val(secondary_cell_number.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-		}
-		
-		
-				if($('#primary_home_number').length >0 && $('#primary_home_number').val()!=""){
-							var primary_home_number = $('#primary_home_number').val();
-						$('#primary_home_number').val(primary_home_number.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-				}
-
-
-	if($('#vaterinarian_primary_phone_number').length >0 && $('#vaterinarian_primary_phone_number').val()!=""){
-				var vaterinarian_primary_phone_number = $('#vaterinarian_primary_phone_number').val();
-					$('#vaterinarian_primary_phone_number').val(vaterinarian_primary_phone_number.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+		if($('#primary_home_number').length >0 && $('#primary_home_number').val()!=""){
+			var primary_home_number = $('#primary_home_number').val();
+			$('#primary_home_number').val(primary_home_number.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
 		}
 
-		if($('#vaterinarian_secondary_phone_number').length >0 && $('#vaterinarian_secondary_phone_number').val()!=""){
-		var vaterinarian_secondary_phone_number = $('#vaterinarian_secondary_phone_number').val();
-			
-				$('#vaterinarian_secondary_phone_number').val(vaterinarian_secondary_phone_number.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+		if($('#vaterinarian_primary_phone_number').length >0 && $('#vaterinarian_primary_phone_number').val()!=""){
+			var vaterinarian_primary_phone_number = $('#vaterinarian_primary_phone_number').val();
+			$('#vaterinarian_primary_phone_number').val(vaterinarian_primary_phone_number.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+		}
+
+		if($('#vaterinarian_secondary_phone_number').length > 0 && $('#vaterinarian_secondary_phone_number').val()!=""){
+			var vaterinarian_secondary_phone_number = $('#vaterinarian_secondary_phone_number').val();
+			$('#vaterinarian_secondary_phone_number').val(vaterinarian_secondary_phone_number.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+		}
+
+		if($('#phone_number').length >0 && $('#phone_number').val()!=""){
+			var phone_number = $('#phone_number').val();
+			$('#phone_number').val(phone_number.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
 		}
 
 
-if($('#phone_number').length >0 && $('#phone_number').val()!=""){
-		var phone_number = $('#phone_number').val();
-		
-				$('#phone_number').val(phone_number.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+		if($('#phone').length >0 && $('#phone').val()!=""){
+			var phone = $('#phone').val();
+			$('#phone').val(phone.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
 		}
 
-
-if($('#phone').length >0 && $('#phone').val()!=""){
-		var phone = $('#phone').val();
-		
-				$('#phone').val(phone.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+		if($('#ps-phone').length >0 && $('#ps-phone').val()!=""){
+			var ps_phone = $('#ps-phone').val();
+			$('#ps-phone').val(ps_phone.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
 		}
 
-
-if($('#ps-phone').length >0 && $('#ps-phone').val()!=""){
-	var ps_phone = $('#ps-phone').val();
-		
-				$('#ps-phone').val(ps_phone.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-		}
-
-		
-
-/*		var ps_phone = $('.phone-number').val();
-			if(ps_phone!=""){
-				$('.phone-number').val(ps_phone.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
-		}
-
-
-*/			//nhi chal rha
-
-	if($('#ss-phone').length >0 && $('#ss-phone').val()!=""){
-		var ss_phone = $('#ss-phone').val();
-		
-				$('#ss-phone').val(ss_phone.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+		if($('#ss-phone').length >0 && $('#ss-phone').val()!=""){
+			var ss_phone = $('#ss-phone').val();
+			$('#ss-phone').val(ss_phone.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
 		}
 
 		if($('#v-prim').length >0 && $('#v-prim').val()!=""){
-		 var v_prim = $('#v-prim').val();
-		
-				$('#v-sec').val(v_prim.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+			var v_prim = $('#v-prim').val();
+			$('#v-sec').val(v_prim.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
 		}
 
-	if($('#v-sec').length >0 && $('#v-sec').val()!=""){
-		 var v_sec = $('#v-sec').val();
+		if($('#v-sec').length >0 && $('#v-sec').val()!=""){
+			var v_sec = $('#v-sec').val();
 			$('#v-sec').val(v_sec.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
 		}
 
-
-	if($('#urp-phone').length >0 && $('#urp-phone').val()!=""){
-
- var urp_phone = $('#urp-phone').val();
-			
-				$('#urp-phone').val(urp_phone.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+		if($('#urp-phone').length >0 && $('#urp-phone').val()!=""){
+			var urp_phone = $('#urp-phone').val();
+			$('#urp-phone').val(urp_phone.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
 		}
 
 		if($('#urps-phone').length >0 && $('#urps-phone').val()!=""){
-
-		 var v_sec = $('#urps-phone').val();
-		
-				$('#urps-urps').val(v_sec.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
+			var v_sec = $('#urps-phone').val();
+			$('#urps-urps').val(v_sec.replace(/^(\d{3})(\d{3})(\d+)$/, "($1) $2-$3"));
 		}
 
+	}, 500);
 
-
-
-
-
-
-}, 500);
-
-
-
-});
-	 
-
-/*end*/
-
-
-	jQuery(document).ready(function(){
-		//setTimeout(function() {
-			console.log('sds');
-      		// jQuery('#pa_ttype').change(function(){ 
-      		// 	alert("gafga");
-      		// 	jQuery("#picker_pa_ttype").find(".swatch-wrapper").each(function(){
-      		// 		if(!jQuery(this).hasClass("selected")){
-      		// 			jQuery(this).addClass('disabled');
-      		// 		}
-      		// 		if(jQuery(this).hasClass("selected")){
-      		// 			jQuery(this).removeClass('disabled');
-      		// 		}
-      		// 	});
-      			   
-      		// });
-      		
-  //  }, 200);*/
-
-
-
-/*term and condition */
-$('.checkout-button').click(function() {
- 	if($('.woocommerce-form__input').not(':checked').length){
-    	$('.term-condition').show();
-	     return false;
-  }else{
+	/*term and condition */
+	$('.checkout-button').click(function() {
+	 	if($('.woocommerce-form__input').not(':checked').length){
+	    $('.term-condition').show();
+		  return false;
+	  }else{
      	$('.term-condition').hide();
 	     return true;
-		     
-		    } 
-		});
+		} 
+	});
 
 /*save webhook value in database*/
-	$(document).ready(function(){
-		 var url2 = window.location.origin+'/cart';
-     
+	var url2 = window.location.origin+'/cart';
   if (window.location.href.indexOf(url2) > -1) {
-				
-				setTimeout(function() {
-					if($('input:checkbox[name=webhook]').is(':checked')== false){
-								
-						          $.ajax({
-						              type: 'POST',
-						              url: '<?php echo admin_url('admin-ajax.php'); ?>',
-						              dataType: 'json',
-						              data: {
-						                  'action': 'set_cart_as_webhook',
-						                  'webhook': 'no',
-						              },
-						              	success: function (result) {
-						              		
+		setTimeout(function() {
+			if($('input:checkbox[name=webhook]').is(':checked')== false){
+				$.ajax({
+            type: 'POST',
+            url: '<?php echo admin_url('admin-ajax.php'); ?>',
+            dataType: 'json',
+            data: {
+              'action': 'set_cart_as_webhook',
+              'webhook': 'no',
+            },success: function (result){}
+        });
+			}else{
+				$.ajax({
+			    type: 'POST',
+			    url: '<?php echo admin_url('admin-ajax.php'); ?>',
+			    dataType: 'json',
+			    data: {
+		        'action': 'set_cart_as_webhook',
+		        'webhook': 'yes',
+			    },success: function (result){}
+				});
+			}
+		}, 2500);
+	}
 
-						              	}
-						          });
-					}else{
-							$.ajax({
-							    type: 'POST',
-							    url: '<?php echo admin_url('admin-ajax.php'); ?>',
-							    dataType: 'json',
-							    data: {
-							        'action': 'set_cart_as_webhook',
-							        'webhook': 'yes',
-							    },
-							    	success: function (result) {
-							    		
+	if (window.location.href.indexOf(url2) > -1) {
+		setTimeout(function() {
+			if($('input:checkbox[name=webhook1]').is(':checked')== false){
+				$.ajax({
+	        type: 'POST',
+	        url: '<?php echo admin_url('admin-ajax.php'); ?>',
+	        dataType: 'json',
+	        data: {
+	            'action': 'set_cart_as_webhook',
+	            'webhook': 'no',
+	        },success: function (result){}
+	      });
+			}else{
 
-							    	}
-							});
-					}
-				}, 2500);
+				$.ajax({
+			    type: 'POST',
+			    url: '<?php echo admin_url('admin-ajax.php'); ?>',
+			    dataType: 'json',
+			    data: {
+		        'action': 'set_cart_as_webhook',
+		        'webhook': 'yes',
+				  },success: function (result){}
+				});
+
+			}
+		}, 1000);
+	}
+
+	// webhook
+	$(document).on( 'change', 'input[name="webhook"]', function(){
+   	$('input[name="webhook"]').not(this).prop('checked', false); 
+    var webhook_value = $(this).prop('checked') === true ? 'yes' : 'no';
+  	if($('input:checkbox[name=webhook1]').is(':checked')==true){
+    	webhook_value = 'yes';
 		}
+  	$.ajax({
+      type: 'POST',
+      url: '<?php echo admin_url('admin-ajax.php'); ?>',
+      dataType: 'json',
+      data: {
+          'action': 'set_cart_as_webhook',
+          'webhook': webhook_value,
+      },success: function (result){}
+    });
+  });
 
-			if (window.location.href.indexOf(url2) > -1) {
-				
-				setTimeout(function() {
-					if($('input:checkbox[name=webhook1]').is(':checked')== false){
-								
-						          $.ajax({
-						              type: 'POST',
-						              url: '<?php echo admin_url('admin-ajax.php'); ?>',
-						              dataType: 'json',
-						              data: {
-						                  'action': 'set_cart_as_webhook',
-						                  'webhook': 'no',
-						              },
-						              	success: function (result) {
-						              		
-
-						              	}
-						          });
-					}else{
-							$.ajax({
-							    type: 'POST',
-							    url: '<?php echo admin_url('admin-ajax.php'); ?>',
-							    dataType: 'json',
-							    data: {
-							        'action': 'set_cart_as_webhook',
-							        'webhook': 'yes',
-							    },
-							    	success: function (result) {
-							    		
-
-							    	}
-							});
-					}
-				}, 1000);
-		}
-
-
-	});
+	$(document).on( 'change', 'input[name="webhook1"]', function(){
+   	$('input[name="webhook1"]').not(this).prop('checked', false); 
+    var webhook_value = $(this).prop('checked') === true ? 'yes' : 'no';
+  	if($('input:checkbox[name=webhook]').is(':checked')==true){
+    	webhook_value = 'yes';
+    }	
+    $.ajax({
+      type: 'POST',
+      url: '<?php echo admin_url('admin-ajax.php'); ?>',
+      dataType: 'json',
+      data: {
+          'action': 'set_cart_as_webhook',
+          'webhook': webhook_value,
+      },
+      success: function (result){}
+  	});
+  });
 	
+	/*check localstorage is empty or not*/
+	if (localStorage.getItem("products_id") === null) {
+  	localStorage.setItem('products_id',75193);
+	}			
 
-
-
-			$(document).on( 'change', 'input[name="webhook"]', function(){
-		   	$('input[name="webhook"]').not(this).prop('checked', false); 
-		        var webhook_value = $(this).prop('checked') === true ? 'yes' : 'no';
-
-		        	if($('input:checkbox[name=webhook1]').is(':checked')==true){
-		        			webhook_value = 'yes';
-		        	}
-
-		        console.log(webhook_value);
-		       
-		      		
-							$.ajax({
-			              type: 'POST',
-			              url: '<?php echo admin_url('admin-ajax.php'); ?>',
-			              dataType: 'json',
-			              data: {
-			                  'action': 'set_cart_as_webhook',
-			                  'webhook': webhook_value,
-			              },
-			              	success: function (result) {
-			              		 
-			              	}
-			          });
-		    });
-
-			$(document).on( 'change', 'input[name="webhook1"]', function(){
-		   	$('input[name="webhook1"]').not(this).prop('checked', false); 
-		        var webhook_value = $(this).prop('checked') === true ? 'yes' : 'no';
-
-		        	if($('input:checkbox[name=webhook]').is(':checked')==true){
-		        			webhook_value = 'yes';
-		        	}	
-
-		        console.log(webhook_value);
-		       
-		      		
-							$.ajax({
-			              type: 'POST',
-			              url: '<?php echo admin_url('admin-ajax.php'); ?>',
-			              dataType: 'json',
-			              data: {
-			                  'action': 'set_cart_as_webhook',
-			                  'webhook': webhook_value,
-			              },
-			              	success: function (result) {
-			              		 
-
-			              		console.log(result);
-			              	}
-			          });
-		    });
-
-});
-
-
-/*check localstorage is empty or not*/
-if (localStorage.getItem("products_id") === null) {
-    localStorage.setItem('products_id',75193);
-}
-
-
-$(document).ready(function(){
 	var psize = $('#psize :selected').text();
 	console.log(psize);
 	$('#size').html(psize);
@@ -2721,114 +2514,84 @@ $(document).ready(function(){
 	var pettype = $('#pettype :selected').text();
 	$('#pet_type').html(pettype);
 
-    setTimeout(function() { 
-    	console.log('breedid_testing');
-			var secondary_breed = $('#sbreedid :selected').text();
-				$('#secondary_breed').html(secondary_breed);
-			var primary_breed = $('#breedid :selected').text();
-				$('#primary_breed').html(primary_breed);
-	 }, 10000);
-});
+  setTimeout(function() { 
+  	console.log('breedid_testing');
+		var secondary_breed = $('#sbreedid :selected').text();
+			$('#secondary_breed').html(secondary_breed);
+		var primary_breed = $('#breedid :selected').text();
+			$('#primary_breed').html(primary_breed);
+ 	}, 10000);
 
-
-
-$(document).ready(function(){
-    var insurance = localStorage.getItem('Insurance');
-        if(insurance == 'no'){
-            $('.webhook_checkbox_check').removeAttr('checked');
-        }else{
-            $('.webhook_checkbox_check').attr('checked');
-        }
+  var insurance = localStorage.getItem('Insurance');
+  if(insurance == 'no'){
+      $('.webhook_checkbox_check').removeAttr('checked');
+  }else{
+      $('.webhook_checkbox_check').attr('checked');
+  }
     
   setTimeout(function() {
-			$('.slider-faderIn').fadeIn(400);
+		$('.slider-faderIn').fadeIn(400);
 	}, 4000);
             	
-           
-
-/*add space after each 5-4 number in */
+  /*add space after each 5-4 number in */
   setTimeout(function() {
-$('.break_number').keyup(function(e) {
-		e.preventDefault();
-		limitText(this, 18)
-			var charCode = (e.which) ? e.which : event.keyCode    
+		$('.break_number').keyup(function(e) {
+			e.preventDefault();
+			limitText(this, 17)
+			var charCode = (e.which) ? e.which : event.keyCode;   
 			var foo = $(this).val().split(" ").join("");
-				if (foo.length > 0) {
-						foo = foo.match(new RegExp('.{1,5}', 'g')).join(" ");
-				}
-					$(this).val(foo);
-});
+			if (foo.length > 0) {
+				foo = foo.match(new RegExp('.{1,5}', 'g')).join(" ");
+			}
+			$(this).val(foo);
+		});
 
-$('.break_number-4').keyup(function(e) {
-		e.preventDefault();
-		limitText(this, 9)
-			var charCode = (e.which) ? e.which : event.keyCode    
+		$('.break_number-4').keyup(function(e) {
+			e.preventDefault();
+			limitText(this, 9)
+			var charCode = (e.which) ? e.which : event.keyCode;   
 			var foo = $(this).val().split(" ").join("");
-				if (foo.length > 0) {
-						foo = foo.match(new RegExp('.{1,4}', 'g')).join(" ");
-				}
-					$(this).val(foo);
-});
+			if (foo.length > 0) {
+				foo = foo.match(new RegExp('.{1,4}', 'g')).join(" ");
+			}
+			$(this).val(foo);
+		
+		});
 
-
-
-function limitText(field, maxChar){
-    var ref = $(field),
-        val = ref.val();
-    if ( val.length >= maxChar ){
+		function limitText(field, maxChar){
+	    var ref = $(field);
+	    var val = ref.val();
+	    if ( val.length >= maxChar ){
         ref.val(function() {
-            console.log(val.substr(0, maxChar))
-            return val.substr(0, maxChar);       
+          console.log("ocean",val.substr(0, maxChar))
+          return val.substr(0, maxChar);       
         });
-    }
-}
-
-   	
-}, 200);
-
-
+	    }
+		}
+	}, 200);
 
 /*checbox on primary phone*/
 //localStorage.setItem("cart_checkbox", "yes");
 	$('.primary_checkbox').change(function(){
-			$(this).toggleClass('checked');
-			if(!$('.primary_checkbox').hasClass('checked')){
-		localStorage.setItem("cart_checkbox", "no");
-	}else{
-     localStorage.setItem("cart_checkbox", "yes");
-	}
+		$(this).toggleClass('checked');
+		if(!$('.primary_checkbox').hasClass('checked')){
+			localStorage.setItem("cart_checkbox", "no");
+		}else{
+	     localStorage.setItem("cart_checkbox", "yes");
+		}
+	});
 
-});
-  /*setTimeout(function() {
-
-	if(!$('.primary_checkbox').hasClass('checked')){
-		localStorage.setItem("cart_checkbox", "no");
-	}else{
-     localStorage.setItem("cart_checkbox", "yes");
-	}
-}, 150);
-*/
-
-
-});
-
-
-$(document).ready(function(){
-	  setTimeout(function() {
-	if(localStorage.getItem('cart_checkbox') =='yes'){
+	setTimeout(function() {
+		if(localStorage.getItem('cart_checkbox') =='yes'){
 			$('.webhook_checkbox_check').prop('checked', true);
 			$('.woocommerce-form__input').prop('checked', true);
-	}else{
-
-		  $('.webhook_checkbox_check').prop('checked', false);
+		}else{
+			$('.webhook_checkbox_check').prop('checked', false);
 			$('.woocommerce-form__input').prop('checked', false);
-	}
+		}
+	}, 1500);
 
-}, 1500);
-
-})
-
-
+});
 
 </script>
 

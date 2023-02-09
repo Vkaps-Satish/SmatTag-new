@@ -46,7 +46,7 @@
             <div class="field-wrap two-fields-wrap">
                <div class="field-div">
                   <label>*Serial Number </label>
-                  <input type="text" placeholder="Serial Number" name="smarttag_id_number" class="text-data sereal-number-1" id="sname_input" required=""   />
+                  <input type="text" placeholder="Serial Number" name="smarttag_id_number" class="text-data sereal-number-1 break_number-4" id="sname_input" required=""   />
                   <span class="valid_message error"></span>
                </div>
                <div class="field-div">
@@ -106,8 +106,8 @@
                   </select>
                </div>
                <div class="field-div">
-                  <label>Secondary Color(s) (Optional)</label>
-                  <select name="secondary_color" class="text-data" id="scolor" required="" >
+                  <label>Secondary Color(s)</label>
+                  <select name="secondary_color" class="text-data" id="scolor">
                         <option value="">Select Color</option>
                         <option value="1">Black</option>
                         <option value="2">Blue</option>
@@ -148,9 +148,7 @@
                </div>
                <div class="field-div">
                   <label>Pet Date of Birth (Optional)</label>
-                  <div class="field-wrap three-fields-wrap ">
-                     <input type="date" name="pet_date_of_birth" id="pet-dob1-1" placeholder="mm/dd/yyyy" class="input-10 input text-data">
-                  </div>
+                  <input type="date" name="pet_date_of_birth" id="pet-dob1-1" placeholder="mm/dd/yyyy" class="input-10 input text-data">
                </div>
             </div>
             <div class="field-wrap two-fields-wrap">
@@ -990,3 +988,4 @@
 	    </fieldset>
    </form>
 </section>
+

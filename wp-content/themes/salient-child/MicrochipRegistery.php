@@ -2,6 +2,8 @@
 /*
 * Template Name:  Mircochip registery
 */
+global $petColors;
+
 get_header(); 
 $getTypes = get_top_parents('pet_type_and_breed');
 
@@ -38,36 +40,7 @@ $secondary_cell_country_code  = get_user_meta($user_id,'secondary_cell_country_c
 $secondary_phone_country_code  = get_user_meta($user_id,'secondary_phone_country_code',$single);
 
 ?>
-<!-- 
-<?php if(is_user_logged_in()){ ?>
-<script type="text/javascript">
-jQuery(document).ready(function(){
-$.each($('#profileuser1 .text-data'), function() {
 
-var name = $(this).attr('name');
-$("#"+name).text(localStorage.getItem(name));
-
-if(name == "pet_type" || name == "primary_breed" || name == "secondary_breed" || name == "gender" || name == "size"){
-if($("#profileuser1 select[name='"+name+"']").hasClass('text-data')){
-var optionValue  = localStorage.getItem(name);
-
-$('#profileuser1 select[name="'+name+'"] option[value="'+optionValue+'"]').attr('selected', true);
-}
-
-}else{
-$( "#profileuser1 input[name='"+name+"']").val(localStorage.getItem(name));
-}
-
-});
-
-$.each($('#profileuser1 .text-data'), function() {
-var fieldName = $(this).attr('name');
-localStorage.removeItem(fieldName);
-});
-
-})
-</script>
-<?php } ?> -->
 
 <div class="container-wrap">
 <div class="container main-content">
@@ -89,147 +62,116 @@ localStorage.removeItem(fieldName);
 <form id="profileuser1" method="POST" enctype="multipart/form-data">
 <!--   <script src='https://www.google.com/recaptcha/api.js'></script> -->
 <fieldset aria-label="Step One" tabindex="-1" id="step-1" class="step-form-box">
-<div class="contact-form" id="pro-info">
-<div class="field-wrap two-fields-wrap">
-<div class="field-div">
-<label>*Microchip Id Number</label>
-<input type="text" placeholder="Microchip Id Number" name="microchip_id" class="text-data sname_input-MC break_number" id="sname_input" value="<?= (isset($_GET['id'])) ? $_GET['id'] : "" ?>" />	 <span class="valid_message "></span><span class="error" id="error"></span>
-<a href="<?php echo get_site_url().'/our-services/universal-microchip-register-new/';?>" class="show-atag error"style="display: none;">Click here</a>
-
-</div>
-<div class="field-div">
-<label></label>
-<input type="text" name="conf_microchip_id" placeholder="Confirm Microchip Id Number" class="text-data break_number" value="<?= (isset($_GET['id'])) ? $_GET['id'] : "" ?>" />
-</div>
-</div>
-<div class="field-wrap two-fields-wrap">
-<div class="field-div">
-<label>*Pet Name</label>
-<input type="text" name="pet_name" class="text-data" id="pname_input" placeholder="Enter Pet Name" required="" />
-</div>
-<div class="field-div">&nbsp;</div>
-</div>
-<div class="field-wrap two-fields-wrap">
-<div class="field-div">
-<label>*Pet Type & Breed </label>
-<div class="field-wrap two-fields-wrap">
-	<div class="field-div">
-		<select name="pet_type" class="text-data" id="pettype" required=""  >
-			<option value="">Type</option>
-			<?php foreach ($getTypes as $key => $value) { ?>
-
-				<option value="<?= $value['term_id'] ?>"><?= $value['name'] ?></option>
-
-			<?php } ?>
-		</select>
+	<div class="contact-form" id="pro-info">
+		<div class="field-wrap two-fields-wrap">
+			<div class="field-div">
+				<label>*Microchip Id Number</label>
+				<input type="text" placeholder="Microchip Id Number" name="microchip_id" data-input="microchip_id" class="text-data break_number " id="sname_input" value="<?= (isset($_GET['id'])) ? $_GET['id'] : "" ?>">	 
+			</div>
+			<div class="field-div">
+				<label></label>
+				<input type="text" name="conf_microchip_id" placeholder="Confirm Microchip Id Number" class="text-data break_number" value="<?= (isset($_GET['id'])) ? $_GET['id'] : "" ?>" />
+			</div>
+		</div>
+		<div class="field-wrap two-fields-wrap">
+			<div class="field-div">
+				<label>*Pet Name</label>
+				<input type="text" name="pet_name" class="text-data" id="pname_input" placeholder="Enter Pet Name" required="" />
+			</div>
+			<div class="field-div">&nbsp;</div>
+		</div>
+		<div class="field-wrap two-fields-wrap">
+			<div class="field-div">
+				<label>*Pet Type & Breed</label>
+				<div class="field-wrap two-fields-wrap">
+					<div class="field-div">
+						<select name="pet_type" class="text-data" id="pettype" required=""  >
+							<option value="">Type</option>
+							<?php foreach ($getTypes as $key => $value) { ?>
+								<option value="<?= $value['term_id'] ?>"><?= $value['name'] ?></option>
+							<?php } ?>
+						</select>
+					</div>
+					<div class="field-div Pet_Type_Breed " style="display:none;">
+						<select name="primary_breed" class="text-data" id="breedid" required="" >
+							<option value="">Breed</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="field-div Pet_Type_Breed " style="display:none;">
+				<label>Secondary Breed</label>
+				<select name="secondary_breed" class="text-data" id="sbreedid" >
+					<option value="">Breed</option>
+				</select>
+			</div>
+		</div>
+		<div class="field-wrap two-fields-wrap">
+			<div class="field-div">
+				<label>*Primary Color</label>
+				<select name="primary_color" class="text-data" id="pcolor" required="" >
+					<option value="">Select Color</option>
+					<?php 
+						foreach ($petColors as $key => $color) {
+							echo '<option value="'.$key.'">'.$color.'</option>';
+						}
+					?>	
+				</select>
+			</div>
+			<div class="field-div">
+				<label>Secondary Color(s)</label>
+				<select name="secondary_color" class="text-data" id="scolor" >
+					<option value="">Select Color</option>
+					<?php 
+						foreach ($petColors as $key => $color) {
+							echo '<option value="'.$key.'">'.$color.'</option>';
+						}
+					?>	
+				</select>
+			</div>
+		</div>
+		<div class="field-wrap two-fields-wrap">
+			<div class="field-div">
+				<div class="field-wrap two-fields-wrap">
+					<div class="field-div">
+						<label>*Gender</label>
+						<select name="gender" class="text-data" id="pgender" required="">
+						<option value="">Select</option>
+						<option value="Male">Male</option>
+						<option value="Female">Female</option>
+					</select>
+					</div>
+					<div class="field-div">
+						<label>Size</label>
+						<select name="size" class="text-data" id="psize">
+							<option value="">Select</option>
+							<option value="Small">Small</option>
+							<option value="Medium">Medium</option>
+							<option value="Large">Large</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="field-div">
+				<label>Pet Date of Birth</label>
+				<input type="date" name="pet_date_of_birth" id="pet-dob1-1" placeholder="mm/dd/yyyy" autocomplete="off" class="input-10 input text-data date-mnth-yer">
+			</div>
+		</div>
+		<div class="field-wrap two-fields-wrap">
+			<div class="field-div">
+				<label>Upload Pet Image</label>
+				<input type="file" name="files" class="files-data" multiple id="imgInp" required="" />
+			</div>
+			<div class="field-div">
+				<label></label>
+				<div class="field-notice">Files must be less than 2MB.
+				<br>Allowed file types .png/ .gif/ .jpg/ .jpeg</div>
+			</div>
+		</div>
 	</div>
-	<div class="field-div Pet_Type_Breed " style="display:none;">
-		<select name="primary_breed" class="text-data" id="breedid" required="" >
-			<option value="">Breed</option>
-
-		</select>
+	<div class="step-btns">
+		<button class="btn btn-default btn-next" type="button" aria-controls="step-2">Next&nbsp;<i class="fa fa-caret-right"></i></button>
 	</div>
-</div>
-</div>
-<div class="field-div Pet_Type_Breed " style="display:none;">
-<label>Secondary Breed</label>
-<select name="secondary_breed" class="text-data" id="sbreedid" >
-	<option value="">Breed</option>
-</select>
-</div>
-</div>
-<div class="field-wrap two-fields-wrap">
-<div class="field-div">
-<label>*Primary Color</label>
-
-
-<select name="primary_color" class="text-data" id="pcolor" required="" >
-			<option value="">Select Color</option>
-			<option value="1">Black</option>
-			<option value="2">Blue</option>
-			<option value="3">Brown</option>
-			<option value="4">Gold</option>
-			<option value="5">Gray</option>
-			<option value="6">Orange</option>
-			<option value="7">Red</option>
-			<option value="8">Sliver</option>
-			<option value="9">Tan</option>
-			<option value="10">White</option>
-			<option value="11">Yellow</option>
-
-		</select>
-
-
-
-
-
-
-</div>
-<div class="field-div">
-<label>Secondary Color(s)</label>
-<select name="secondary_color" class="text-data" id="scolor" >
-			<option value="">Select Color</option>
-			<option value="1">Black</option>
-			<option value="2">Blue</option>
-			<option value="3">Brown</option>
-			<option value="4">Gold</option>
-			<option value="5">Gray</option>
-			<option value="6">Orange</option>
-			<option value="7">Red</option>
-			<option value="8">Sliver</option>
-			<option value="9">Tan</option>
-			<option value="10">White</option>
-			<option value="11">Yellow</option>
-
-		</select>
-</div>
-</div>
-<div class="field-wrap two-fields-wrap">
-<div class="field-div">
-<div class="field-wrap two-fields-wrap">
-	<div class="field-div">
-		<label>*Gender</label>
-		<select name="gender" class="text-data" id="pgender" required="" />
-		<option value="">Select</option>
-		<option value="male">Male</option>
-		<option value="Female">Female</option>
-	</select>
-</div>
-<div class="field-div">
-	<label>Size</label>
-	<select name="size" class="text-data" id="psize">
-		<option value="">Select</option>
-		<option value="1">Small</option>
-		<option value="2">Medium</option>
-		<option value="3">Large</option>
-	</select>
-</div>
-</div>
-</div>
-<div class="field-div">
-<label>Pet Date of Birth</label>
-<input type="date" name="pet_date_of_birth" id="pet-dob1-1" placeholder="mm/dd/yyyy" autocomplete="off" class="input-10 input text-data date-mnth-yer">
-</div>
-</div>
-<div class="field-wrap two-fields-wrap">
-<div class="field-div">
-<label class="auto-height">
-<?php __( 'Upload Pet Image)', 'cvf-upload'); ?>
-</label>
-<label>Upload Pet Image</label>
-<input type="file" name="files" class="files-data" multiple id="imgInp" required="" />
-</div>
-<div class="field-div">
-<label></label>
-<div class="field-notice">Files must be less than 2MB.
-<br>Allowed file types .png/ .gif/ .jpg/ .jpeg</div>
-</div>
-</div>
-</div>
-<div class="step-btns">
-<button class="btn btn-default btn-next" type="button" aria-controls="step-2">Next <i class="fa fa-caret-right"></i>
-</button>
-</div>
 </fieldset>
 <fieldset aria-label="Step Two" tabindex="-1" id="step-2" class="step-form-box">
 <?php  if(is_user_logged_in()) { ?>
@@ -630,8 +572,8 @@ localStorage.removeItem(fieldName);
 </div>
 </div>
 <div class="step-btns">
-<button class="btn btn-default btn-prev" type="button" aria-controls="step-1"><i class="fa fa-caret-left"></i> Back</button>
-<button class="btn btn-default btn-next email_already" type="button" aria-controls="step-3">Next <i class="fa fa-caret-right"></i></button>
+<button class="btn btn-default btn-prev" type="button" aria-controls="step-1"><i class="fa fa-caret-left"></i>&nbsp;Back</button>
+<button class="btn btn-default btn-next email_already" type="button" aria-controls="step-3">Next&nbsp;<i class="fa fa-caret-right"></i></button>
 </div>
 </fieldset>
 <fieldset aria-label="Step Three" tabindex="-1" id="step-3" class="step-form-box">
@@ -973,8 +915,8 @@ localStorage.removeItem(fieldName);
 </div>
 </div>
 <div class="step-btns">
-<button class="btn btn-default btn-prev" type="button" aria-controls="step-2"><i class="fa fa-caret-left"></i> Back</button>
-<button class="btn btn-default btn-next ste4" type="button" aria-controls="step-4">Limited Protection Only<i class="fa fa-caret-right"></i>
+<button class="btn btn-default btn-prev" type="button" aria-controls="step-2"><i class="fa fa-caret-left"></i> &nbsp;Back</button>
+<button class="btn btn-default btn-next ste4" type="button" aria-controls="step-4">Limited Protection Only &nbsp;<i class="fa fa-caret-right"></i>
 </button>
 </div>
 </fieldset>
@@ -1397,10 +1339,10 @@ localStorage.removeItem(fieldName);
 				               			 </div>
 				                   </div>
 								<div>
-									<label>
-										<input type="radio" id="CustPro" name="customproduct">Yes I want a custom engraved ID Tag
+									
+										<input type="radio" id="CustPro" name="customproduct"><label for="CustPro">Yes I want a custom engraved ID Tag</label>
 										<br>
-										<input type="radio" id="CustProdis" name="customproduct">No, I don't want an engraved ID Tag
+										<input type="radio" id="CustProdis" name="customproduct"><label for="CustProdis">No, I don't want an engraved ID Tag</label>
 										<br>
 									</div>
 								</div>
@@ -1561,200 +1503,198 @@ Included with your SmartTag Membership</h3>
 <img src="<?php bloginfo('template_url'); ?>-child/images/red-table.jpg" alt="image" />
 </p>
 <?php $product=wc_get_product($protectionArrangement); ?>
-<p><strong>Price: $ <?= $product->get_price(); ?></strong>
-</p>
+	<p><strong>Price: $ <?= $product->get_price(); ?></strong></p>
 </div>
 <div class="step-check-wrap">
-<div class="step-check">
-<input class="" type="radio" name="protectionArrangement" value="<?= $protectionArrangement;?>" id="PetArg" />
-<label>I would like to add a Pet Protection Arrangement</label>
-</div>
-<div class="step-check">
-<input type="radio" name="protectionArrangement" id="PetArg1" />
-<label>I would not like to add a Pet Protection Arrangement</label>
-</div>
-</div>
-</div>
-<div class="step-btns">
-<button class="btn btn-default btn-prev" type="button" aria-controls="step-3"><i class="fa fa-caret-left"></i> Back</button>
-<button class="btn btn-default btn-next skip2" type="button" aria-controls="step-5">Skip All Offers <i class="fa fa-caret-right"></i>
-</button>
-</div>
-</fieldset>
-<fieldset aria-label="Step Five" tabindex="-1" id="step-5" class="step-form-box">
-<p>	<strong>Please review that your information is correct.</strong>
-<br>You can edit this information if you need to.</p>
-<div class="acc-blue-box">
-<div class="acc-blue-head">Engraved ID Tag
-<div class="acc-edit engrave-edit">	<i class="fa fa-edit"></i> EDIT</div>
-</div>
-<div class="acc-blue-content">
-<div class="row" style="display: none" id="eng_id">
-<div class="col-sm-8">
-<div class="field-box">
-	<div class="home-front-back-section">
-		<div class="style-pro">
-			<div class="section-front-image design-circle micro-back">
-				<label>Front:</label>
-				<span class="micro-back-img">
-					<img src="<?php bloginfo('template_url'); ?>-child/images/flower_circle_shape.png" class="front-img">
-					<span class="woo-complex-custom" style="display: none;">
-						<span class="back_line_text1" id="back_line1"></span>
-						<span class="back_line_text2"id="back_line2"></span>
-						<span class="back_line_text3" id="back_line3"></span>
-						<span class="back_line_text4" id="back_line4"></span>
-					</span>
-				</span>
-			</div>
-			<div class="section-back-image design-circle micro-back">
-				<label>Back:</label>
-				<span class="micro-back-img">
-					<img src="<?php bloginfo('template_url'); ?>-child/images/circle_back.png" class="back-img">
-					<span class="woo-complex-custom">	
-						<span class="back_line_text1" id="back_line1"></span>
-						<span class="back_line_text2" id="back_line2"></span>
-						<span class="back_line_text3" id="back_line3">
-						</span>
-						<span class="back_line_text4" id="back_line4"></span>
-					</span>
-				</span>
-
-			</div>
-			<div class="section-front-image design-bone micro-back">
-				<label>Front:</label>
-				<span class="micro-back-img">
-					<img src="<?php bloginfo('template_url'); ?>-child/images/black_bone_bone_shape.png" class="front-img">
-					<span class="woo-complex-custom" style="display: none;">	
-						<span class="front_line_text1" id="front_line1"></span>
-						<span class="front_line_text2" id="front_line2"></span>
-						<span class="front_line_text3" id="front_line3"></span>
-						<span class="back_line_text4" id="back_line4"></span>
-					</span>
-				</span>
-			</div>
-			<div class="section-back-image design-bone micro-back">
-				<label>Back:</label>
-				<span class="micro-back-img">
-					<img src="<?php bloginfo('template_url'); ?>-child/images/bone_back.jpg" class="back-img">
-					<span class="woo-complex-custom">	
-						<span class="back_line_text1" id="back_line1"></span>
-						<span class="front_line_text2" id="front_line2"></span>
-						<span class="front_line_text3" id="front_line3">
-						</span>
-						<span class="back_line_text4" id="back_line4"></span>
-					</span>
-				</span>
-			</div>
-			<div class="section-front-image design-heart micro-back">
-				<label>Front:</label>
-				<span class="micro-back-img">
-					<img src="<?php bloginfo('template_url'); ?>-child/images/brass_heart.jpg" class="front-img">
-					<span class="woo-complex-custom" style="display: none;">	
-						<span class="front_line_text1" id="front_line1"></span>
-						<span class="front_line_text2" id="front_line2"></span>
-						<span class="front_line_text3" id="front_line3">
-						</span>
-						<span class="back_line_text4" id="back_line4"></span>
-					</span>
-				</span>
-			</div>
-			<div class="section-back-image design-heart micro-back">
-				<label>Back:</label>
-				<span class="micro-back-img">
-					<img src="<?php bloginfo('template_url'); ?>-child/images/brass_heart.jpg" class="back-img">
-					<span class="woo-complex-custom">	
-						<span class="back_line_text1" id="back_line1"></span>
-						<span class="front_line_text2" id="front_line2"></span>
-						<span class="front_line_text3" id="front_line3">
-						</span>
-						<span class="back_line_text4" id="back_line4"></span>
-					</span>
-				</span>
-			</div>
-		</div>
-		<div class="color-pro">
-			<div class="section-front-image color-circle micro-back">
-				<label>Front:</label>
-				<span class="micro-back-img">
-					<img src="<?php bloginfo('template_url'); ?>-child/images/bluetag2.jpg" class="front-img"> 
-					<span class="woo-complex-custom" style="display: none;">	
-						<span class="front_line_text1" id="front_line1"></span>
-						<span class="front_line_text2" id="front_line2"></span>
-						<span class="front_line_text3" id="front_line3">
-						</span>
-						<span class="back_line_text4" id="back_line4"></span>
-					</span>
-				</div>
-				<div class="section-back-image color-circle micro-back">
-					<label>Back:</label>
-					<span class="micro-back-img">
-						<img src="<?php bloginfo('template_url'); ?>-child/images/bluetag2.jpg" class="back-img">
-						<span class="woo-complex-custom">	
-							<span class="back_line_text1" id="back_line1"></span>
-							<span class="front_line_text2" id="front_line2"></span>
-						<span class="front_line_text3" id="front_line3">
-						</span>
-						<span class="back_line_text4" id="back_line4"></span>
-						</span>
-					</span>
-				</div>
-				<div class="section-front-image color-bone micro-back">
-					<label>Front:</label>
-					<span class="micro-back-img">
-						<img src="<?php bloginfo('template_url'); ?>-child/images/black_bone_shape_2_2.png" class="front-img">
-						<span class="woo-complex-custom" style="display: none;">	
-							<span class="front_line_text1" id="front_line1"></span>
-							<span class="front_line_text2" id="front_line2"></span>
-						<span class="front_line_text3" id="front_line3">
-						</span>
-						<span class="back_line_text4" id="back_line4"></span>
-						</span>
-					</span>
-				</div>
-				<div class="section-back-image color-bone micro-back">
-					<label>Back:</label>
-					<span class="micro-back-img">
-						<img src="<?php bloginfo('template_url'); ?>-child/images/black_bone_shape_2_2.png" class="back-img">
-						<span class="woo-complex-custom">	
-							<span class="back_line_text1" id="back_line1"></span>
-							<span class="front_line_text2" id="front_line2"></span>
-						<span class="front_line_text3" id="front_line3">
-						</span>
-						<span class="back_line_text4" id="back_line4"></span>
-						</span>
-					</span>
-				</div>
-				<div class="section-front-image color-heart micro-back">
-					<label>Front:</label>
-					<span class="micro-back-img">
-						<img src="<?php bloginfo('template_url'); ?>-child/images/heart_pink_shape_2.png" class="front-img">
-						<span class="woo-complex-custom" style="display: none;">	
-							<span class="front_line_text1" id="front_line1"></span>
-							<span class="front_line_text2" id="front_line2"></span>
-						<span class="front_line_text3" id="front_line3">
-						</span>
-						<span class="back_line_text4" id="back_line4"></span>
-						</span>
-					</span>
-				</div>
-				<div class="section-back-image color-heart micro-back">
-					<label>Back:</label>
-					<span class="micro-back-img">
-						<img src="<?php bloginfo('template_url'); ?>-child/images/heart_pink_shape_2.png" class="back-img">
-						<span class="woo-complex-custom">	
-							<span class="back_line_text1" id="back_line1"></span>
-							<span class="front_line_text2" id="front_line2"></span>
-						<span class="front_line_text3" id="front_line3">
-						</span>
-						<span class="back_line_text4" id="back_line4"></span>
-						</span>
-					</span>
-
-				</div>
-			</div>
-		</div>
+	<div class="step-check">
+		<input type="radio" name="protectionArrangement" value="<?= $protectionArrangement;?>" id="PetArg">
+		<label for="PetArg">I would like to add a Pet Protection Arrangement</label>
+	</div>
+	<div class="step-check">
+		<input type="radio" name="protectionArrangement" id="PetArg1">
+		<label for="PetArg1">I would not like to add a Pet Protection Arrangement</label>
 	</div>
 </div>
+</div>
+	<div class="step-btns">
+		<button class="btn-default btn-prev" type="button" aria-controls="step-3"><i class="fa fa-caret-left"></i>&nbsp;Back</button>
+		<button class="btn-default btn-next skip2" type="button" aria-controls="step-5">Skip All Offers&nbsp;<i class="fa fa-caret-right"></i></button>
+	</div>
+</fieldset>
+<fieldset aria-label="Step Five" tabindex="-1" id="step-5" class="step-form-box">
+	<p>	<strong>Please review that your information is correct.</strong>
+	<br>You can edit this information if you need to.</p>
+<div class="acc-blue-box">
+	<div class="acc-blue-head">Engraved ID Tag
+		<div class="acc-edit engrave-edit">	<i class="fa fa-edit"></i> EDIT</div>
+	</div>
+	<div class="acc-blue-content">
+		<div class="row" style="display: none" id="eng_id">
+			<div class="col-sm-8">
+		<div class="field-box">
+			<div class="home-front-back-section">
+				<div class="style-pro">
+					<div class="section-front-image design-circle micro-back">
+						<label>Front:</label>
+						<span class="micro-back-img">
+							<img src="<?php bloginfo('template_url'); ?>-child/images/flower_circle_shape.png" class="front-img">
+							<span class="woo-complex-custom" style="display: none;">
+								<span class="back_line_text1" id="back_line1"></span>
+								<span class="back_line_text2"id="back_line2"></span>
+								<span class="back_line_text3" id="back_line3"></span>
+								<span class="back_line_text4" id="back_line4"></span>
+							</span>
+						</span>
+					</div>
+					<div class="section-back-image design-circle micro-back">
+						<label>Back:</label>
+						<span class="micro-back-img">
+							<img src="<?php bloginfo('template_url'); ?>-child/images/circle_back.png" class="back-img">
+							<span class="woo-complex-custom">	
+								<span class="back_line_text1" id="back_line1"></span>
+								<span class="back_line_text2" id="back_line2"></span>
+								<span class="back_line_text3" id="back_line3">
+								</span>
+								<span class="back_line_text4" id="back_line4"></span>
+							</span>
+						</span>
+
+					</div>
+					<div class="section-front-image design-bone micro-back">
+						<label>Front:</label>
+						<span class="micro-back-img">
+							<img src="<?php bloginfo('template_url'); ?>-child/images/black_bone_bone_shape.png" class="front-img">
+							<span class="woo-complex-custom" style="display: none;">	
+								<span class="front_line_text1" id="front_line1"></span>
+								<span class="front_line_text2" id="front_line2"></span>
+								<span class="front_line_text3" id="front_line3"></span>
+								<span class="back_line_text4" id="back_line4"></span>
+							</span>
+						</span>
+					</div>
+					<div class="section-back-image design-bone micro-back">
+						<label>Back:</label>
+						<span class="micro-back-img">
+							<img src="<?php bloginfo('template_url'); ?>-child/images/bone_back.jpg" class="back-img">
+							<span class="woo-complex-custom">	
+								<span class="back_line_text1" id="back_line1"></span>
+								<span class="front_line_text2" id="front_line2"></span>
+								<span class="front_line_text3" id="front_line3">
+								</span>
+								<span class="back_line_text4" id="back_line4"></span>
+							</span>
+						</span>
+					</div>
+					<div class="section-front-image design-heart micro-back">
+						<label>Front:</label>
+						<span class="micro-back-img">
+							<img src="<?php bloginfo('template_url'); ?>-child/images/brass_heart.jpg" class="front-img">
+							<span class="woo-complex-custom" style="display: none;">	
+								<span class="front_line_text1" id="front_line1"></span>
+								<span class="front_line_text2" id="front_line2"></span>
+								<span class="front_line_text3" id="front_line3">
+								</span>
+								<span class="back_line_text4" id="back_line4"></span>
+							</span>
+						</span>
+					</div>
+					<div class="section-back-image design-heart micro-back">
+						<label>Back:</label>
+						<span class="micro-back-img">
+							<img src="<?php bloginfo('template_url'); ?>-child/images/brass_heart.jpg" class="back-img">
+							<span class="woo-complex-custom">	
+								<span class="back_line_text1" id="back_line1"></span>
+								<span class="front_line_text2" id="front_line2"></span>
+								<span class="front_line_text3" id="front_line3">
+								</span>
+								<span class="back_line_text4" id="back_line4"></span>
+							</span>
+						</span>
+					</div>
+				</div>
+				<div class="color-pro">
+					<div class="section-front-image color-circle micro-back">
+						<label>Front:</label>
+						<span class="micro-back-img">
+							<img src="<?php bloginfo('template_url'); ?>-child/images/bluetag2.jpg" class="front-img"> 
+							<span class="woo-complex-custom" style="display: none;">	
+								<span class="front_line_text1" id="front_line1"></span>
+								<span class="front_line_text2" id="front_line2"></span>
+								<span class="front_line_text3" id="front_line3">
+								</span>
+								<span class="back_line_text4" id="back_line4"></span>
+							</span>
+						</div>
+						<div class="section-back-image color-circle micro-back">
+							<label>Back:</label>
+							<span class="micro-back-img">
+								<img src="<?php bloginfo('template_url'); ?>-child/images/bluetag2.jpg" class="back-img">
+								<span class="woo-complex-custom">	
+									<span class="back_line_text1" id="back_line1"></span>
+									<span class="front_line_text2" id="front_line2"></span>
+								<span class="front_line_text3" id="front_line3">
+								</span>
+								<span class="back_line_text4" id="back_line4"></span>
+								</span>
+							</span>
+						</div>
+						<div class="section-front-image color-bone micro-back">
+							<label>Front:</label>
+							<span class="micro-back-img">
+								<img src="<?php bloginfo('template_url'); ?>-child/images/black_bone_shape_2_2.png" class="front-img">
+								<span class="woo-complex-custom" style="display: none;">	
+									<span class="front_line_text1" id="front_line1"></span>
+									<span class="front_line_text2" id="front_line2"></span>
+								<span class="front_line_text3" id="front_line3">
+								</span>
+								<span class="back_line_text4" id="back_line4"></span>
+								</span>
+							</span>
+						</div>
+						<div class="section-back-image color-bone micro-back">
+							<label>Back:</label>
+							<span class="micro-back-img">
+								<img src="<?php bloginfo('template_url'); ?>-child/images/black_bone_shape_2_2.png" class="back-img">
+								<span class="woo-complex-custom">	
+									<span class="back_line_text1" id="back_line1"></span>
+									<span class="front_line_text2" id="front_line2"></span>
+								<span class="front_line_text3" id="front_line3">
+								</span>
+								<span class="back_line_text4" id="back_line4"></span>
+								</span>
+							</span>
+						</div>
+						<div class="section-front-image color-heart micro-back">
+							<label>Front:</label>
+							<span class="micro-back-img">
+								<img src="<?php bloginfo('template_url'); ?>-child/images/heart_pink_shape_2.png" class="front-img">
+								<span class="woo-complex-custom" style="display: none;">	
+									<span class="front_line_text1" id="front_line1"></span>
+									<span class="front_line_text2" id="front_line2"></span>
+								<span class="front_line_text3" id="front_line3">
+								</span>
+								<span class="back_line_text4" id="back_line4"></span>
+								</span>
+							</span>
+						</div>
+						<div class="section-back-image color-heart micro-back">
+							<label>Back:</label>
+							<span class="micro-back-img">
+								<img src="<?php bloginfo('template_url'); ?>-child/images/heart_pink_shape_2.png" class="back-img">
+								<span class="woo-complex-custom">	
+									<span class="back_line_text1" id="back_line1"></span>
+									<span class="front_line_text2" id="front_line2"></span>
+								<span class="front_line_text3" id="front_line3">
+								</span>
+								<span class="back_line_text4" id="back_line4"></span>
+								</span>
+							</span>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 <div class="col-sm-4">
 	<strong>Price:&nbsp;</strong>$<span id="ProductPrice"></span>
 </div>
@@ -1971,8 +1911,8 @@ if (is_user_logged_in()) {
 </div>
 
 <div class="step-btns">
-<button class="btn btn-default btn-prev" type="button" aria-controls="step-4"><i class="fa fa-caret-left"></i> Back</button>
-<button class="btn btn-default" type="submit">Checkout and Register Microchip <i class="fa fa-caret-right"></i>
+<button class="btn btn-default btn-prev" type="button" aria-controls="step-4"><i class="fa fa-caret-left"></i>&nbsp;Back</button>
+<button class="btn btn-default" type="submit">Checkout and Register Microchip&nbsp;<i class="fa fa-caret-right"></i>
 </button>
 </div>
 </p> <?php //} ?>
