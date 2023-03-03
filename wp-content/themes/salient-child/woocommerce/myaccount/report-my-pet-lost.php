@@ -106,8 +106,7 @@ if ($wp_query->have_posts()) {
       <div class="col-sm-5 rmb-15">
         <strong>Pet Name:</strong> <a href="javascript:;" class="show-post"><span class="name"><?php echo get_the_title(); ?></span></a>
         <br>
-        <strong>Pet Type:</strong> <span><?php $typeId = $mypod->display('pet_type');
-        echo (isset(get_term( $typeId )->name)) ? get_term( $typeId )->name : "" ;
+        <strong>Pet Type:</strong> <span><?php echo $typeId = $mypod->display('pet_type');
         ?></span>
         <br>
         <strong>IDTag Serial Number:</strong> <span class="name"><?php echo $mypod->display('smarttag_id_number'); ?></span>

@@ -59,483 +59,307 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
             <!-- <div class="small-text">
                 Each -SmartTag Microchip includes a FREE Silver Lifetime Plan. Please review the plan benefits below and choose a plan that is right for your pet
             </div> -->
+            
             <section class="multi-step-form ocean">
-              
-                 <fieldset aria-label="Step One" tabindex="-1" id="step-1" class="step-form-box">
-                     <div class="contact-form" id="pro-info">
-                      <center><h2>Register any brand microchip</h2></center>
-                      <p class="text-center">Home Again®, AVID™ AKC CAR/EID™, Digital Angel®, ResQ®, ALLFLEX®, Schering Plough™, 24 PET WATCH™, Lifechip®, Banfield®, Crystal Tag™, Datamars™, Petlink, Trovan®, & Deston Fearing™, MICHELSON FOUND ANIMALS, Savethislife, etc...</p>
-                      <h3 style="color: #dc2727;"><center>Registration for as low as $6.95!</center></h3> 
-                      
-                      <div class="field-wrap three-fields-wrap universal-microchips-field-wrap">
-                        <form name="universalMicrochipForm"  id="universalMicrochipForm" method="POST" enctype="multipart/form-data">
-                          <div class="field-div">
-                            <label>Register Here:</label>
-                              <input type="text" name="microchipNumber" placeholder="*Microchip ID Number" class="user-data break_number"  autocomplete="off" value="<?= (isset($_GET['id'])) ? $_GET['id']  : "";?>" id="MiroNumber"  />
-                          </div>
-                          <div class="field-div">
-                             <label></label>
-                             <input type="text" name="conMicrochipNumber" placeholder="*Confirm ID Number" class="user-data break_number"  autocomplete="off" value="<?= (isset($_GET['id'])) ? $_GET['id']  : "";?>"  />
-                          </div>
-                         
-                          <div class="field-div field-div-btn">
-                             <label></label>
-                              <button class="site-btn-red" type="submit">Enter <i class="fa fa-caret-right"></i></button>
-                          </div>
-                        </div>
-                      </form>
-                      <hr>
-                       <?php get_template_part( 'register', 'universal-microchips-benefits' );
-                       ?> 
-
-                      <table class="table table-total">
-                        <tr>
-                          <td> 1 Year:
-                          </td>  
-                          <td>
-                            $6.95
-                          </td>
-                          <td>
-                             $9.95
-                          </td>
-                          <td>
-                             $19.95
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            Lifetime:
-                          </td>
-                          <td>
-                            $14.95
-                          </td>
-                          <td>
-                             $29.95
-                          </td>
-                          <td>
-                             $49.95
-                          </td>
-                        </tr>
-
-                      </table>
-                    </div>
-                  </fieldset>
-
-                  <fieldset aria-label="Step Two" tabindex="-1" id="step-2" class="step-form-box">
-                     <form id="profileuser1" method="POST" enctype="multipart/form-data">
-                     <div class="contact-form" id="pro-info">
-                     	<h2>Pet Profile Detail</h2>
-                     	<hr>
-                        <div class="field-wrap two-fields-wrap">
-                           	<div class="field-div">
-                              	<label>*Microchip Id Number:</label>
-                              	<input type="text" placeholder="Microchip Id Number" name="universal_microchip_id" class="text-data dog_universal_microchip_id break_number" id="sname_input" value="<?= (isset($_GET['id'])) ? $_GET['id']  : "";?>" required=""  />
-                                <span class="valid_message "></span><span class="error" id="error"></span>
-                                 <a href="<?php echo get_site_url().'/our-services/microchip-registry/';?>" class="show-atag error"style="display: none;">Click here</a>
-                           	</div>
-                           	<div class="field-div">
-                              	<label>*Confirm Microchip Id Number:</label>
-                              	<input type="text" name="conf_universal_microchip_id" placeholder="Confirm Microchip Id Number" class="text-data break_number" value="<?= (isset($_GET['id'])) ? $_GET['id']  : "";?>" required=""  id="con_input" />
-                           	</div>
-                           
-                        </div>
-                        <div class="field-wrap two-fields-wrap">
-                        <div class="field-div">
-                        <label>*Pet Name</label>
-                        <input type="text" name="pet_name" class="text-data dog_universal_microchip_id" id="pname_input" placeholder="Enter Pet Name" required="" />
-                        </div>
-                        <div class="field-div">&nbsp;</div>
-                        </div>
-
-                        <div class="field-wrap two-fields-wrap">
-                        <div class="field-div">
-                        <label>*Pet Type & Breed </label>
-                        <div class="field-wrap two-fields-wrap">
-                          <div class="field-div">
-                             <select name="pet_type" class="text-data" id="pettype" required="">
-                                  <option value="">Type</option>
-                                  <?php foreach ($getbreeds as $key => $value) { ?>
-                                
-                                <option value="<?= $value['term_id'] ?>"><?= $value['name'] ?></option>
-                                
-                                  <?php } ?>
-                                </select>
-                          </div>
-                          <div class="field-div Pet_Type_Breed " style="display:none;">
-                            <select name="primary_breed" class="text-data" id="breedid" required="" >
-                              <option value="">Breed</option>
-
-                            </select>
-                          </div>
-                        </div>
-                        </div>
-                        <div class="field-div Pet_Type_Breed " style="display:none;">
-                        <label>Secondary Breed</label>
-                        <select name="secondary_breed" class="text-data" id="sbreedid" >
-                          <option value="">Breed</option>
-                        </select>
-                        </div>
-                        </div>
-
-                        <div class="field-wrap two-fields-wrap">
-	                       	<div class="field-div">
-                              	<label>*Primary Color: </label>
-                                <select name="primary_color" class="text-data" id="pcolor" required="" >
-                                  <option value="">Select Color</option>
-                                    <?php 
-                                        foreach ($petColors as $key => $color) {
-                                            echo '<option value="'.$key.'">'.$color.'</option>';
-                                        }
-                                    ?>  
-                              </select>
-                           	</div>
-                              <div class="field-div">
-                              <label>Secondary Color(s)</label>
-                                 <select name="secondary_color" class="text-data" id="scolor">
-                                    <option value="">Select Color</option>
-                                    <?php 
-                                        foreach ($petColors as $key => $color) {
-                                            echo '<option value="'.$key.'">'.$color.'</option>';
-                                        }
-                                    ?>  
-                                 </select>
-                           </div>
-                        </div>
-                        <div class="field-wrap two-fields-wrap">
-                           	<div class="field-div">
-                              <div class="field-wrap two-fields-wrap">
-                                <div class="field-div">
-                            	    <label>*Gender: </label>
-                                	<select name="gender" class="text-data" id="pgender" required=""  />
-                                   		<option value="">Select</option>
-                                   		<option value="male">Male</option>
-                                   		<option value="Female">Female</option>
-                                	</select>
-                        	      </div>
-                               	<div class="field-div">
-                                      <label>Size </label>
-                                      <select name="size" class="text-data" id="psize">
-                                        <option value="">Select</option>
-                                      <option value="1">Small</option>
-                                      <option value="2">Medium</option>
-                                      <option value="3">Large</option>
-                                      </select>
-                               	</div>
-                              </div>
+                <form id="universalForm" method="POST" enctype="multipart/form-data">
+                    <fieldset aria-label="Step One" tabindex="-1" id="step-1" class="step-form-box">
+                        <div class="contact-form" id="pro-info">
+                          <center><h2>Register any brand microchip</h2></center>
+                          <p class="text-center">Home Again®, AVID™ AKC CAR/EID™, Digital Angel®, ResQ®, ALLFLEX®, Schering Plough™, 24 PET WATCH™, Lifechip®, Banfield®, Crystal Tag™, Datamars™, Petlink, Trovan®, & Deston Fearing™, MICHELSON FOUND ANIMALS, Savethislife, etc...</p>
+                          <h3 style="color: #dc2727;"><center>Registration for as low as $6.95!</center></h3> 
+                            <div class="field-wrap three-fields-wrap universal-microchips-field-wrap">
+                                <!-- <form name="universalMicrochipForm"  id="universalMicrochipForm" method="POST" enctype="multipart/form-data"> -->
+                                    <div class="field-div">
+                                        <label>Register Here:</label>
+                                        <input type="text" name="microchipNumber" placeholder="*Microchip ID Number" class="user-data break_number copyUniversalFromStep1"  autocomplete="off" value="<?= (isset($_GET['id'])) ? $_GET['id']  : "";?>" id="MiroNumber"  />
+                                    </div>
+                                    <div class="field-div">
+                                        <label></label>
+                                        <input type="text" name="conMicrochipNumber" placeholder="*Confirm ID Number" class="user-data break_number"  autocomplete="off" value="<?= (isset($_GET['id'])) ? $_GET['id']  : "";?>"  />
+                                    </div>
+                                 
+                                    <div class="field-div field-div-btn">
+                                        <label></label>
+                                        <button class="site-btn-red btn-next" type="button">Enter <i class="fa fa-caret-right"></i></button>
+                                        <!-- <button class="site-btn-red" type="submit">Enter <i class="fa fa-caret-right"></i></button> -->
+                                    </div>
+                                <!-- </form> -->
                             </div>
-                              <div class="field-div">
-                            <label>Pet Date of Birth</label>
-                            <input type="date" name="pet_date_of_birth" id="pet-dob1-1" placeholder="mm/dd/yyyy" autocomplete="off" class="input-10 input text-data">
-                           </div>           
-                    </div>
-                    <div class="field-wrap two-fields-wrap">
-                    <div class="field-div">
-                    <label class="auto-height">
-                    <?php __( 'Upload Pet Image)', 'cvf-upload'); ?>
-                    </label>
-                    <label>Upload Pet Image</label>
-                    <input type="file" name="files" class="files-data" multiple id="imgInp" required="" />
-                    </div>
-                    <div class="field-div">
-                    <label></label>
-                    <div class="field-notice">Files must be less than 2MB.
-                    <br>Allowed file types .png/ .gif/ .jpg/ .jpeg</div>
-                    </div>
-                    </div>
-                    <div class="step-btns">
-                        <button class="btn btn-default btn-prev" type="button" aria-controls="step-1"><i class="fa fa-caret-left"></i> Back</button>
-                        <button class="btn btn-default btn-next ste4" type="button" aria-controls="step-3">Next <i class="fa fa-caret-right"></i></button>
-                     </div>
-                  </fieldset>
-                  <fieldset aria-label="Step Three" tabindex="-1" id="step-3" class="step-form-box">
-                     <div class="contact-form" id="cus-info">
-                                              <br>
-                                              <h2>User Profile Detail</h2>
-                                            <hr>
-                                            <?php  if(is_user_logged_in()) { ?>
-                                                <div class="field-wrap two-fields-wrap">
-                                                    <input type="hidden" name="UsrLoginId" class="user-data" value="<?php echo $user_id;?>" />
-                                                    <div class="field-div">
-                                                        <label>*First Name </label>
-                                                        <input type="text" name="p_fst_name" placeholder="First Name" class="user-data" id="u-first" required="" value="<?php echo $first_name;?>" maxlength = "100" />
-                                                    </div>
-                                                    <div class="field-div">
-                                                        <label>*Last Name </label>
-                                                        <input type="text" name="p_lst_name" placeholder="Last Name" class="user-data" id="u-last" required="" value="<?php echo $last_name;?>" maxlength = "100"/>
-                                                    </div>
-                                                    <div class="field-div">
-                                                        <label>*Email </label>
-                                                        <input type="email" name="p_email" placeholder="Enter Email Address" class="user-data" id="u-email" required="" value="<?php echo $email;?>"    />
-                                                    </div>
-                                                </div>
-                                                <div class="field-wrap two-fields-wrap">
-                                                  <div class="field-div">
-                                                        <label>*Select Your Country </label>
-                                                        <select name="p_country" class="user-data address-country" id="u-country" required="" >
-                                                          <option value="">Select</option>
-                                                          <?php foreach ($countries as $key => $value) {?>
-                                                            <option value="<?php echo $key; ?>" <?php if(!empty($primary_country) && $primary_country  == $key){ echo 'selected="selected"';}?>><?php echo $value;?></option>
-                                                          <?php } ?>
-                                                        </select>
-                                                    </div>
-                                                    <div class="field-div">
-                                                          <label class="statevalidate">*State</label>
-                                                          <select name="p_state" class="user-data address-state not-require" id="s-state" placeholder="State" data-val="<?php echo $primary_state;?>" value="<?php echo $primary_state;?>"></select>
-                                                      </div>
-                                                    <div class="field-div">
-                                                      <label>*Address</label>
-                                                      <input type="text" name="p_add1" placeholder="Address line 1" class="user-data" id="u-add1" required="" value="<?php echo $primary_address_line1;?>"  />
-                                                  </div>
-                                                </div>
-                                                <div class="field-wrap three-fields-wrap">
-                                                  <div class="field-div">
-                                                        <label>Address line 2</label>
-                                                        <input type="text" name="p_add2" placeholder="Address line 2 (optional)" class="user-data" id="u-add2" value="<?php echo $primary_address_line2;?>"  />
-                                                    </div>
-                                                    <div class="field-div">
-                                                      <label>*City</label>
-                                                        <input type="text" name="p_city" placeholder="City" class="user-data" id="u-city1" required="" value="<?php echo $primary_city;?>" />
-                                                    </div>
-                                                      <div class="field-div">
-                                                        <label>*Zipcode</label>
-                                                          <input type="text" name="p_zipcode" placeholder="Zipcode" class="user-data" id="u-zip" required="" value="<?php echo $primary_postcode;?>" />
-                                                      </div>
-                                                </div>
-                                                <div class="field-wrap three-fields-wrap">
-                                                  <div class="field-div phone-div">
-                                                        <label>*Primary Phone Number </label>
-                                                        <input type="text" name="p_prm_no" placeholder="(555) 123-1234" class="user-data phone-number" id="p-phone"  required="" value="<?php echo $primary_home_number;?>" />
-                                                        <input type="hidden" name="p_prm_no_code" placeholder="(555) 123-1234" class="user-data" value="<?php echo $primary_home_number_code;?>" />
-                                                    </div>
-                                                    <div class="field-div"></div>
-                                                    <div class="field-div"></div>
-                                                    
-                                                </div>
-                                                <div class="cc-main mt-3">
-                                                  <div class="cutome-content">
-                                                  <div class="check-icon">
-                                                    <input type="checkbox" class="primary_checkbox" name="checkbox" checked>
-                                                  </div>
-                                                  <div class="cc-text">
-                                                    By leaving this box checked and clicking "Next", you agree to receive automated calls or text messages at the phone number provided regarding your pets, pet-related products or services from SmartTag and all SmartTag affiliates and Partners.  Your agreement is not a condition of registration. By clicking Next, you also agree to our Terms of Service and Privacy Policy
-                                                  </div>
-                                                  </div>
-                                                </div>
-                                            <?php }else{ ?>
-                                              <div class="field-wrap two-fields-wrap">
-                                                    <div class="field-div">
-                                                        <label>*First Name </label>
-                                                        <input type="text" name="p_fst_name" placeholder="First Name" class="user-data" id="u-first" required="" value="" maxlength = "100" />
-                                                    </div>
-                                                    <div class="field-div">
-                                                        <label>*Last Name </label>
-                                                        <input type="text" name="p_lst_name" placeholder="Last Name" class="user-data" id="u-last" required="" value="" maxlength = "100"/>
-                                                    </div>
-                                                    
-                                                </div>
-                                                <div class="field-wrap two-fields-wrap">
-                                                  <div class="field-div">
-                                                        <label>*Email </label>
-                                                        <input type="email" name="p_email" placeholder="Enter Email Address" class="user-data" id="u-email" required="" value="" />
-                                                    </div>
-                                                  <div class="field-div">
-                                                        <label>*Password </label>
-                                                        <input type="password" name="password" placeholder="Enter Password" class="user-data" required="" minlength="8" />
-                                                    </div>
-                                                  </div>
-                                                  <div class="field-wrap">
-                                                  <div class="field-div">
-                                                        <label>*Select Your Country </label>
-                                                        <select name="p_country" class="user-data address-country" id="u-country" required="" >
-                                                          <option value="">Select</option>
-                                                          <?php foreach ($countries as $key => $value) { ?>
-                                                            <option value="<?php echo $key; ?>"><?php echo $value;?></option>
-                                                          <?php } ?>
-                                                        </select>
-                                                    </div>
-                                                  </div>
-                                                <div class="field-wrap two-fields-wrap">
-                                                  <div class="field-div">
-                                                    <label>*Address</label>
-                                                    <input type="text" name="p_add1" placeholder="Address line 1" class="user-data" id="u-add1" required="" value=""  />
-                                                  </div>
-                                                  <div class="field-div">
-                                                    <label></label>
-                                                    <input type="text" name="p_add2" placeholder="Address line 2 (optional)" class="user-data" id="u-add2" value="<?php echo $primary_address_line2;?>"  />
-                                                  </div>
-                                                </div>
-                                                <div class="field-wrap two-fields-wrap">
-                                                    <div class="field-div">
-                                                         <input type="text" name="p_city" placeholder="City" class="user-data" id="u-city1" required="" value="" />
-                                                    </div>
-                                                    <div class="field-div">
-                                                      <div class="field-wrap two-fields-wrap">
-                                                        <div class="field-div">
-                                                          <label class="statevalidate" style="display: none"></label>
-                                                          <select name="p_state" class="user-data address-state s-sate rq" data-val="<?php echo $primary_state; ?>"></select>
-                                                        </div >
-                                                        <div class="field-div">
-                                                          <input type="text" name="p_zipcode" placeholder="Zipcode" class="user-data" id="u-zip" required="" value="<?php echo $primary_postcode;?>" />
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                </div>
-                                                <div class="field-wrap two-fields-wrap">
-                                                <div class="field-div phone-div">
-                                                  <label>*Primary Phone Number </label>
-                                                  <input type="text" name="p_prm_no" placeholder="(555) 123-1234" class="user-data phone-number" id="p-phone"  required="" value="<?php echo $primary_home_number;?>"/>
-                                                  <input type="hidden" name="p_prm_no_code" placeholder="(555) 123-1234" class="user-data" value="<?php echo $primary_home_number_code; ?>" />
-                                                </div>
-                                                <div class="field-div phone-div">
-                                                  <label>Secondary Phone Number </label>
-                                                  <input type="text" name="p_sec_no" placeholder="(555) 123-1234" class="user-data phone-number" id="ps-phone" value="<?php echo $primary_cell_number;?>" />
-                                                  <input type="hidden" name="p_sec_no_code" placeholder="(555) 123-1234" class="user-data" value="<?php echo $primary_cell_number_code; ?>"/>
-                                                </div>
-                                                </div>
-                                                <div class="cc-main mt-3">
-                                                  <div class="cutome-content">
-                                                  <div class="check-icon">
-                                                    <input type="checkbox"  class="primary_checkbox"
-                                                    name="checkbox" checked>
-                                                  </div>
-                                                  <div class="cc-text">
-                                                    By leaving this box checked and clicking "Next", you agree 
-                                                    to receive automated calls or text messages at the phone number
-                                                    provided regarding your pets, pet-related products or services
-                                                    from SmartTag and all SmartTag affiliates and Partners. 
-                                                    Your agreement is not a condition of registration. 
-                                                    By clicking Next, you also agree to our Terms of Service 
-                                                    and Privacy Policy.
-                                                  </div>
-                                                  </div>
-                                                </div>
-                                                
-                                            <?php } ?>
-                                          </div>
-                                            <div class="step-btns">
-                                                <button class="btn btn-default btn-prev" type="button" aria-controls="step-2"><i class="fa fa-caret-left"></i> Back</button>
-                                                <button class="btn btn-default btn-next ste4" type="button" aria-controls="step-5">Next <i class="fa fa-caret-right"></i></button>
-                                             </div>
+                            <hr>
+                           <?php get_template_part( 'register', 'universal-microchips-benefits' );
+                           ?> 
 
-                  </fieldset>
-                  <fieldset aria-label="Step Four" tabindex="-1" id="step-4" class="step-form-box">
-                    <div class="contact-form" id="cus-info">
-                                              <br>
-                                              <h2>User Profile Detail</h2>
-                                            <hr>
-                                            <?php  if(is_user_logged_in()) { ?>
-                                                <div class="field-wrap two-fields-wrap">
-                                                    <input type="hidden" name="UsrLoginId" class="user-data" value="<?php echo $user_id;?>" />
-                                                    <div class="field-div">
-                                                        <label>*First Name </label>
-                                                        <input type="text" name="p_fst_name" placeholder="First Name" class="user-data" id="u-first" required="" value="<?php echo $first_name;?>" maxlength = "100" />
-                                                    </div>
-                                                    <div class="field-div">
-                                                        <label>*Last Name </label>
-                                                        <input type="text" name="p_lst_name" placeholder="Last Name" class="user-data" id="u-last" required="" value="<?php echo $last_name;?>" maxlength = "100"/>
-                                                    </div>
-                                                    <div class="field-div">
-                                                        <label>*Email </label>
-                                                        <input type="email" name="p_email" placeholder="Enter Email Address" class="user-data" id="u-email" required="" value="<?php echo $email;?>"    />
-                                                    </div>
-                                                </div>
-                                                <div class="field-wrap two-fields-wrap">
-                                                  <div class="field-div">
-                                                        <label>*Select Your Country </label>
-                                                        <select name="p_country" class="user-data address-country" id="u-country" required="" >
-                                                          <option value="">Select</option>
-                                                          <?php foreach ($countries as $key => $value) {?>
-                                                            <option value="<?php echo $key; ?>" <?php if(!empty($primary_country) && $primary_country  == $key){ echo 'selected="selected"';}?>><?php echo $value;?></option>
-                                                          <?php } ?>
-                                                        </select>
-                                                    </div>
-                                                    <div class="field-div">
-                                                          <label class="statevalidate">*State</label>
-                                                          <select name="p_state" class="user-data address-state not-require" id="s-state" placeholder="State" data-val="<?php echo $primary_state;?>" value="<?php echo $primary_state;?>"></select>
-                                                      </div>
-                                                    <div class="field-div">
-                                                      <label>*Address</label>
-                                                      <input type="text" name="p_add1" placeholder="Address line 1" class="user-data" id="u-add1" required="" value="<?php echo $primary_address_line1;?>"  />
-                                                  </div>
-                                                </div>
-                                                <div class="field-wrap three-fields-wrap">
-                                                  <div class="field-div">
-                                                        <label>Address line 2</label>
-                                                        <input type="text" name="p_add2" placeholder="Address line 2 (optional)" class="user-data" id="u-add2" value="<?php echo $primary_address_line2;?>"  />
-                                                    </div>
-                                                    <div class="field-div">
-                                                      <label>*City</label>
-                                                        <input type="text" name="p_city" placeholder="City" class="user-data" id="u-city1" required="" value="<?php echo $primary_city;?>" />
-                                                    </div>
-                                                      <div class="field-div">
-                                                        <label>*Zipcode</label>
-                                                          <input type="text" name="p_zipcode" placeholder="Zipcode" class="user-data" id="u-zip" required="" value="<?php echo $primary_postcode;?>" />
-                                                      </div>
-                                                </div>
-                                                <div class="field-wrap three-fields-wrap">
-                                                  <div class="field-div phone-div">
-                                                        <label>*Primary Phone Number </label>
-                                                        <input type="text" name="p_prm_no" placeholder="(555) 123-1234" class="user-data phone-number" id="p-phone"  required="" value="<?php echo $primary_home_number;?>" />
-                                                        <input type="hidden" name="p_prm_no_code" placeholder="(555) 123-1234" class="user-data" value="<?php echo $primary_home_number_code;?>" />
-                                                    </div>
-                                                    <div class="field-div"></div>
-                                                    <div class="field-div"></div>
-                                                    
-                                                </div>
-                                                <div class="cc-main mt-3">
-                                                  <div class="cutome-content">
-                                                  <div class="check-icon">
-                                                    <input type="checkbox"  class="primary_checkbox" name="checkbox" checked>
-                                                  </div>
-                                                  <div class="cc-text">
-                                                    By leaving this box checked and clicking "Next", you agree to receive automated calls or text messages at the phone number provided regarding your pets, pet-related products or services from SmartTag and all SmartTag affiliates and Partners.  Your agreement is not a condition of registration. By clicking Next, you also agree to our Terms of Service and Privacy Policy
-                                                  </div>
-                                                  </div>
-                                                </div>
-                                            <?php }else{ ?>
-                                              <div class="field-wrap two-fields-wrap">
-                                                    <div class="field-div">
-                                                        <label>*First Name </label>
-                                                        <input type="text" name="p_fst_name" placeholder="First Name" class="user-data" id="u-first" required="" value="" maxlength = "100" />
-                                                    </div>
-                                                    <div class="field-div">
-                                                        <label>*Last Name </label>
-                                                        <input type="text" name="p_lst_name" placeholder="Last Name" class="user-data" id="u-last" required="" value="" maxlength = "100"/>
-                                                    </div>
-                                                    
-                                                </div>
-                                                <div class="field-wrap two-fields-wrap">
-                                                  <div class="field-div">
-                                                        <label>*Email </label>
-                                                        <input type="email" name="p_email" placeholder="Enter Email Address" class="user-data" id="u-email" required="" value="" />
-                                                    </div>
-                                                  <div class="field-div">
-                                                        <label>*Password </label>
-                                                        <input type="password" name="password" placeholder="Enter Password" class="user-data" required="" minlength="8" />
-                                                    </div>
-                                                  </div>
-                                                  <div class="field-wrap">
-                                                  <div class="field-div">
-                                                        <label>*Select Your Country </label>
-                                                        <select name="p_country" class="user-data address-country" id="u-country" required="" >
-                                                          <option value="">Select</option>
-                                                          <?php foreach ($countries as $key => $value) { ?>
-                                                            <option value="<?php echo $key; ?>"><?php echo $value;?></option>
-                                                          <?php } ?>
-                                                        </select>
-                                                    </div>
-                                                  </div>
-                                                <div class="field-wrap two-fields-wrap">
-                                                  <div class="field-div">
-                                                    <label>*Address</label>
-                                                    <input type="text" name="p_add1" placeholder="Address line 1" class="user-data" id="u-add1" required="" value=""  />
-                                                  </div>
-                                                  <div class="field-div">
-                                                    <label></label>
-                                                    <input type="text" name="p_add2" placeholder="Address line 2 (optional)" class="user-data" id="u-add2" value="<?php echo $primary_address_line2;?>"  />
-                                                  </div>
-                                                </div>
-                                                <div class="field-wrap two-fields-wrap">
+                            <table class="table table-total">
+                            <tr>
+                              <td> 1 Year:
+                              </td>  
+                              <td>
+                                $6.95
+                              </td>
+                              <td>
+                                 $9.95
+                              </td>
+                              <td>
+                                 $19.95
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                Lifetime:
+                              </td>
+                              <td>
+                                $14.95
+                              </td>
+                              <td>
+                                 $29.95
+                              </td>
+                              <td>
+                                 $49.95
+                              </td>
+                            </tr>
+
+                          </table>
+                        </div>
+                    </fieldset>
+
+                    <fieldset aria-label="Step Two" tabindex="-1" id="step-2" class="step-form-box">
+                         <div class="contact-form" id="pro-info">
+                         	<h2>Pet Profile Detail</h2>
+                         	<hr>
+                            <div class="field-wrap two-fields-wrap">
+                               	<div class="field-div">
+                                  	<label>*Microchip Id Number:</label>
+                                  	<input type="text" placeholder="Microchip Id Number" name="universal_microchip_id" class="text-data dog_universal_microchip_id break_number copyUniversal" id="sname_input" value="<?= (isset($_GET['id'])) ? $_GET['id']  : "";?>" required="">
+                                    <span class="valid_message "></span><span class="error" id="error"></span>
+                                     <a href="<?php echo get_site_url().'/our-services/microchip-registry/';?>" class="show-atag error"style="display: none;">Click here</a>
+                               	</div>
+                               	<div class="field-div">
+                                  	<label>*Confirm Microchip Id Number:</label>
+                                  	<input type="text" name="conf_universal_microchip_id" placeholder="Confirm Microchip Id Number" class="text-data break_number copyUniversal" value="<?= (isset($_GET['id'])) ? $_GET['id']  : "";?>" required=""  id="con_input">
+                               	</div>
+                               
+                            </div>
+                            <div class="field-wrap two-fields-wrap">
+                                <div class="field-div">
+                                    <label>*Pet Name</label>
+                                    <input type="text" name="pet_name" class="text-data dog_universal_microchip_id" id="pname_input" placeholder="Enter Pet Name" required="">
+                                </div>
+                                <div class="field-div">&nbsp;</div>
+                            </div>
+                            <div class="field-wrap two-fields-wrap">
+                                <div class="field-div">
+                                    <label>*Pet Type & Breed </label>
+                                    <div class="field-wrap two-fields-wrap">
+                                        <div class="field-div">
+                                            <select name="pet_type" class="text-data" id="pettype" required="">
+                                                <option value="">Type</option>
+                                                <?php foreach ($getbreeds as $key => $value) { ?>
+                                                    <option value="<?= $value['term_id'] ?>"><?= $value['name'] ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                        <div class="field-div Pet_Type_Breed " style="display:none;">
+                                            <select name="primary_breed" class="text-data" id="breedid" required="">
+                                                <option value="">Breed</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field-div Pet_Type_Breed " style="display:none;">
+                                    <label>Secondary Breed</label>
+                                    <select name="secondary_breed" class="text-data" id="sbreedid" >
+                                      <option value="">Breed</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="field-wrap two-fields-wrap">
+    	                       	<div class="field-div">
+                                  	<label>*Primary Color: </label>
+                                    <select name="primary_color" class="text-data" id="pcolor" required="" >
+                                      <option value="">Select Color</option>
+                                        <?php 
+                                            foreach ($petColors as $key => $color) {
+                                                echo '<option value="'.$key.'">'.$color.'</option>';
+                                            }
+                                        ?>  
+                                  </select>
+                               	</div>
+                                  <div class="field-div">
+                                  <label>Secondary Color(s)</label>
+                                     <select name="secondary_color" class="text-data" id="scolor">
+                                        <option value="">Select Color</option>
+                                        <?php 
+                                            foreach ($petColors as $key => $color) {
+                                                echo '<option value="'.$key.'">'.$color.'</option>';
+                                            }
+                                        ?>  
+                                     </select>
+                               </div>
+                            </div>
+                            <div class="field-wrap two-fields-wrap">
+                               	<div class="field-div">
+                                    <div class="field-wrap two-fields-wrap">
+                                        <div class="field-div">
+                                    	    <label>*Gender: </label>
+                                        	<select name="gender" class="text-data" id="pgender" required="">
+                                           		<option value="">Select</option>
+                                           		<option value="male">Male</option>
+                                           		<option value="Female">Female</option>
+                                        	</select>
+                                	    </div>
+                                       	<div class="field-div">
+                                              <label>Size </label>
+                                              <select name="size" class="text-data" id="psize">
+                                                <option value="">Select</option>
+                                              <option value="1">Small</option>
+                                              <option value="2">Medium</option>
+                                              <option value="3">Large</option>
+                                              </select>
+                                       	</div>
+                                    </div>
+                                </div>
+                                <div class="field-div">
+                                    <label>Pet Date of Birth</label>
+                                    <input type="date" name="pet_date_of_birth" id="pet-dob1-1" placeholder="mm/dd/yyyy" autocomplete="off" class="input-10 input text-data">
+                                </div>           
+                            </div>
+                            <div class="field-wrap two-fields-wrap">
+                                <div class="field-div">
+                                    <label class="auto-height">
+                                        <?php __( 'Upload Pet Image)', 'cvf-upload'); ?>
+                                    </label>
+                                    <label>Upload Pet Image</label>
+                                    <input type="file" name="files" class="files-data" multiple id="imgInp" required="" />
+                                </div>
+                                <div class="field-div">
+                                    <label></label>
+                                    <div class="field-notice">Files must be less than 2MB.
+                                    <br>Allowed file types .png/ .gif/ .jpg/ .jpeg</div>
+                                </div>
+                            </div>
+                            <div class="step-btns">
+                                <button class="btn btn-default btn-prev" type="button" aria-controls="step-1"><i class="fa fa-caret-left"></i> Back</button>
+                                <button class="btn btn-default btn-next ste3" type="button" aria-controls="step-3">Next <i class="fa fa-caret-right"></i></button>
+                            </div>
+                        </fieldset>
+                        
+                            <fieldset aria-label="Step Three" tabindex="-1" id="step-3" class="step-form-box">
+                                <div class="contact-form" id="cus-info">
+                                <br>
+                                <h2>User Profile Detail</h2>
+                                <hr>
+                                <?php  if(is_user_logged_in()) { ?>
+                                    <div class="field-wrap two-fields-wrap">
+                                        <input type="hidden" name="UsrLoginId" class="user-data" value="<?php echo $user_id;?>" />
+                                        <div class="field-div">
+                                            <label>*First Name </label>
+                                            <input type="text" name="p_fst_name" placeholder="First Name" class="user-data" id="u-first" required="" value="<?php echo $first_name;?>" maxlength = "100" />
+                                        </div>
+                                        <div class="field-div">
+                                            <label>*Last Name </label>
+                                            <input type="text" name="p_lst_name" placeholder="Last Name" class="user-data" id="u-last" required="" value="<?php echo $last_name;?>" maxlength = "100"/>
+                                        </div>
+                                        <div class="field-div">
+                                            <label>*Email </label>
+                                            <input type="email" name="p_email" placeholder="Enter Email Address" class="user-data" id="u-email" required="" value="<?php echo $email;?>"    />
+                                        </div>
+                                    </div>
+                                    <div class="field-wrap two-fields-wrap">
+                                        <div class="field-div">
+                                            <label>*Select Your Country </label>
+                                            <select name="p_country" class="user-data address-country" id="u-country" required="" >
+                                              <option value="">Select</option>
+                                              <?php foreach ($countries as $key => $value) {?>
+                                                <option value="<?php echo $key; ?>" <?php if(!empty($primary_country) && $primary_country  == $key){ echo 'selected="selected"';}?>><?php echo $value;?></option>
+                                              <?php } ?>
+                                            </select>
+                                        </div>
+                                        <div class="field-div">
+                                              <label class="statevalidate">*State</label>
+                                              <select name="p_state" class="user-data address-state not-require" id="s-state" placeholder="State" data-val="<?php echo $primary_state;?>" value="<?php echo $primary_state;?>"></select>
+                                        </div>
+                                        <div class="field-div">
+                                          <label>*Address</label>
+                                          <input type="text" name="p_add1" placeholder="Address line 1" class="user-data" id="u-add1" required="" value="<?php echo $primary_address_line1;?>"  />
+                                        </div>
+                                    </div>
+                                    <div class="field-wrap three-fields-wrap">
+                                        <div class="field-div">
+                                            <label>Address line 2</label>
+                                            <input type="text" name="p_add2" placeholder="Address line 2 (optional)" class="user-data" id="u-add2" value="<?php echo $primary_address_line2;?>"  />
+                                        </div>
+                                        <div class="field-div">
+                                            <label>*City</label>
+                                            <input type="text" name="p_city" placeholder="City" class="user-data" id="u-city1" required="" value="<?php echo $primary_city;?>" />
+                                        </div>
+                                        <div class="field-div">
+                                            <label>*Zipcode</label>
+                                              <input type="text" name="p_zipcode" placeholder="Zipcode" class="user-data" id="u-zip" required="" value="<?php echo $primary_postcode;?>" />
+                                        </div>
+                                    </div>
+                                    <div class="field-wrap three-fields-wrap">
+                                        <div class="field-div phone-div">
+                                            <label>*Primary Phone Number </label>
+                                            <input type="text" name="p_prm_no" placeholder="(555) 123-1234" class="user-data phone-number" id="p-phone"  required="" value="<?php echo $primary_home_number;?>" />
+                                            <input type="hidden" name="p_prm_no_code" placeholder="(555) 123-1234" class="user-data" value="<?php echo $primary_home_number_code;?>" />
+                                        </div>
+                                        <div class="field-div"></div>
+                                        <div class="field-div"></div>
+                                    </div>
+                                    <div class="cc-main mt-3">
+                                        <div class="cutome-content">
+                                            <div class="check-icon">
+                                                <input type="checkbox"  class="primary_checkbox" name="checkbox" checked>
+                                            </div>
+                                            <div class="cc-text">
+                                                By leaving this box checked and clicking "Next", you agree to receive automated calls or text messages at the phone number provided regarding your pets, pet-related products or services from SmartTag and all SmartTag affiliates and Partners.  Your agreement is not a condition of registration. By clicking Next, you also agree to our Terms of Service and Privacy Policy
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php }else{ ?>
+                                    <div class="field-wrap two-fields-wrap">
+                                        <div class="field-div">
+                                            <label>*First Name </label>
+                                            <input type="text" name="p_fst_name" placeholder="First Name" class="user-data" id="u-first" required="" value="" maxlength = "100" />
+                                        </div>
+                                        <div class="field-div">
+                                            <label>*Last Name </label>
+                                            <input type="text" name="p_lst_name" placeholder="Last Name" class="user-data" id="u-last" required="" value="" maxlength = "100"/>
+                                        </div>
+                                            
+                                    </div>
+                                    <div class="field-wrap two-fields-wrap">
+                                        <div class="field-div">
+                                            <label>*Email </label>
+                                            <input type="email" name="p_email" placeholder="Enter Email Address" class="user-data" id="u-email" required="" value="" />
+                                        </div>
+                                        <div class="field-div">
+                                            <label>*Password </label>
+                                            <input type="password" name="password" placeholder="Enter Password" class="user-data" required="" minlength="8" />
+                                        </div>
+                                    </div>
+                                    <div class="field-wrap">
+                                        <div class="field-div">
+                                            <label>*Select Your Country </label>
+                                            <select name="p_country" class="user-data address-country" id="u-country" required="" >
+                                              <option value="">Select</option>
+                                              <?php foreach ($countries as $key => $value) { ?>
+                                                <option value="<?php echo $key; ?>"><?php echo $value;?></option>
+                                              <?php } ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="field-wrap two-fields-wrap">
+                                        <div class="field-div">
+                                            <label>*Address</label>
+                                            <input type="text" name="p_add1" placeholder="Address line 1" class="user-data" id="u-add1" required="" value=""  />
+                                        </div>
+                                        <div class="field-div">
+                                            <label></label>
+                                            <input type="text" name="p_add2" placeholder="Address line 2 (optional)" class="user-data" id="u-add2" value="<?php echo $primary_address_line2;?>"  />
+                                          </div>
+                                        </div>
+                                                    <div class="field-wrap two-fields-wrap">
                                                     <div class="field-div">
                                                          <input type="text" name="p_city" placeholder="City" class="user-data" id="u-city1" required="" value="" />
                                                     </div>
@@ -804,10 +628,10 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                      </div>
                      <div class="step-btns">
                         <button class="btn btn-default btn-prev" type="button" aria-controls="step-2"><i class="fa fa-caret-left"></i> Back</button>
-                        <button class="btn btn-default btn-next" type="button" aria-controls="step-5">Next <i class="fa fa-caret-right"></i></button>
+                        <button class="btn btn-default btn-next" type="button" aria-controls="step-4">Next <i class="fa fa-caret-right"></i></button>
                      </div>
                   </fieldset>
-                  <fieldset aria-label="Step Five" tabindex="-1" id="step-5" class="step-form-box">
+                  <fieldset aria-label="Step Four" tabindex="-1" id="step-4" class="step-form-box">
                   	<div class="step-btns">
                   		<input type="text" name="protectionPlan" value="" style="visibility: hidden;opacity: 0;height: 0px;margin: 0px;" class="custom-protection-plan-check">
                   	</div>
@@ -825,11 +649,11 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                        ?> 
                      </div>
                      <div class="step-btns">
-                        <button class="btn btn-default btn-prev" type="button" aria-controls="step-5"><i class="fa fa-caret-left"></i> Back</button>
-                        <button class="btn btn-default btn-next ste4" type="button" aria-controls="step-6">Next <i class="fa fa-caret-right"></i></button>
+                        <button class="btn btn-default btn-prev" type="button" aria-controls="step-3"><i class="fa fa-caret-left"></i> Back</button>
+                        <button class="btn btn-default btn-next ste4" type="button" aria-controls="step-5">Next <i class="fa fa-caret-right"></i></button>
                      </div>
                   </fieldset>
-                  <fieldset aria-label="Step Six" tabindex="-1" id="step-6" class="step-form-box">
+                  <fieldset aria-label="Step Five" tabindex="-1" id="step-5" class="step-form-box">
                      <div class="blue-border-box">
                         <div class="pp-icon-wrap previous">
                            <h3 id="purchase_id_tag"></h3>
@@ -1278,84 +1102,7 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                         </div>
                         </div>
                       </div>
-                       <!-- <div class="pp-icon-wrap">
-                       <div class="pp-icon pp-icon-plus"></div>
-                       <h3>Pet Insurance</h3>
-                       </div> -->
-                       <!-- <div class="blue-box-content">
-                       <h3>30-Days of PetFirst Pet Insurance
-                       <br>
-                       Included with your SmartTag Membership</h3>
-                       <p>Veterinary costs continue to rise, and at SmartTag we want to provide you with an introductory pet insurance plan to help reimburse you for your pet’s veterinary expenses. We are the only ID Tag company to include pet insurance with our membership.</p>
-                       <div class="row">
-                       <div class="col-sm-4">
-                       <h4>Plan Details</h4>
-                       <p>Aggregate Benefit Limit: $1,000
-                       <br>Per-Incident Limit: $500
-                       <br>Pet-Incident Deductible: $50
-                       <br>Reimbursement: 90%</p>
-                       </div>
-                       <div class="col-sm-8">
-                       <div class="row">
-                       <div class="col-sm-12">
-                       <h4>What is Covered?</h4>
-                       </div>
-                       <div class="col-sm-4">
-                       <p>• Accidents
-                       <br>• Illnesses
-                       <br>• Exam Fees
-                       <br>• X-rays</p>
-                       </div>
-                       <div class="col-sm-4">
-                       <p>• Medications
-                       <br>• Ultrasounds
-                       <br>• Hospital Stays
-                       <br>• Surgeries</p>
-                       </div>
-                       <div class="col-sm-4">
-                       <p>• Alternative Therapies
-                       <br>• Diagnostic Tests
-                       <br>• Holistic Care
-                       <br>• Much more!</p>
-                       </div>
-                       </div>
-                       </div>
-                       </div>
-                       <div class="row">
-                       <div class="col-sm-12">
-                       <h4>What Is Not Covered?</h4>
-                       </div>
-                       <div class="col-sm-3">
-                       <p>• Special Diets
-                       <br>• Routine Wellness
-                       <br>• Spay/Neuter</p>
-                       </div>
-                       <div class="col-sm-3">
-                       <p>• Pre-Existing Conditions
-                       <br>• Preventative Conditions
-                       <br>• Chronic Conditions</p>
-                       </div>
-                       <div class="col-sm-3">
-                       <p>• Hereditary Conditions
-                       <br>• Congenital Conditions
-                       <br>• Behavior Training</p>
-                       </div>
-                       <div class="col-sm-3">
-                       <p>• Organ Transplants
-                       <br>• Elective Procedures</p>
-                       </div>
-                       </div>
-                       </div> -->
-                      <!--  <div class="step-check-wrap">
-                       <div class="step-check">
-                       <input type="radio" name="health_insurance" id="heth_id" value="<?php echo $heth_proid;?>" class="" />
-                       <label>I Accept my free 30 days of pet health insurance</label>
-                       </div>
-                       <div class="step-check">
-                       <input type="radio" name="health_insurance" id="heth_id1" />
-                       <label>I don't want my free 30 days of pet health insurance</label>
-                       </div>
-                       </div> -->
+                       
                      </div>
                      <div class="blue-border-box">
                         <div class="pp-icon-wrap">
@@ -1770,10 +1517,10 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                                  <br>
                                  <strong>Pet Date of Birth:</strong> <span id="ptdob"></span>
                               </div>
-                              <!-- <div class="col-sm-6">
+                              <div class="col-sm-6">
                                  <p><strong>Pet Image:</strong></p>
-                                 <img id="blah" src="<?php // echo get_site_url(); ?>/wp-content/uploads/2019/02/pet-image.jpg" alt="your image" />
-                              </div> -->
+                                    <img id="blah" src="/wp-content/uploads/2019/02/pet-image.jpg" alt="your image" />
+                              </div> 
                            </div>
                         </div>
                      </div>
@@ -1782,7 +1529,7 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                         <button class="btn btn-default" type="submit">Checkout and Register Microchip<i class="fa fa-caret-right"></i></button>
                      </div>
                   </fieldset>
-               </form>
+                </form>   
             </section>
          </div>
          <?php //nectar_pagination(); ?>
@@ -1795,194 +1542,28 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
 <input type="hidden" name="universalMicrochip" value="1">
 <script type="text/javascript">
 	jQuery(document).ready(function(){
-    /* code for next button click Purchase an Engraved ID Tag */
-    $('#purchase_id_tag').html('Purchase an Engraved ID Tag with Your Pet Name & Microchip Number');
-    $("#sname_input").keyup(function(){
-      var microchipNumber = $("#sname_input").val();
-      localStorage.setItem("microchipNumber", microchipNumber);
-    });
+        /* code for next button click Purchase an Engraved ID Tag */
+        $('#purchase_id_tag').html('Purchase an Engraved ID Tag with Your Pet Name & Microchip Number');
+        $("#sname_input").keyup(function(){
+            var microchipNumber = $("#sname_input").val();
+            localStorage.setItem("microchipNumber", microchipNumber);
+        });
 
-    $("#pname_input").keyup(function(){
-      var microchipNumber = localStorage.getItem('microchipNumber');
-      var petName = $("#pname_input").val();
-      if(!microchipNumber == '' && !petName == ''){
-        $('#purchase_id_tag').html('Purchase an Engraved ID Tag with '+petName+' & '+microchipNumber);
-      }
-    });
+        $("#pname_input").keyup(function(){
+            var microchipNumber = localStorage.getItem('microchipNumber');
+            var petName = $("#pname_input").val();
+                if(!microchipNumber == '' && !petName == ''){
+                    $('#purchase_id_tag').html('Purchase an Engraved ID Tag with '+petName+' & '+microchipNumber);
+                }
+        });
 
-    
-/*
-              $(".btn-next").on("click", function(){
-                    $(this).parent().parent().next().show();
-                    $(this).parent().parent().hide();
-                });
-
-                $(".btn-prev").on("click", function(){
-                    $(this).parent().parent().prev().show();
-                    $(this).parent().parent().hide();
-
-                });*/
-
-
-
-
-
-
-	$(".btn-next").on("click", function(){
-   if ($("fieldset#step-3").is(":visible")) {
-       console.log('1');
-       window.scrollTo(0, 300);
-        $("fieldset#step-1").addClass('hidden');
-                $("fieldset#step-2").addClass('hidden');
-                $("fieldset#step-4").addClass('visible');
-                $("fieldset#step-3").removeClass("visible").addClass("hidden");
-      }
-            else if ($("fieldset#step-4").is(":visible")) {
-                    console.log('2');
-                    window.scrollTo(0, 300);
-                $("fieldset#step-1").removeClass("visible").addClass("hidden");
-                $("fieldset#step-2").removeClass("visible").addClass("hidden");
-                $("fieldset#step-3").removeClass("visible").addClass("hidden");
-                $("fieldset#step-4").removeClass("visible").addClass("hidden");
-                $("fieldset#step-5").addClass("visible");
-            }else if( $("fieldset#step-5").is(":visible")){
-                    console.log('3');
-
-                    window.scrollTo(0, 300);
-                    $("fieldset#step-1").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-2").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-3").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-4").removeClass("visible").addClass("hidden");
-                       $("fieldset#step-5").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-6").addClass("visible");
-            }else if( $("fieldset#step-6").is(":visible")){
-                        console.log('4');
-                        window.scrollTo(0, 300);
-                    $("fieldset#step-1").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-2").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-3").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-4").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-5").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-6").removeClass("visible").addClass("hidden");
-                     $("fieldset#step-7").addClass("visible");
-            }else if( $("fieldset#step-7").is(":visible")){
-                    console.log('5');
-                    window.scrollTo(0, 300);
-                    $("fieldset#step-1").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-2").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-3").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-4").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-5").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-6").removeClass("visible").addClass("hidden");
-            }
-
-
-    });
-
-
-  $(".btn-prev").on("click", function(){
-      if ($("fieldset#step-3").is(":visible")) {
-       console.log('1');
-                    window.scrollTo(0, 300);
-                    $("fieldset#step-1").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-3").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-4").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-5").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-6").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-7").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-2").addClass("visible");
-      }
-            else if ($("fieldset#step-4").is(":visible")) {
-                    console.log('2');
-                    window.scrollTo(0, 300);
-                    $("fieldset#step-1").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-3").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-4").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-5").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-6").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-7").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-2").addClass("visible");
-            }else if( $("fieldset#step-5").is(":visible")){
-                    console.log('3');
-                    window.scrollTo(0, 300);
-                    $("fieldset#step-1").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-2").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-3").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-5").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-6").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-7").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-4").addClass("visible");
-            }else if( $("fieldset#step-6").is(":visible")){
-                        console.log('4');
-                        window.scrollTo(0, 300);
-                     $("fieldset#step-1").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-2").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-3").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-4").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-6").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-7").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-5").addClass("visible");
-            }else if( $("fieldset#step-7").is(":visible")){
-                    console.log('5');
-                     window.scrollTo(0, 300);
-                    $("fieldset#step-1").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-2").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-3").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-4").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-5").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-7").removeClass("visible").addClass("hidden");
-                    $("fieldset#step-6").addClass("visible");
-            }
-
-
-    });
-
-var validMessage;
-    jQuery.validator.addMethod("validMicrochip", function(value, element) {
-       
-    var regex = /^[0-9\s]*$/;
-        if(!regex.test(value)){
-            console.log(value+'ocean');
-
-            validMessage = "Please enter only digits";
-            return false;
-        }
-        var microchip_id = value.replace(/\s/g, '');
-        if(microchip_id.length != 15){
-            validMessage = "Microchip Id should be 15 digits";
-            return false;
-        }
-        return true;
-       
-    },function() { return validMessage; });
-
-    $("form[id='universalMicrochipForm']").validate({
-        // Specify validation rules
-        rules: {
-            microchipNumber: {
-                required: true,
-                validMicrochip : true,
-            },
-            conMicrochipNumber: {
-                required: true,
-                equalTo : "#MiroNumber"
-            }
-        },
-        messages: {
-          
+        $('.copyUniversalFromStep1').change(function(){
+            var UniversalMichrochip = $('.copyUniversalFromStep1').val();
+            $('.copyUniversal').val(UniversalMichrochip);
             
-        },
-        submitHandler: function(form) {
-          $("#step-1").removeClass("visible").addClass("hidden");
-          $("#step-2").removeClass("hidden").addClass("visible");
-          var microchipNumber = $("input[name=microchipNumber]").val();
-          $("#sname_input").val(microchipNumber);
-          $("#con_input").val(microchipNumber);
-        }
-
+        });
     }); 
 
-	})
 </script>
 <script type="text/javascript">
     $(document).ready(function(){
@@ -2042,9 +1623,6 @@ var validMessage;
             }
 
         });
-
-
-
 
 
     if($('.primary_checkbox').is(':checked')){

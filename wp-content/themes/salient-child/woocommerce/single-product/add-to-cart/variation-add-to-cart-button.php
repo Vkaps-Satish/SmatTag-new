@@ -12,55 +12,117 @@ defined( 'ABSPATH' ) || exit;
 global $product;
 $form = true;
 ?>
-<div class="woocommerce-variation-add-to-cart variations_button">
-	<?php if ($product->get_id() ==  6033 || $product->get_id() == 6089 || $product->get_id() == 7722 || $product->get_id() == 7659) {
-	       $form = false;
-	    } ?>
-	<?php if ($form) {
-		do_action( 'woocommerce_before_add_to_cart_button' );
-	} ?>
-	<!-- <?php do_action( 'woocommerce_before_add_to_cart_button' ); ?> -->
+<form>
+	<div class="woocommerce-variation-add-to-cart variations_button">
+		<?php if ($product->get_id() ==  6033 || $product->get_id() == 6089 || $product->get_id() == 7722 || $product->get_id() == 7659) {
+		       $form = false;
+		    } ?>
+		<?php if ($form) {
+			do_action( 'woocommerce_before_add_to_cart_button' );
+		} ?>
+		<!-- <?php do_action( 'woocommerce_before_add_to_cart_button' ); ?> -->
 
-	<?php
-	do_action( 'woocommerce_before_add_to_cart_quantity' );
+		<?php
+		do_action( 'woocommerce_before_add_to_cart_quantity' );
 
-	woocommerce_quantity_input( array(
-		'min_value'   => apply_filters( 'woocommerce_quantity_input_min', $product->get_min_purchase_quantity(), $product ),
-		'max_value'   => apply_filters( 'woocommerce_quantity_input_max', $product->get_max_purchase_quantity(), $product ),
-		'input_value' => isset( $_POST['quantity'] ) ? wc_stock_amount( wp_unslash( $_POST['quantity'] ) ) : $product->get_min_purchase_quantity(), // WPCS: CSRF ok, input var ok.
-	) );
+		woocommerce_quantity_input( array(
+			'min_value'   => apply_filters( 'woocommerce_quantity_input_min', $product->get_min_purchase_quantity(), $product ),
+			'max_value'   => apply_filters( 'woocommerce_quantity_input_max', $product->get_max_purchase_quantity(), $product ),
+			'input_value' => isset( $_POST['quantity'] ) ? wc_stock_amount( wp_unslash( $_POST['quantity'] ) ) : $product->get_min_purchase_quantity(), // WPCS: CSRF ok, input var ok.
+		) );
 
-	do_action( 'woocommerce_after_add_to_cart_quantity' );
-	?>
+		do_action( 'woocommerce_after_add_to_cart_quantity' );
+		?>
 
-	<?php
+		<?php
 
-		if ( is_user_logged_in() ) { 
+			if ( is_user_logged_in() ) { ?>
+				<button type="submit" class="single_add_to_cart_button_custom button alt">Add to Cart</button>
+
+	  	<?php	} else { ?>
+				<button type="submit" class="single_add_to_cart_button_custom button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
+
+			<?php } ?>
+			<span class="addbtn_error"></span>
+		<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
+
 		
-			?>
-				<!-- <button type="submit"  class="single_add_to_cart_button button ocean alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button> -->
-				<button type="submit"  class="single_add_to_cart_button button ocean alt">Add to Cart</button>
-  	<?php	} else { ?>
-				<button type="submit"  class="single_add_to_cart_button button ocean1 alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
+			<input type="hidden" name="add-to-cart" value="<?php echo absint( $product->get_id() ); ?>" />
+			<input type="hidden" name="product_id" value="<?php echo absint( $product->get_id() ); ?>" />
+			<input type="hidden" name="variation_id" class="variation_id" value="0" />
 
-		<?php }
-
-	 ?>
-
-
-	<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
-
-	<input type="hidden" name="add-to-cart" value="<?php echo absint( $product->get_id() ); ?>" />
-	<input type="hidden" name="product_id" value="<?php echo absint( $product->get_id() ); ?>" />
-	<input type="hidden" name="variation_id" class="variation_id" value="0" />
-</div>
-
+	</div>
+</form>	
 
 <script type="text/javascript">
 	$(document).ready(function(){
-	$('.single_add_to_cart_button').click(function(){
-		<?php $_SESSION["idtag_action"] = 'new-id-tag'; // 86400 = 1 day ?>
-	})
+		$('.single_add_to_cart_button_custom').click(function(e){
+			e.preventDefault();
+			<?php $_SESSION["idtag_action"] = 'new-id-tag'; // 86400 = 1 day ?>
+
+			var product_id = jQuery("input[name='product_id']").val();
+			if(product_id == "6033"){
+				var shape = jQuery("#pa_shape").val();
+				var size = jQuery("#pa_size").val();
+				var color = jQuery("#pa_color").val();
+				var quantity = $("input[name=quantity]").val();
+
+				var data = { 
+								product_id : product_id, 
+								shape : shape, 
+								size : size, 
+								color : color,
+								quantity : quantity,
+								engraving_front_line_1: $(".front_line1").text(),
+								engraving_front_line_2: $(".front_line2").text(),
+								engraving_front_line_3: $(".front_line3").text(),
+								engraving_front_line_4: $(".front_line4").text(),
+								engraving_back_line_1:  $(".back_line1").text(),
+								engraving_back_line_2:  $(".back_line1").text(),
+								engraving_back_line_3:  $(".back_line3").text(),
+								engraving_back_line_4:  $(".back_line4").text(),
+								action : 'add_variation_product'
+							}
+			}
+			
+			if(product_id == "6089"){
+				var type = jQuery("#pa_ttype").val();
+				var size = jQuery("#pa_size").val();
+				var style = jQuery("#pa_style").val();
+				var quantity = $("input[name=quantity]").val()
+				var data = { 
+							product_id : product_id, 
+							type :  type, 
+							size :  size, 
+							style : style,
+							engraving_back_line_1 : $('.back_line1').text(),
+							engraving_back_line_2 : $('.back_line2').text(),
+							engraving_back_line_3 : $('.back_line3').text(),
+							engraving_back_line_4 : $('.back_line4').text(),
+							action : 'add_variation_product',
+							quantity:quantity
+				}
+			}	
+			console.log("Data", data);
+			$('.loader-wrap').fadeIn();
+			$.ajax({
+     		 	type: 'POST',
+	      		url: ajaxurl,
+	      		data: data,
+	      		 dataType: "json",
+              	success: function(response) {
+              		$('.loader-wrap').fadeOut();
+					if(response['success']==1){
+						window.open(window.location.origin+'/product/smarttag-id-tag-protection-plans/?sub=true');
+						return ;	
+					}else{
+						$('.addbtn_error').text(response['message']);
+						$('.addbtn_error').css('color: red');
+
+					}
+              	}
+    		});
+		})
 
 	});
 </script>

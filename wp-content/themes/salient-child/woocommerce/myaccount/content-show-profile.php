@@ -1,4 +1,6 @@
   <?php 
+  $getTypes = get_top_parents('pet_type_and_breed');
+
   $currentUserId  = get_current_user_id();
   $postId         = $_GET['pet_id'];
   $userId         = get_post_field( 'post_author', $postId );
@@ -322,25 +324,22 @@
       <br>
       <strong>Pet Type:</strong> 
       <span><?php 
-      $termId = $mypod->display('pet_type');
-      echo $term_name = get_term( $termId )->name;
+     echo  $pet_type = $mypod->display('pet_type');
+    // $term_name = get_term( $termId )->name;
       ?>  
     </span>
     <br>
     <strong>Gender:</strong> <span><?php echo $mypod->display('gender'); ?></span>
     <br>
     <strong>Size:</strong> <span><?php 
-
     $size =  $mypod->display('size'); ?></span>
       <?php 
-
         if($size == 1){
           echo 'Small';
         }elseif($size == 2){
           echo 'Medium';
         }else{
           echo 'Large';
-
         }
 
        ?>
@@ -349,71 +348,24 @@
     <br>
     <strong>Pet Date of Birth:</strong> <span><?php echo $mypod->display('pet_date_of_birth'); ?></span>
     <br>
-    <strong>Primary Breed:</strong> <span><?php $term_id =  $mypod->display('primary_breed'); 
-    echo (isset(get_term( $term_id )->name)) ? get_term( $term_id )->name : "" ;
+    <strong>Primary Breed:</strong> <span><?php echo $term_id =  $mypod->display('primary_breed'); 
+
+    //echo (isset(get_term( $term_id )->name)) ? get_term( $term_id )->name : "" ;
     ?></span>
     <br>
     <strong>Secondary Breed:</strong> <span><?php 
 
-    $sterm_id = $mypod->display('secondary_breed');
-    echo (isset(get_term( $sterm_id )->name)) ? get_term( $sterm_id )->name : "";
+    echo $sterm_id = $mypod->display('secondary_breed');
+    //echo (isset(get_term( $sterm_id )->name)) ? get_term( $sterm_id )->name : "";
 
     ?></span>
     
     <br>
-    <strong>Primary Color:</strong> <span><?php $primary_color =  $mypod->display('primary_color'); 
-                              if($primary_color == '1'){
-                                echo 'Black';
-                              }else if($primary_color == '2'){
-                                echo 'Blue';
-                              }else if($primary_color == '3'){
-                                echo 'Brown';
-                              }else if($primary_color == '4'){
-                                echo 'Gold';
-                              }else if($primary_color == '5'){
-                                echo 'Gray';
-                              }else if($primary_color == '6'){
-                                echo 'Orange';
-                              }else if($primary_color == '7'){
-                                echo 'Sliver';
-                              }else if($primary_color == '8'){
-                                echo 'Tan';
-                              }else if($primary_color == '9'){
-                                echo 'White';
-                              }else{
-                                echo 'Yellow';
-                              }
-
+    <strong>Primary Color:</strong> <span><?php echo $primary_color =  $mypod->display('primary_color'); 
+                             
   ?></span>
     <br>
-    <strong>Secondary Color:</strong> <span><?php $secondary_color =  $mypod->display('secondary_color');
-                        if($secondary_color == '1'){
-                          echo 'Black';
-                        }else if($secondary_color == '2'){
-                          echo 'Blue';
-                        }else if($secondary_color == '3'){
-                          echo 'Brown';
-                        }else if($secondary_color == '4'){
-                          echo 'Gold';
-                        }else if($secondary_color == '5'){
-                          echo 'Gray';
-                        }else if($secondary_color == '6'){
-                          echo 'Orange';
-                        }else if($secondary_color == '7'){
-                          echo 'Sliver';
-                        }else if($secondary_color == '8'){
-                          echo 'Tan';
-                        }else if($secondary_color == '9'){
-                          echo 'White';
-                        }else{
-                          echo 'Yellow';
-                        }
-
-
-     ?>
-                    
-
-
+    <strong>Secondary Color:</strong> <span><?php  echo $secondary_color =  $mypod->display('secondary_color');?>
     </span>
     <br>
     <strong>Neutered/Spayed:</strong> <span><?php echo $neutered; ?></span>
@@ -551,18 +503,16 @@
          </div>
          <div class="field-div">
           <label>*Pet Type:</label>
-          <?php
-          $getTypes = get_top_parents('pet_type_and_breed');
-          $type = $mypod->display('pet_type'); 
-          ?>
-          <select name="pet_type" class="text-data" id="pettype" required="" >
-            <option value="">Type</option>
-            <?php foreach ($getTypes as $key => $value) { ?>
-
-             <option <?= ($value['term_id'] == $type) ? "selected" : ""; ?> value="<?= $value['term_id'] ?>"><?= $value['name'] ?></option>
-             
-           <?php } ?>
-         </select>
+          
+            <select name="pet_type" class="text-data" id="pettype" required="">
+              <option value="">Type</option>
+                <?php 
+                foreach ($getTypes as $key => $value) { 
+                  $petType = ($value['name'] == $pet_type) ? 'selected' : '';
+                    echo "<option ".$petType." value='".$value['term_id']."'>".$value['name']. "</option>"; ?>
+                    <?php } ?>
+            </select>
+       
        </div>
      </div>
     </div>
@@ -570,123 +520,63 @@
     <div class="field-wrap two-fields-wrap">
      <div class="field-div">
       <label>Primary Breed:</label>
-      <?php $primbred =  $mypod->display('primary_breed'); 
-      $primchild = get_term_children( $type , "pet_type_and_breed" );
-
-      ?>
-      <select name="primary_breed" id="breedid">
-       <option value="">Breed</option>
-       <?php 
-       foreach ($primchild as $key => $childTermId) {
-        $primaryselected = ($primbred == $childTermId) ? 'selected' : '';
-        echo "<option ".$primaryselected." value='".$childTermId."'>".get_term($childTermId)->name. "</option>";
-      }
-      ?>
-    </select>
+          <?php   $primbred =  $mypod->display('primary_breed'); 
+        global $wpdb;
+        $get_term_id = $wpdb->get_results("SELECT `term_id` FROM `wp_terms` WHERE `name` ='$pet_type'");
+        $primchild = get_term_children( $get_term_id[0]->term_id , "pet_type_and_breed" );
+          ?>
+         <select name="primary_breed" id="breedid">
+          <option value="">Breed</option>
+            <?php 
+              foreach ($primchild as $key => $childTermId) {
+                $petBreed  = get_term($childTermId)->name;
+               $primaryselected = $primbred == $petBreed ? 'selected' : '';
+              echo "<option ".$primaryselected." value='".$childTermId."'>".$petBreed. "</option>";
+              }
+           ?>
+        </select>
     </div>
     <div class="field-div">
-      <label>Secondary Breed:</label>
+      <label>Secondary Breed</label>
       <?php $secbred = $mypod->display('secondary_breed');
-      $secchild = get_term_children( $type , "pet_type_and_breed" );
-      ?>
-      <select name="secondary_breed" id="sbreedid">
-       <option value="">Breed</option>
-       <?php 
-       foreach ($secchild as $key => $childTermId) {
-
-        $secselected = ($secbred == $childTermId) ? 'selected' : '';
-        echo "<option ".$secselected." value='".$childTermId."'>".get_term($childTermId)->name. "</option>";
-      }
-      ?>
-    </select>
+        $secchild = get_term_children( $get_term_id[0]->term_id , "pet_type_and_breed" ); ?>
+        <select name="secondary_breed" id="sbreedid">
+          <option value="">Breed</option>
+            <?php 
+              foreach ($secchild as $key => $childTermId) {
+                $petBreed  = get_term($childTermId)->name;
+                $secoundaryselected = $secbred == $petBreed ? 'selected' : '';
+                echo "<option ".$secoundaryselected." value='".$childTermId."'>".$petBreed. "</option>";
+              }?>
+        </select>
     </div>
     </div>
     <div class="field-wrap two-fields-wrap">
-     <div class="field-div phone-div">
+     <div class="field-div ">
       <label>Primary Color:</label>
      <?php $primary_color = $mypod->display('primary_color'); ?>
+      <select name="primary_color" class="text-data" id="pcolor" required="" aria-required="true">
+        <option value="">Select Color</option>
+        <?php
+          global $petColors;   
+          foreach ($petColors as $key => $color) {
+              $selected = ($primary_color == $color) ? "selected" : "";
+              echo '<option value="'.$key.'" '.$selected.' >'.$color.'</option>';
+          }
+              ?>  
 
-
-         <select name="primary_color" class="text-data" id="pcolor" required="" aria-required="true">
-          <option value="">Select Color</option>
-          <option value="1" <?php if ($primary_color == "1"): ?>
-                selected="selected"
-              <?php endif ?>>Black</option>
-          <option value="2" <?php if ($primary_color == "2"): ?>
-                selected="selected"
-              <?php endif ?>>Blue</option>
-          <option value="3" <?php if ($primary_color == "3"): ?>
-                selected="selected"
-              <?php endif ?>>Brown</option>
-          <option value="4" <?php if ($primary_color == "4"): ?>
-                selected="selected"
-              <?php endif ?>>Gold</option>
-          <option value="5" <?php if ($primary_color == "5"): ?>
-                selected="selected"
-              <?php endif ?>>Gray</option>
-          <option value="6" <?php if ($primary_color == "6"): ?>
-                selected="selected"
-              <?php endif ?>>Orange</option>
-          <option value="7" <?php if ($primary_color == "7"): ?>
-                selected="selected"
-              <?php endif ?>>Red</option>
-          <option value="8" <?php if ($primary_color == "8"): ?>
-                selected="selected"
-              <?php endif ?>>Sliver</option>
-          <option value="9" <?php if ($primary_color == "9"): ?>
-                selected="selected"
-              <?php endif ?>>Tan</option>
-          <option value="10" <?php if ($primary_color == "10"): ?>
-                selected="selected"
-              <?php endif ?>>White</option>
-          <option value="11" <?php if ($primary_color == "11"): ?>
-                selected="selected"
-              <?php endif ?>>Yellow</option>
-
-        </select>
-     </div>
-     <div class="field-div phone-div">
+      </select>
+     <div class="field-div">
       <label>Secondary Color(s):</label>
       <?php $secondary_color =  $mypod->display('secondary_color'); ?>
-
-         <select name="secondary_color" class="text-data" id="scolor" required="" aria-required="true">
+        <select name="secondary_color" class="text-data" id="scolor">
           <option value="">Select Color</option>
-          <option value="1" <?php if ($secondary_color == "1"): ?>
-                selected="selected"
-              <?php endif ?>>Black</option>
-          <option value="2" <?php if ($secondary_color == "2"): ?>
-                selected="selected"
-              <?php endif ?>>Blue</option>
-          <option value="3" <?php if ($secondary_color == "3"): ?>
-                selected="selected"
-              <?php endif ?>>Brown</option>
-          <option value="4" <?php if ($secondary_color == "4"): ?>
-                selected="selected"
-              <?php endif ?>>Gold</option>
-          <option value="5" <?php if ($secondary_color == "5"): ?>
-                selected="selected"
-              <?php endif ?>>Gray</option>
-          <option value="6" <?php if ($secondary_color == "6"): ?>
-                selected="selected"
-              <?php endif ?>>Orange</option>
-          <option value="7" <?php if ($secondary_color == "7"): ?>
-                selected="selected"
-              <?php endif ?>>Red</option>
-          <option value="8" <?php if ($secondary_color == "8"): ?>
-                selected="selected"
-              <?php endif ?>>Sliver</option>
-          <option value="9" <?php if ($secondary_color == "9"): ?>
-                selected="selected"
-              <?php endif ?>>Tan</option>
-          <option value="10" <?php if ($secondary_color == "10"): ?>
-                selected="selected"
-              <?php endif ?>>White</option>
-          <option value="11" <?php if ($secondary_color == "11"): ?>
-                selected="selected"
-              <?php endif ?>>Yellow</option>
-
-        </select>
-
+          <?php
+            foreach ($petColors as $key => $color) {
+              $selected2 = ($secondary_color == $key) ? "selected" : "";
+              echo '<option value="'.$key.'" '.$selected2.' >'.$color.'</option>';
+            } ?>  
+         </select>
     </div>
   </div>
    

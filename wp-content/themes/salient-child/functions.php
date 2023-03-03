@@ -96,7 +96,7 @@ global $printLostPoster;
 $printLostPoster = 83410;
 
 /*Define Global serial Number Prefix*/
-global $serialNumberPrefix1, $serialNumberPrefix2 ,$serialNumberPrefix3;
+global $serialNumberPrefix1, $serialNumberPrefix2 ,$serialNumberPrefix3,$serialNumberPrefix4;
 
 $serialNumberPrefix1 = 900139;
 $serialNumberPrefix2 = 900141;
@@ -182,6 +182,7 @@ wp_enqueue_script( 'jquery-js', 'https://cdn.jsdelivr.net/npm/jquery.ui.widget@1
         wp_enqueue_script( 'steps-script', get_stylesheet_directory_uri() . '/js/steps.js', array( 'jquery' ),rand(),true );
         
     }
+    wp_enqueue_script( 'universal-steps-script', get_stylesheet_directory_uri() . '/js/universal_steps.js', array( 'jquery' ),rand(),true );
 
     
     wp_enqueue_script( 'tabs-script', get_stylesheet_directory_uri() . '/js/tabs.js', array( 'jquery' ),rand(),true );
@@ -503,6 +504,7 @@ function uploadImage($file,$post_id){
 }
 /*function for update pet profile info.*/
 function updatePetInformation($post,$post_id = '',$short=true,$other=false){
+
     if (empty($post_id)) {
         $post_id = $post['post_id'];
     }
@@ -971,26 +973,22 @@ function checkMicrochipIDPetProfile($microchip = ""){
         $microchip = $_POST['microchip-id'];
     }
 
-    $args=array(
+    $args = array(
         'post_type' => 'pet_profile',
         'post_status' => 'publish',
         'posts_per_page' => -1,
         'meta_query'=>array(
-            'relation' => 'AND',
                 array(
                     'key' => 'microchip_id_number',
                     'value' => $microchip,
                 ),
             )
-        
     );
-    $query = new WP_Query($args);
 
+    $query = new WP_Query($args);
     if ($query->have_posts()) {
-       
         return false;
     }else{
-
         return true;
     }
 
@@ -1039,10 +1037,6 @@ add_action('wp_ajax_nopriv_checkUniversalMicrochipId', 'checkUniversalMicrochipI
 function checkUniversalMicrochipIdForPetProfile($universalMicrochipID = ""){
 
     global $serialNumberPrefix1,$serialNumberPrefix2,$serialNumberPrefix3,$serialNumberPrefix4;
-
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
     if(isset($_POST) && empty($universalMicrochipID)){
         $universalMicrochipId = $_POST['smarttag_id_number'];
@@ -1527,9 +1521,6 @@ add_action('wp_ajax_Multicustomer', 'Create_Multiple_Customers');
 add_action('wp_ajax_nopriv_Multicustomer', 'Create_Multiple_Customers');
  
  function Create_Multiple_Customers() {
-
-    print_r($_POST['users_info']);
-die();
 
 
     if (isset($_POST['users_info'][0])) {
@@ -2556,6 +2547,9 @@ function wdm_add_user_custom_data_options_callback(){
 
     global $woocommerce, $globalAluminumIdTag, $globalBrassIdTag;    
   //  unset($_POST['action']);
+
+ 
+
     $cart_item_data = array();
     if(isset($_POST['attribute_pa_color'])){
         $product_id = $globalAluminumIdTag; 
@@ -2592,6 +2586,7 @@ function wdm_add_user_custom_data_options_callback(){
         }
     }
 
+       
 
     $customproduct = $woocommerce->cart->add_to_cart( $product_id ,1, $variation,wc_get_product_variation_attributes( $variation )); 
 
@@ -2608,13 +2603,9 @@ add_action('wp_ajax_custom_product_price', 'get_custom_product_price');
 add_action('wp_ajax_nopriv_custom_product_price', 'get_custom_product_price');
 
 function get_custom_product_price(){
-
-
-    
-      global $woocommerce, $globalAluminumIdTag, $globalBrassIdTag;    
+    global $woocommerce, $globalAluminumIdTag, $globalBrassIdTag;    
     unset($_POST['action']);
     $cart_item_data = array();
-    
     $attributes['attribute_pa_size'] =  $_POST['attribute_pa_size'];
     
     if(isset($_POST['attribute_pa_color'])){
@@ -2630,32 +2621,20 @@ function get_custom_product_price(){
     }
 
     $variationld = find_matching_product_variation_id($product_id, $attributes);
- 
-   
-    
-  $product = wc_get_product( $variationld );
-    
+    $product = wc_get_product( $variationld );
     if($variationld){
-
-       $product = wc_get_product( $variationld );
+        $product = wc_get_product( $variationld );
         $productPrice = $product->get_regular_price();
-
         if($productPrice){
             echo json_encode(array("success"=>1,"productPrice" => $productPrice));
         }else{
             echo json_encode(array("success"=>1,"productPrice" => 6.95));
 
         }
-        
-
     }else{
-
-        
-        echo json_encode(array("success"=>1,"productPrice" => 6.95));
-    }
-    
-
- die;  
+            echo json_encode(array("success"=>1,"productPrice" => 6.95));
+        }
+    die;  
      
 }
 
@@ -7057,25 +7036,19 @@ echo '</pre>';
 }
 
 
-  add_action( 'admin_enqueue_scripts', 'load_custom_script' ); 
-  function load_custom_script() {
-      
-      wp_enqueue_script('custom_js_script', 'https://cdn.datatables.net/1.12.0/js/jquery.dataTables.min.js', array('jquery'));
-      wp_enqueue_script('custom_js_script', 'https://cdn.datatables.net/1.12.0/js/dataTables.bootstrap4.min.js', array('jquery'));
-      ?>
-        <script type="text/javascript">
-           /*  jQuery(document).ready(function(){
-                alert();
-                jQuery('#example').DataTable({
-                    "language": {
-                        "emptyTable": "No Fosters"
-                }
-            });
-        });*/
+add_action( 'admin_footer', 'load_custom_script' ); 
+function load_custom_script() {
+    wp_enqueue_style('datatable_style','https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css',[], rand(1,10), 'all');
+    wp_enqueue_script('custom_js_script', 'https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js', array('jquery'),rand(1,10));
+  ?>
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+           // jQuery('#customers').DataTable();
+    });
 
-        </script>
-      <?php
-  }
+    </script>
+  <?php
+}
 
 
 
@@ -7700,11 +7673,16 @@ function michrochip_registring(WP_REST_Request $request) {
     $PetName        = $parameters['Pet']['PetName'];
     $PetType        = $parameters['Pet']['PetType'];
     $PrimaryColor   = $parameters['Pet']['PrimaryColor'];
-    $Gender         = $parameters['Pet']['Gender'];
-    $Size           = $parameters['Pet']['Size'];
+    $Gender           = trim(strtolower($parameters['Pet']['Gender']));
+    $Size           = trim(strtolower($parameters['Pet']['Size']));
     $DOB            = $parameters['Pet']['Dob'];
     $SecondaryColor = $parameters['Pet']['SecondaryColor'];
     
+    $result = substr($MicrochipId, 0, 6);
+    $validSerialPrefix = array($serialNumberPrefix1, $serialNumberPrefix2, $serialNumberPrefix3,$serialNumberPrefix4);
+   
+
+
     // var_dump(email_exists($Email));die;
     /*save User information*/
      if(email_exists($Email)){
@@ -7721,14 +7699,19 @@ function michrochip_registring(WP_REST_Request $request) {
     }
 
     if($MicrochipId == ""){
-
         $response['status'] = "error";
         $response['message'] = "Microchip Id is required.";  
         return new WP_REST_Response( $response, 400 ); 
 
+    }else if(strlen($MicrochipId) != 15){
+        $response['status'] = "error";
+        $response['message'] = "Microchip Id should be 15 digits only";  
+        return new WP_REST_Response( $response , 400 ); 
+    }else if (!in_array( $result, $validSerialPrefix)){
+        $response['status'] = "error";
+        $response['message'] = "Please enter a valid MicroChip Id";  
+        return new WP_REST_Response( $response, 400 ); 
     }
-
-
     if($FirstName == ""){
 
         $response['status'] = "error";
@@ -7742,7 +7725,6 @@ function michrochip_registring(WP_REST_Request $request) {
         return new WP_REST_Response( $response, 400 );  
 
     }else if($Email == ""){
-
         $response['status'] = "error";
         $response['message'] = "Email addresss is required.";  
         return new WP_REST_Response( $response, 400 );  
@@ -7771,10 +7753,10 @@ function michrochip_registring(WP_REST_Request $request) {
         $response['message'] = "Please Enter only number";  
         return new WP_REST_Response( $response, 400 );  
 
-    }else if(trim($Size) != "small" && trim($Size) != "large" && !empty(trim($Size))){
+    }else if(trim($Size) != "small" && trim($Size) != "medium" && trim($Size) != "large" && !empty(trim($Size))){
 
         $response['status'] = "error";
-        $response['message'] = "The size field accepts only small or large.";  
+        $response['message'] = "The size field accepts only small, medium or large.";  
         return new WP_REST_Response( $response, 400 );  
 
     }else if(trim($Gender) != "male" && trim($Gender) != "female" && !empty(trim($Gender))){
@@ -7796,6 +7778,8 @@ function michrochip_registring(WP_REST_Request $request) {
         return new WP_REST_Response( $response, 400 ); 
 
     }else if($newUserId){
+
+
         if(strlen($MicrochipId) == '15'){
             $result = substr($MicrochipId, 0, 6);
             $validSerialPrefix = array($serialNumberPrefix1, $serialNumberPrefix2, $serialNumberPrefix3,$serialNumberPrefix4);
@@ -8188,12 +8172,9 @@ function change_single_add_to_cart_button_text( $button_text, $product ) {
 add_action( 'woocommerce_after_variations_form', 'action_after_variations_form_callback' );
 function action_after_variations_form_callback() {
     global $product;
-
     // Get the produc variation Ids for the variable product
     $children_ids = $product->get_visible_children();
-
     $ids_in_cart  = [];
-
     // Loop through cart items
     foreach( WC()->cart->get_cart() as $item ) {
         if( in_array( $item['variation_id'], $children_ids ) ) {
@@ -8445,12 +8426,7 @@ function createNewUserComing(){
                 $login_data['user_password'] = $password;
                 $login_data['remember'] = $remember_me;  
                 update_user_meta( $user_id, 'importStatus', 'S');
-
-
-
-
-                  
-                $user_verify = wp_signon( $login_data, false );
+                 $user_verify = wp_signon( $login_data, false );
                 echo json_encode(array('success'=>1, 'email'=>$user_name, 'user_type'=> 'createNewUserComing', 'message'=>'You are login'));
             exit();
 
@@ -8637,6 +8613,8 @@ function searchWithMichrochip() { ?>
 
 
 add_action("wp_ajax_SeachWithMicrochip" , "SeachWithMicrochip");
+add_action('wp_ajax_nopriv_SeachWithMicrochip', 'SeachWithMicrochip');
+
 //array('987000008578277' , '987000008578291')
 
 function SeachWithMicrochip(){
@@ -8773,40 +8751,41 @@ $loop = new WP_Query( $args );
                         }
 
                       echo '<div class="col-sm-12">
-                      <div class="acc-blue-box">
-                      <div class="acc-blue-head">
-                              Pet Information
-                           </div>
-                           <div class="acc-blue-content">
-                           <div class="row" style="display:flex;">
-                           <div class="col-lg-6">
-                           <strong class="bold_area">Microchip ID Number:</strong> <span class="bold_child_sub">' .$microchip_id_number.'</span><br>
-                            <strong class="bold_area">ID Tag Serial Number:</strong><span class="bold_child_sub">' .$smarttag_id_number.'</span><br>
-                            <strong class="bold_area">Pet Name:</strong> <span class="bold_child_sub">' .$pet_name.'</span><br>
-                            <strong class="bold_area">Pet Type:</strong><span class="bold_child_sub">' .$pets_type.'</span>
-                          <br><strong class="bold_area">Gender:</strong> <span class="bold_child_sub">' .$gender.'</span><br><strong class="bold_area">Size:</strong> <span class="bold_child_sub">
-                            ' .$size.'</span><br><strong class="bold_area">Pet Date of Birth:</strong> <span class="bold_child_sub">' .$pet_date_of_birth.'</span><br>
-                          <strong class="bold_area">Primary Breed:</strong><span class="bold_child_sub">' .$p_breed.'</span><br>
-                          <strong class="bold_area">Secondary Breed:</strong><span class="bold_child_sub">' .$b_breed.'</span><br>
-                          <strong class="bold_area">Primary Color:</strong> <span class="bold_child_sub">' .$primarycolor.'</span>
-                          <br>
-                          <strong class="bold_area">Secondary Color:</strong><span  class="bold_area" >' .$secoundarycolor.' </span><br>
-                           <strong class="bold_area">Pet Profile Link:</strong><span  class="bold_area" > <a href="'.$pet_profile_link.'">Pet Profile</a </span>   
+                        <div class="acc-blue-box">
+                            <div class="acc-blue-head">
+                                 Pet Information
                             </div>
-                           <div class="col-lg-6">
-                           <div class="pet-img">
-                           <img src="'.$image.'" alt="" height="250px" width="250px" />
-                           </div>
-                           </div>
-                           </div>
+                        <div class="acc-blue-content">
+                            <div class="row" style="display:flex;">
+                                <div class="col-lg-6">
+                                    <strong class="bold_area">Microchip ID Number:</strong> <span class="bold_child_sub">' .$microchip_id_number.'</span><br>
+                                    <strong class="bold_area">ID Tag Serial Number:</strong><span class="bold_child_sub">' .$smarttag_id_number.'</span><br>
+                                    <strong class="bold_area">Pet Name:</strong> <span class="bold_child_sub">' .$pet_name.'</span><br>
+                                    <strong class="bold_area">Pet Type:</strong><span class="bold_child_sub">' .$pets_type.'</span><br>
+                                    <strong class="bold_area">Gender:</strong> <span class="bold_child_sub">' .$gender.'</span><br>
+                                    <strong class="bold_area">Size:</strong> <span class="bold_child_sub">' .$size.'
+                                        </span><br>
+                                    <strong class="bold_area">Pet Date of Birth:</strong> <span class="bold_child_sub">' .$pet_date_of_birth.'
+                                    </span><br>
+                                    <strong class="bold_area">Primary Breed:</strong><span class="bold_child_sub">' .$p_breed.'</span><br>
+                                    <strong class="bold_area">Secondary Breed:</strong><span class="bold_child_sub">' .$b_breed.'</span><br>
+                                    <strong class="bold_area">Primary Color:</strong> <span class="bold_child_sub">' .$primarycolor.'</span><br>
+                                    <strong class="bold_area">Secondary Color:</strong><span  class="bold_area" >' .$secoundarycolor.' </span><br>
+                                    <strong class="bold_area">Pet Profile Link:</strong><span  class="bold_area" > <a href="'.$pet_profile_link.'">Pet Profile</a </span>   
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="pet-img">
+                                        <img src="'.$image.'" alt="" height="250px" width="250px" />
+                                    </div>
+                                </div>
                             </div>
-                          </div>
-                          <div class="acc-blue-box">
+                            </div>
+                        </div>
+                        <div class="acc-blue-box">
                            <div class="acc-blue-head">
                             Owner Information
-                            
-                          </div>
-                          <div class="acc-blue-content">
+                            </div>
+                        <div class="acc-blue-content">
                             <strong class="bold_area">Email:</strong> <span class="bold_child_sub">'.$email.'</span>
                             <br>
                             <strong class="bold_area">First Name:</strong> <span class="bold_child_sub">'.$first_name.'</span>
@@ -8826,11 +8805,9 @@ $loop = new WP_Query( $args );
                               <br>
                              <strong class="bold_area">Pet Owner Profile Link:</strong><span class="bold_child_sub"> <a target="_blank"href="'.$user_profile.'">Owner Profile</a></span> <br>
                                <strong class="bold_area">Range it belongs to:</strong><span >"'. $res = str_replace( array( '\'', '"',',' , ';', '<', '>' ), ' ', $range).'"</span> 
-                              
-
-                          </div>
-                          </div>
-                         </div>';
+                            </div>
+                        </div>
+                    </div>';
             endwhile;
             exit();
 
@@ -8918,8 +8895,8 @@ function _custom_menu_seach_page_for_petpros(){
                 </div>
 
             <div class="form-contant">
-                <input type="text" class="form-control" id="searchCustom" aria-describedby="emailHelp" placeholder="Enter Microchp number/Id tag serial number/First Name/Last Name/phone number">
-                <span class="michrochip_start_range" style="display:none;"></span>
+                <input type="text" class="form-control" id="searchCustom" aria-describedby="emailHelp" placeholder="Enter Microchp number/Id tag serial number/First Name/Last Name/phone number" value="987000122254147">
+                <span class="search_error" style="display:none;"></span>
     
                 <button type="submit" id="searchCustomfunctionality" class="btn btn-primary">Search</button>
         </div>   
@@ -8927,6 +8904,24 @@ function _custom_menu_seach_page_for_petpros(){
         </div> 
      
     </form>
+<!--     <table id="table_id" class="display">
+    <thead>
+        <tr>
+            <th>Column 1</th>
+            <th>Column 2</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Row 1 Data 1</td>
+            <td>Row 1 Data 2</td>
+        </tr>
+        <tr>
+            <td>Row 2 Data 1</td>
+            <td>Row 2 Data 2</td>
+        </tr>
+    </tbody>
+</table> -->
     <div class="search-row"></div> 
                   <br/>
                   <br/>
@@ -8939,47 +8934,219 @@ function _custom_menu_seach_page_for_petpros(){
 <?php  
 
 }
-add_action( 'admin_footer', 'customsearchWithMichrochip' );
-function customsearchWithMichrochip(){ ?>
 
 
-    <script type="text/javascript" >
-    jQuery(document).ready(function($) {
-        jQuery('#searchCustomfunctionality').click(function(e){
-            e.preventDefault();
 
-            var searchCustom = $('#searchCustom').val();
-           
-            if(searchCustom == ''){
-                jQuery('.michrochip_start_range').fadeIn();
-                jQuery('.michrochip_start_range').text('This field is required');
-                jQuery('.michrochip_start_range').css('color', 'red');
-                return false;
-            }else{
-                jQuery('.michrochip_start_range').fadeOut();
-                var dataVariable = {
-                    'action': 'customeSearchFunctionality', // your action name
-                    'searchCustom': $('#searchCustom').val(), 
-                   
-                };
-                $('.loader-outer').fadeIn();
-                jQuery.ajax({
-                    url: ajaxurl, // this will point to admin-ajax.php
-                    type: 'POST',
-                    data: dataVariable, 
-                    success: function (response) {
-                        $('.loader-outer').fadeOut();
-                        $('.search-row').html(response);
-                        return false;
-                    }
-                });
-           } 
-        });    
-    });
-    </script> 
-    <?php
+add_action('wp_ajax_get_pet_profile', 'get_pet_profile');
+add_action('wp_ajax_nopriv_get_pet_profile', 'get_pet_profile');
+
+function get_pet_profile(){
+
+    if(isset($_POST['action'])=='get_pet_profile'){
+
+        $args = array(
+            'post_type' => 'pet_profile',
+            'post_status' => 'publish',
+            'meta_query' => array( 
+                'relation' => 'OR',
+             array(
+                'key' => 'microchip_id_number',
+                'value' =>  $_POST['serialNumber'],
+                'compare' => '=',
+                ),
+              array(
+                'key' => 'owner_email',
+                'value' =>  $_POST['serialNumber'],
+                'compare' => '=',
+                ),
+               array(
+                'key' => 'smarttag_id_number',
+                'value' =>  $_POST['serialNumber'],
+                'compare' => '=',
+                ),
+             )
+        );
+        
+        $query = new WP_Query($args);
+            if( $query->have_posts() ){
+           while ( $query->have_posts() ) : $query->the_post();
+                    $userId = get_post_field( 'post_author', get_the_ID() );
+                   /*Pet Information*/  
+                   $microchip_id_number = get_post_meta(get_the_ID(),"microchip_id_number",true);
+                   $smarttag_id_number = get_post_meta(get_the_ID(),"smarttag_id_number",true);
+                 
+                
+                  $pet_name = get_post_meta(get_the_ID(),"pet_name",true); 
+                
+                   $pet_type = get_post_meta(get_the_ID(),"pet_type",true); 
+                   if($pet_type == 587){
+                     $pets_type = 'Cat';
+                   }else if($pet_type == 1045){
+                     $pets_type = 'Dog';
+                   }else if($pet_type == 1046){
+                     $pets_type = 'Ferret';
+                   }else if($pet_type == 588){
+                     $pets_type = 'Horse';
+                   }else if($pet_type == 1048){
+                     $pets_type = 'Other';
+                   }else{
+                     $pets_type = 'Rabbit';
+                   }
+                   $pet_type = (isset(get_term( $pet_type )->name));  
+                   $primary_breed = get_post_meta(get_the_ID(),"primary_breed",true);  
+                   $p_breed =   (isset(get_term( $primary_breed )->name)) ? get_term( $primary_breed )->name : "" ;
+                   $secondary_breed = get_post_meta(get_the_ID(),"secondary_breed",true);
+                   $b_breed =   (isset(get_term( $secondary_breed )->name)) ? get_term( $secondary_breed )->name : "" ;
+                   $primary_color = get_post_meta(get_the_ID(),"primary_color",true);   
+                   if($primary_color == '1'){
+                     $primarycolor =  'Black';
+                   }else if($primary_color == '2'){
+                     $primarycolor = 'Blue';
+                   }else if($primary_color == '3'){
+                     $primarycolor =  'Brown';
+                   }else if($primary_color == '4'){
+                     $primarycolor =  'Gold';
+                   }else if($primary_color == '5'){
+                     $primarycolor =  'Gray';
+                   }else if($primary_color == '6'){
+                     $primarycolor =  'Orange';
+                   }else if($primary_color == '7'){
+                     $primarycolor = 'Sliver';
+                   }else if($primary_color == '8'){
+                     $primarycolor = 'Tan';
+                   }else if($primary_color == '9'){
+                     $primarycolor =  'White';
+                   }else{
+                     $primarycolor =  'Yellow';
+                   }
+                   $secondary_color = get_post_meta(get_the_ID(),"secondary_color",true);
+                 if($secondary_color == '1'){
+                     $secoundarycolor =  'Black';
+                   }else if($secondary_color == '2'){
+                     $secoundarycolor = 'Blue';
+                   }else if($secondary_color == '3'){
+                     $secoundarycolor =  'Brown';
+                   }else if($secondary_color == '4'){
+                     $secoundarycolor =  'Gold';
+                   }else if($secondary_color == '5'){
+                     $secoundarycolor =  'Gray';
+                   }else if($secondary_color == '6'){
+                     $secoundarycolor =  'Orange';
+                   }else if($secondary_color == '7'){
+                     $secoundarycolor = 'Sliver';
+                   }else if($secondary_color == '8'){
+                     $secoundarycolor = 'Tan';
+                   }else if($secondary_color == '9'){
+                     $secoundarycolor =  'White';
+                   }else{
+                     $secoundarycolor =  'Yellow';
+                   }   
+                   $size = get_post_meta(get_the_ID(),"size",true); 
+                   if($size == 1){
+                       $size = 'Small';
+                   }elseif($size == 2){
+                       $size =  'Medium';
+                   }else{
+                       $size ='Large';
+                   }
+                      
+                   $gender = get_post_meta(get_the_ID(),"gender",true);   
+                   $pet_date_of_birth = get_post_meta(get_the_ID(),"pet_date_of_birth",true);   
+                   $petId = get_the_ID(); 
+                   $pet_profile_link  =site_url().'/wp-admin/post.php?post='.$petId.'&action=edit';
+                   //$pet_profile_link = site_url().'/my-account/show-profile?pet_id='.$petId;
+                   $user_profile = site_url().'/wp-admin/user-edit.php?user_id='.$userId;
+                   $pet_pros_profile = site_url().'/wp-admin/user-edit.php?user_id='.$PetProsUser_id;
+                    $Owner = site_url().'/my-account/show-profile?pet_id='.$petId;
+                    $title = get_the_title(get_the_ID()); 
+                           if (has_post_thumbnail( get_the_ID())){
+                               $image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'single-post-thumbnail' );
+                               $image = $image[0];
+                           }else{
+                               $image = site_url().'/wp-content/uploads/2019/02/pet-image.jpg';
+                           }
+                    $user_info = get_userdata($userId);
+                    $user_login = $user_info->user_login;
+                    $email = $user_info->user_email;
+                    $first_name = $user_info->first_name;
+                    $last_name = $user_info->last_name;
+                    $primary_address_line1 = $user_info->primary_address_line1;
+                    $primary_city = $user_info->primary_city;
+                    $primary_state = $user_info->primary_state;
+                    $primary_postcode = $user_info->primary_postcode;
+                    $primary_home_number = $user_info->primary_home_number;
+                    $secondary_cell_number = $user_info->secondary_cell_number;
+                    $secondary_phone_country_code = $user_info->secondary_phone_country_code; 
+                    $primary_phone_country_code = $user_info->primary_phone_country_code; 
+                    $primary_country = $user_info->primary_country;
+                        if(is_numeric($_POST['serialNumber'])){
+                            echo '<div class="col-sm-12">
+                             <div class="acc-blue-box">
+                             <div class="acc-blue-head">
+                                     Pet Information
+                                  </div>
+                                  <div class="acc-blue-content">
+                                  <div class="row" style="display:flex;">
+                                  <div class="col-lg-6">
+                                  <strong class="bold_area">Microchip ID Number:</strong> <span class="bold_child_sub">' .$microchip_id_number.'</span><br>
+                                   <strong class="bold_area">ID Tag Serial Number:</strong><span class="bold_child_sub">' .$smarttag_id_number.'</span><br>
+                                   <strong class="bold_area">Pet Name:</strong> <span class="bold_child_sub">' .$pet_name.'</span><br>
+                                   <strong class="bold_area">Pet Type:</strong><span class="bold_child_sub">' .$pets_type.'</span>
+                                 <br><strong class="bold_area">Gender:</strong> <span class="bold_child_sub">' .$gender.'</span><br><strong class="bold_area">Size:</strong> <span class="bold_child_sub">
+                                   ' .$size.'</span><br><strong class="bold_area">Pet Date of Birth:</strong> <span class="bold_child_sub">' .$pet_date_of_birth.'</span><br>
+                                 <strong class="bold_area">Primary Breed:</strong><span class="bold_child_sub">' .$p_breed.'</span><br>
+                                 <strong class="bold_area">Secondary Breed:</strong><span class="bold_child_sub">' .$b_breed.'</span><br>
+                                 <strong class="bold_area">Primary Color:</strong> <span class="bold_child_sub">' .$primarycolor.'</span>
+                                 <br>
+                                 <strong class="bold_area">Secondary Color:</strong><span  class="bold_area" >' .$secoundarycolor.' </span><br>
+                                  <strong class="bold_area">Pet Profile Detail:</strong><span  class="bold_area" > <a target="_blank" href="'.$pet_profile_link.'">Pet Profile Detail</a </span>   
+                                   </div>
+                                  <div class="col-lg-6">
+                                  <div class="pet-img">
+                                  <img src="'.$image.'" alt="" height="250px" width="250px" />
+                                  </div>
+                                  </div>
+                                  </div>
+                                   </div>
+                                 </div>';
+                                 exit();
+                            }else{
+                                echo '<div class="acc-blue-box">
+                                    <div class="acc-blue-head">
+                                        Owner Information
+                                    </div>
+                                    <div class="acc-blue-content">
+                                    <strong class="bold_area">Email:</strong> <span class="bold_child_sub">'.$email.'</span>
+                                    <br>
+                                    <strong class="bold_area">First Name:</strong> <span class="bold_child_sub">'.$first_name.'</span>
+                                    <br>
+                                    <strong class="bold_area">Last Name:</strong> <span class="bold_child_sub">'.$last_name.'</span>
+                                    <br>
+                                    <strong class="bold_area">Address:</strong>
+                                    <br>
+                                    <span class="bold_child_sub">'.$primary_address_line1.' <br>'.$primary_city.', '.$primary_state.' ,'.$primary_postcode.', <br>'.$primary_country.' </span>
+                                    <br>
+                                    <strong class="bold_area">Primary Phone Number:</strong> <span class="bold_child_sub"><span class="phone-country-code" data-val="in"></span>'.$primary_home_number.'</span>
+                                    <br>
+                                    <strong class="bold_area">Secondary Phone Number:</strong> <span class="bold_child_sub"><span class="phone-country-code" data-val="us"></span> '.$secondary_cell_number.'</span><br>
+                                   
+                                    <strong class="bold_area">Pet Owner Detail:</strong><span class="bold_child_sub"> <a target="_blank" href="'.$user_profile.'">Owner Profile Detail</a></span> <br>
+                                   
+                                    </div>
+                                    </div>';
+
+                                      exit();
+
+                            }     
+
+                    endwhile;
+                    exit(); 
+            }
+
+
+    }
+    
 }
-
 
 add_action('wp_ajax_customeSearchFunctionality', 'customeSearchFunctionality');
 add_action('wp_ajax_nopriv_customeSearchFunctionality', 'customeSearchFunctionality');
@@ -9033,6 +9200,8 @@ function customeSearchFunctionality(){
 
     // rohit
     $search_string = $_POST['searchCustom'];
+
+
     $meta_array = [];
     $searchBy = ["primary_home_number", "smarttag_id_number", "microchip_id_number","owner_email","owner_name"];
     foreach ($searchBy as $meta_key) {
@@ -9055,8 +9224,11 @@ function customeSearchFunctionality(){
 
     $query = new WP_Query($args);
             if( $query->have_posts() ){ ?>
-
+              <script type="text/javascript">
+                  
+              </script>  
             <table id="customers" class="table-section">
+            <thead>
                 <tr>
                     <th>S.NO</th>   
                     <th>MicroChip Number</th>
@@ -9066,8 +9238,11 @@ function customeSearchFunctionality(){
                     <th>Owner First Name</th>
                     <th>Owner Last Name</th>
                 </tr>
+            </thead>
+                <tbody>
                 <?php
                 $i=1;
+
                 while( $query->have_posts() ) : $query->the_post();
                 ?>
                 <tr>
@@ -9178,21 +9353,35 @@ function customeSearchFunctionality(){
                                 $image = $image[0];
 
                             }else{
-                                $image = site_url().'/wp-content/uploads/2021/01/dog-placeholder.png';
+                                $image = site_url().'/wp-content/uploads/2019/02/pet-image.jpg';
                             } ?>
                             
                             <td><?php echo $i; ?></td>
-                            <td><a  target="_blank" href="<?php echo $pet_profile_link;?>"><?php echo $microchip_id_number ?></td>
-                            <td><a  target="_blank" href="<?php echo $pet_profile_link;?>"><?php echo $smarttag_id_number; ?></td>
-                            <td><a  target="_blank" href="<?php echo $Owner;?>"><?php echo $email; ?></td>
-                            <td><a  target="_blank" href="<?php echo $Owner;?>"><?php echo $primary_home_number; ?></td>
-                            <td><a  target="_blank" href="<?php echo $Owner;?>"><?php echo $first_name; ?></td>
-                            <td><a  target="_blank" href="<?php echo $Owner;?>"><?php echo $last_name; ?></td>
+                            <td><a  data-id="<?php echo $microchip_id_number;?>"class="serial-number" href=""><?php echo $microchip_id_number ?></a></td>
+                            <td><a data-id="<?php echo $smarttag_id_number;?>" class="serial-number" ><?php echo $smarttag_id_number; ?></a></td>
+                            <td><a data-id="<?php echo $email;?>" class="serial-number"  href=""><?php echo $email; ?></a></td>
+                            <td><a  data-id="<?php echo $email;?>"class="serial-number"  href=""><?php echo $primary_home_number; ?></a></td>
+                            <td><a data-id="<?php echo $email;?>"class="serial-number" href=""><?php echo $first_name; ?></a></td>
+                            <td><a  data-id="<?php echo $email;?>"class="serial-number"  href=""><?php echo $last_name; ?></a></td>
                          </tr>
+                         </tbody>
+
                      <?php
                         $i++;
                           endwhile;
-                       ?>  </table>
+                    
+                       ?>
+                       </tbody>  
+                    </table>
+                            <!-- modal view -->
+                             <div class="get-row"></div> 
+                                  <br/>
+                                  <br/>
+                                  <br/>
+                                  <br/>
+                                  <br/>
+                                  <br/>
+
                        <?php   
                           exit();
                 }else{
@@ -9202,54 +9391,147 @@ function customeSearchFunctionality(){
     }
 }
 
+add_action( 'admin_footer', 'customsearchWithMichrochip' );
+function customsearchWithMichrochip(){ ?>
+    <script type="text/javascript" >
+    jQuery(document).ready(function($) {
+        jQuery('#searchCustomfunctionality').click(function(e){
+            e.preventDefault();
+            var searchCustom = $('#searchCustom').val();
+            if(searchCustom == ''){
+                jQuery('.search_error').fadeIn();
+                jQuery('.search_error').text('This field is required');
+                jQuery('.search_error').css('color', 'red');
+                return false;
+            }else{
+                jQuery('.search_error').fadeOut();
+                var dataVariable = {
+                    'action': 'customeSearchFunctionality', // your action name
+                    'searchCustom': $('#searchCustom').val(), 
+                   
+                };
+                $('.loader-outer').fadeIn();
+                jQuery.ajax({
+                    url: ajaxurl, // this will point to admin-ajax.php
+                    type: 'POST',
+                    data: dataVariable, 
+                    success: function (response) {
+                       $('.loader-outer').fadeOut();
+                        $('.search-row').html(response);
+                        console.log('ajax response');
+                       
+                    }
+                });
+           } 
+        });  
+       
+        jQuery('body').on('click','.serial-number', function (e) {
+            e.preventDefault();
+            var serialNumber = $(this).attr('data-id');
+            var dataVariable = {
+                'action': 'get_pet_profile', // your action name
+                'serialNumber': serialNumber, 
+            };
+            
+            $('.loader-wrap').fadeIn();
+            jQuery.ajax({
+                url: ajaxurl, // this will point to admin-ajax.php
+                type: 'POST',
+                data: dataVariable, 
+                success: function (response) {
+                    $('.loader-wrap').fadeOut();
+                    $('.get-row').html(response);
 
-add_action("init", function(){
+                    return false;
+                }
+            });
 
-    if(isset($_GET['test'])){
+         });
+
+    });
+</script> 
+    <?php
+}
+
+
+
+add_action('wp_ajax_add_variation_product', 'add_variation_product_callback');
+add_action('wp_ajax_nopriv_add_variation_product','add_variation_product_callback');
+function add_variation_product_callback(){
+    global $woocommerce;
+    $quantity = $_POST['quantity'];
+    $product_id = $_POST['product_id'];
+    if($product_id == "6089"){
         
-        $curl = curl_init();
+        $pa_ttype = $_POST['type'];
+        $pa_size = $_POST['size'];
+        $pa_style = $_POST['style'];
 
-        curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://staging.idtag.com/idtag-api/pet-register-microchip/add',
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => '',
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 0,
-          CURLOPT_FOLLOWLOCATION => true,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => 'POST',
-          CURLOPT_POSTFIELDS =>'{
-            "FirstName": "demo_first_name",
-            "LastName": "demo_last_name",
-            "Email": "demo@idtag.com",
-            "PrimaryPhone": "1234567890",
-            "Address": "",
-            "City": "",
-            "State": "",
-            "Country": "",
-            "PostalCode": "",
-            "Pet": {
-                "MicrochipId": "987000221144567",
-                "PetName": "Spot",
-                "PetType": "Dog",
-                "PrimaryColor": "Blue",
-                "Gender": "male",
-                "Size": "small", 
-                "Dob": "2022-03-30",
-                "SecoundaryColor": "brown"
-            }
-        }',
-          CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/json'
-          ),
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-        echo $response;
-        die;
-        
-
+        $match_attributes =  array(
+            "attribute_pa_ttype" => $pa_ttype,
+            "attribute_pa_size" => $pa_size,
+            "attribute_pa_style" => $pa_style,
+        );
     }
-});
+
+    if($product_id == "6033"){
+        
+        $pa_shape = $_POST['shape'];
+        $pa_size = $_POST['size'];
+        $pa_color = $_POST['color'];
+
+        $match_attributes =  array(
+            "attribute_pa_shape" => $pa_shape,
+            "attribute_pa_size" => $pa_size,
+            "attribute_pa_color" => $pa_color,
+        );
+    }
+        
+    $data_store = WC_Data_Store::load( 'product' );
+     $variation_id = $data_store->find_matching_product_variation(
+      new \WC_Product( $product_id),$match_attributes
+    );
+
+    $addProduct = $woocommerce->cart->add_to_cart( $product_id ,1, $variation_id,wc_get_product_variation_attributes( $variation_id )); 
+    if(!empty($addProduct) && $variation_id!= 0){
+        echo json_encode(array("success"=>1,"message"=>'Custom Product Added Into Cart'));
+    }else{
+        echo json_encode(array("success"=>0,"message"=>'Something Went to wrong'));
+    }
+      exit(); 
+}
+
+
+
+add_action('wp_ajax_get_product_variation_through_size', 'get_product_variation_through_size_callback');
+add_action('wp_ajax_nopriv_get_product_variation_through_size','get_product_variation_through_size_callback');
+function get_product_variation_through_size_callback(){
+
+     $attribute_pa_shape = $_POST['type'];
+    $attribute_pa_size = $_POST['size'];
+    $product_id = $_POST['product_id'];
+
+    $product = wc_get_product($product_id);
+    $product_children = $product->get_children();
+    $child_variations = array();
+    foreach ($product_children as $child){
+        $child_variations[] = $product->get_available_variation($child);
+    }    
+
+    $result = [];
+    if(!empty($child_variations)){
+        foreach ($child_variations as $key => $data) {
+         if($data['attributes']['attribute_pa_shape'] == $attribute_pa_shape && $data['attributes']['attribute_pa_size'] == $attribute_pa_size) {
+                array_push($result , $data['attributes']);
+            }
+        if($data['attributes']['attribute_pa_ttype'] == $attribute_pa_shape &&  $data['attributes']['attribute_pa_size'] == $attribute_pa_size){
+                array_push($result , $data['attributes']);
+            }
+        }
+    }
+
+    echo json_encode(array("status" =>"success", "data" => $result, "total_result" => count($result)));
+    exit();
+    
+}
+

@@ -81,7 +81,7 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 							<?php } ?>
 								<label>Front:</label>
 								<div class="design-box">
-<?php
+								<?php
 									 $Tagimage = 'https://'.$_SERVER['SERVER_NAME'].'/wp-content/themes/salient-child/images/back/black-bone-back.png'?> 	<div class="woo-complex-custom-prod-img">
 										<img class="front_img testing" src="<?php echo $Tagimage; ?>"> 
 
@@ -220,9 +220,11 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 
 	<?php do_action( 'woocommerce_after_variations_form' ); ?>
 </form>
+
 <script type="text/javascript">
 	jQuery(document).ready(function(){
-		jQuery("select#pa_size option[value='small']").attr("selected", "selected");
+		//jQuery("select#pa_size option[value='small']").attr("selected", "selected");
+
 		jQuery("#picker_pa_size .variation-custom-radio div").removeClass('active');
 		jQuery("#picker_pa_size .variation-custom-radio div").removeClass('inactive');
 		jQuery("#picker_pa_size .variation-custom-radio div").addClass('inactive');
@@ -376,16 +378,17 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 		}
 
 
+	/*jQuery(document).find("#picker_pa_style .select-option.swatch-wrapper").on('change',function(e){
+			var value = jQuery('#picker_pa_style div.select-option').find('.selected').attr('title');
 
-		jQuery('#pa_style').change(function(){ 
-			var value = jQuery('#picker_pa_style div.select-option.selected a').attr('title');
 			var tagImage = jQuery('#picker_pa_style div.select-option.selected').find('img').attr('src');
 
-			console.log("rohit value",tagImage);
+			console.log(tagImage, 'tag picture');
+
 			$('.front_img').attr('src', tagImage);
 			jQuery("div.woo-complex-prod-variants span.style").text(value);
 		});
-
+*/
 		jQuery("select#pa_size").next("ul").find("input").each(function(){
 			if(jQuery(this).val() == 'small'){
 				jQuery(this).prop("checked",true).trigger("change");
@@ -1109,7 +1112,7 @@ jQuery(document).ready(function(){
 			$(element).removeClass("selected")
 		});
 
-		jQuery('#picker_pa_style select#pa_style').val("").trigger( "change" );
+		//jQuery('#picker_pa_style select#pa_style').val("").trigger( "change" );
 
 
 		var tag_type_string = $(this).attr("data-value");
@@ -1155,19 +1158,18 @@ jQuery(document).ready(function(){
 	/*select style*/
 	
 	jQuery(document).find("#picker_pa_style .select-option.swatch-wrapper").on('click',function(e){
-		e.preventDefault();
-		console.log("style");
-		var value = $(this).attr("data-value");
-		console.log("value", value);
+			e.preventDefault();
+			console.log("style");
+			var value = $(this).attr("data-value");
 
-		// jQuery("select#pa_style option[value='"+value+"']").prop("selected", true).change();
-		jQuery('#picker_pa_style .select-option.swatch-wrapper').removeClass('selected');
-
-
-		jQuery('#picker_pa_style .select-option.swatch-wrapper').each(function(i,element){
+			jQuery('#picker_pa_style .select-option.swatch-wrapper').removeClass('selected');
+			jQuery('#picker_pa_style .select-option.swatch-wrapper').each(function(i,element){
 			
+					console.log($(this).find('.selected').html(), 'undefined');
+
 			if($(element).attr("data-value") == value){
 				console.log("element style", $(element).attr("data-value"), value);
+				console.log("element style", $(element).find("img"), 'img2w121');
 				$(element).addClass('selected');
 				jQuery("select#pa_style option[value='"+value+"']").prop("selected", true).change();
 			}
@@ -1178,11 +1180,8 @@ jQuery(document).ready(function(){
 		var tag_type = tag_type_arry[0];
 
 		jQuery('#picker_pa_ttype .select-option.swatch-wrapper').removeClass('selected');
-
 		jQuery('#picker_pa_ttype .select-option.swatch-wrapper').each(function(i,element){
-			
 			console.log("type element", $(element).attr("data-value") ,  tag_type);
-
 			if($(element).attr("data-value") == tag_type){
 				console.log("element-type: ", $(element).attr("data-value"), tag_type);
 				console.log("element-type: ", $(element).find('img').attr("src"), 'Image');
@@ -1195,35 +1194,27 @@ jQuery(document).ready(function(){
 			}
 		});
 
+	jQuery('#picker_pa_style .select-option.swatch-wrapper.selected').each(function(i,element){
+    			
+				var styleText = $(this).find('a').attr("title");
+				var frontTagImage = $(this).find('img').attr("src");
+				$('.front_img').attr('src', frontTagImage);
+				$('.style').text(styleText);
+
+
+	});
+
+
 
 	})
 
-
-	/*pet type click*/
-	// $('#picker_pa_ttype').find('.select-option').click(function(e) {
-	// 	e.preventDefault();
-
-	// 	$('#picker_pa_ttype').find('.selected').removeClass('selected');
-	// 	$(this).addClass('selected');
-		
-	// 	var title = jQuery('#picker_pa_ttype div.select-option.selected').attr('data-value');
- 		
- // 		console.log("selected title", title);
-
- // 		jQuery("select#pa_ttype option[value='"+title+"']").prop("selected", true).change();
-
-
-
-	// });
 
 
 
 	$("select#pa_ttype").on("change", function(){
 		
 		var value = $(this).val();
-
 		console.log("remove type class");
-
 		jQuery('#picker_pa_ttype .select-option.swatch-wrapper').removeClass('selected');
 		$('#picker_pa_ttype .select-option.swatch-wrapper').each(function(index, element){
 			if($(element).attr("data-value") == value){
@@ -1231,40 +1222,22 @@ jQuery(document).ready(function(){
 
 				$(element).addClass("selected");
 			}
-		}) 
-
-		// return false;
-
-
-	})
+		});
+	});
 
 
 
-$("select#pa_shape").on("change", function(){
-		
+	$("select#pa_shape").on("change", function(){
 		var value = $(this).val();
-
 		console.log("remove type class");
-
 		jQuery('#picker_pa_color .select-option.swatch-wrapper').removeClass('selected');
 		$('#picker_pa_color .select-option.swatch-wrapper').each(function(index, element){
 			if($(element).attr("data-value") == value){
 				console.log("selected");
-
 				$(element).addClass("selected");
 			}
 		}) 
-
-		// return false;
-
-
 	})
-
-
-
-
-
-
 
 	$("select#pa_style").on("change", function(){
 		console.log("change pa_style");
@@ -1288,55 +1261,42 @@ jQuery(document).ready(function(){
         
     jQuery("#picker_pa_color .select-option.swatch-wrapper").on('click',function(e){
     	e.preventDefault();
-    	
-var value = $(this).attr("data-value");
-
-	var color = $(this).find('a').attr('title');
-
-	
-
-jQuery("div.woo-complex-prod-variants span.color").text(color);
-
+		var value = $(this).attr("data-value");
+		var color = $(this).find('a').attr('title');
+		jQuery("div.woo-complex-prod-variants span.color").text(color);
 		// jQuery("select#pa_style option[value='"+value+"']").prop("selected", true).change();
 		jQuery('#picker_pa_color .select-option.swatch-wrapper').removeClass('selected');
-
-
 		jQuery('#picker_pa_color .select-option.swatch-wrapper').each(function(i,element){
-			
 			if($(element).attr("data-value") == value){
-				console.log("element style", $(element).attr("data-value"), value);
-				$(element).addClass('selected');
+			console.log("element style", $(element).attr("data-value"), value);
+			$(element).addClass('selected');
 				jQuery("select#pa_color option[value='"+value+"']").prop("selected", true).change();
 			}
 		});
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    	// remove previous class
+		// remove previous class
     	var lastClass = $('.show_img .section-front-image').attr('class').split(' ');
-		
 		var str = $(this).attr('data-value');
 		var res = str.split("-");
 		$('.show_img .section-front-image').removeClass(lastClass[2]);
 		jQuery(".show_img .section-front-image").addClass("Alu-"+res[1]);
-
 		$('.show_img .section-back-image').removeClass(lastClass[2]);
 		jQuery(".show_img .section-back-image").addClass("Alu-"+res[1]);
-		//end remove previous class
-
 		var image = jQuery(this).attr('data-value');
 		jQuery(".show_img img").attr('src','<?php echo get_template_directory_uri(); ?>'+'-child/images/back/'+image+'-back.png');
+	
+		jQuery('#picker_pa_color .select-option.swatch-wrapper.selected').each(function(i,element){
+	    	var styleText = $(this).find('a').attr("title");
+			var frontTagImage = $(this).find('img').attr("src");
+			$('.front_img').attr('src', frontTagImage);
+			$('.back_img').attr('src', frontTagImage);
+			$('.style').text(styleText);
+
+
+		});
+
+
+
 	});
 });
 </script>
@@ -1378,6 +1338,14 @@ if (isset($_POST['petName'])) { ?>
 		var style = jQuery('#picker_pa_style div.select-option.selected a').attr('title');
 		jQuery("div.woo-complex-prod-variants span.style").text(style);
 	});
+
+
+
+
+
 </script>
 <?php
 do_action( 'woocommerce_after_add_to_cart_form' );
+
+
+

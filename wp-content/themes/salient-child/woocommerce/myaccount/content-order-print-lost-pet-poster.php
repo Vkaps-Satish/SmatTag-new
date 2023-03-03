@@ -53,16 +53,23 @@ if ($wp_query->have_posts()) {
 			<h3>Registered Pet <?php echo ++$i; ?></h3>
 			<div class="row">
 				<div class="col-sm-3 rmb-15">
-					<?php echo get_the_post_thumbnail(); ?>
+				<?php
+          if ( has_post_thumbnail() ) {
+                echo get_the_post_thumbnail();
+              } else {
+                the_content();
+               ?><img src=<?php echo site_url()."/wp-content/uploads/2019/02/pet-image.jpg"; ?>><?php 
+              } ?>
 				</div>
 				<div class="col-sm-5 rmb-15">
 					<strong>Pet Name:</strong> <span class="name"><?php echo get_the_title(); ?></span>
 					<br>
-					<strong>Pet Type:</strong> <span><?php $typeId = $mypod->display('pet_type');
-					echo (isset(get_term( $typeId )->name)) ? get_term( $typeId )->name : "" ;
-					?></span>
+					<strong>Pet Type:</strong> <span><?php echo $typeId = $mypod->display('pet_type');?></span>
 					<br>
 					<strong>IDTag Serial Number:</strong> <span class="name"><?php echo $mypod->display('smarttag_id_number'); ?></span>
+					  <br>
+         <strong>MicroChip Number:</strong> <span class="name"><?php echo $mypod->display('microchip_id_number'); ?></span>
+        
 					<br>
 					<strong>ID Tag Plan:</strong> <span><?php echo $product_name; ?></span>
 				</div>

@@ -51,7 +51,7 @@ if (!empty(get_the_post_thumbnail_url($postId))) {
       <div class="field-wrap">
         <div class="field-div">
           <label>*SmartTag Id Number:</label>
-          <input type="text" name="serial_number" class="serial-number" value="<?php echo $serialNumber; ?>" required="" >
+          <input type="text" name="serial_number" class="serial-number break_number-4" value="<?php echo $serialNumber; ?>" required="" >
         </div>
       </div>
       <div class="field-wrap">
@@ -256,19 +256,18 @@ if (!empty(get_the_post_thumbnail_url($postId))) {
       $("span.extra-info").text($(this).val());
     });
     jQuery(".current-image").change(function(){
-
-      /*custom jquery code start--added by satish*/
-
-      if ($(this).prop('checked') == false) {
-        $image = document.querySelector('input[type=file]');
-        console.log('ifif');
-        readURLL($image,'poster-pet-image');
+      if($(this).prop('checked') == false) {
+        var image = document.querySelector('input[type=file]');
+        readURLL( image,'poster-pet-image');
       }else{
-      var image = '<?php echo get_site_url(); ?>/wp-content/themes/salient-child/images/logo-icon.png';
-
-
-        //var image = $(".pet-current-image").attr('src');
-        $('.poster-pet-image').attr('src',image);
+          var dogImage = $(this).parent().parent().parent().find('img').attr('src');
+          if(dogImage != ''){
+            $('.poster-pet-image').attr('src',dogImage);
+          }else{
+            var dogImage = '<?php echo get_site_url(); ?>/wp-content/themes/salient-child/images/no_pet.jpeg';
+            $('.poster-pet-image').attr('src',dogImage);
+          }
+          
       }
     });
     jQuery(".pet-image").change(function(){
@@ -292,25 +291,22 @@ if (!empty(get_the_post_thumbnail_url($postId))) {
       var image           = $(".poster-pet-image-main").attr('src');
       var postId          = "<?php echo $postId; ?>";
      
-
-
-
-      var isDownload      = 1;
+      var isDownload = 1;
       var data = {
-        'action':'downloadPdf',
-        'dogName':dogName,
-        'type':type,
-        'breed':breed,
-        'color':color,
-        'phoneNumber':phoneNumber,
-        'serialNumber':serialNumber,
-        'reward':reward,
-        'extraInfo':extraInfo,
-        'image':image,
-        'postId':postId,
-        'isDownload':isDownload
+          'action':'downloadPdf',
+          'dogName':dogName,
+          'type':type,
+          'breed':breed,
+          'color':color,
+          'phoneNumber':phoneNumber,
+          'serialNumber':serialNumber,
+          'reward':reward,
+          'extraInfo':extraInfo,
+          'image':image,
+          'postId':postId,
+          'isDownload':isDownload
       };
-      ajaxRun(data, isDownload);
+          ajaxRun(data, isDownload);
     });
     jQuery(".purchase-poster").on('click',function(){
       var dogName         = $(".pet-name").val();
@@ -322,10 +318,6 @@ if (!empty(get_the_post_thumbnail_url($postId))) {
       var reward          = $(".user-reward-main").text();
       var extraInfo       = $(".add-info").val();
       var image           = $(".poster-pet-image-main").attr('src');
-
-
-
-
       var postId          = "<?php echo $postId; ?>";
       var isDownload      = 0;
       var data = {
@@ -377,8 +369,6 @@ if (!empty(get_the_post_thumbnail_url($postId))) {
                 if (filename) { 
                 // use HTML5 a[download] attribute to specify filename
                 var a = document.createElement("a");
-
-                  // safari doesn't support this yet
                   if (typeof a.download === 'undefined') {
                     window.location = downloadUrl;
                   } else {

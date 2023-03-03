@@ -822,30 +822,36 @@ if($sideWidgetArea == '1') {
 					var name = $(this).attr('name');
 
 					//console.log(name);
-				//	console.log('nameOcena' ,name);
+			console.log('nameOcena' ,name);
 
 					
-					$("#"+name).text(localStorage.getItem(name));
+				//	$("#"+name).text(localStorage.getItem(name));
 					if( name == "primary_breed"){
 							var petTypeID = localStorage.getItem("pet_type");
 							var primary_breed = localStorage.getItem("primary_breed");
-								$('.loader-wrap').fadeIn();
-								$.ajax({
-                  type: 'POST',
-                  url: ajaxurl,
-                  data: {
-		                action : 'get_pet_breeds',
-		                 typeId:  petTypeID,
-		                 primary_breed : primary_breed
-		            	},
-                  success: function(response) {
-                		$('.loader-wrap').fadeOut();
-                  	var Obj = jQuery.parseJSON(response);
-                  	$("#breedid").html(Obj.data);
-                  	$("#sbreedid").html(Obj.data);
-                  }
-			        
-                });
+							if(petTypeID || primary_breed ){
+							  	petTypeID = petTypeID;
+							  	primary_breed = primary_breed; 
+							}else{
+							    petTypeID= '587';
+							    primary_breed = '615';
+							}
+									$('.loader-wrap').fadeIn();
+										$.ajax({
+                 		 	type: 'POST',
+                  		url: ajaxurl,
+                  		data: {
+		                		action : 'get_pet_breeds',
+		                 		typeId:  petTypeID,
+		                 		primary_breed : primary_breed
+		            			},
+		                  success: function(response) {
+		                		$('.loader-wrap').fadeOut();
+		                  	var Obj = jQuery.parseJSON(response);
+		                  	$("#breedid").html(Obj.data);
+		                  	$("#sbreedid").html(Obj.data);
+		                  }
+			        			});
 						
 					}
 					else if(name == "pet_type" || name == "primary_breed" || name == "gender" || name == "size" ||name == "primary_color" || name == "secondary_color"  ){
@@ -937,9 +943,14 @@ if($sideWidgetArea == '1') {
 			                            }else{
 			                            	localStorage.setItem("instLogin" , "true");
 			                 	           	$.each($('#profileuser1 .text-data'), function() {
-									    				console.log($(this).attr('name') + ":" + $(this).val());
-							               		localStorage.setItem($(this).attr('name'), $(this).val());
-							                });
+									    									console.log($(this).attr('name') + ":" + $(this).val());
+							               						localStorage.setItem($(this).attr('name'), $(this).val());
+							                			});
+			                 	           		$.each($('#universalForm .text-data'), function() {
+									    									console.log($(this).attr('name') + ":" + $(this).val());
+							               						localStorage.setItem($(this).attr('name'), $(this).val());
+							                			});
+							                			
 																	$('.login-wrap').hide();
 									    								location.reload();
 

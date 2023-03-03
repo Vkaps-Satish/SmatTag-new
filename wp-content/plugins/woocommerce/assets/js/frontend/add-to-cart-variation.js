@@ -308,6 +308,8 @@
 			$qty.show();
 		}
 
+		console.log("ocean-rohit", variation);
+		
 		// Enable or disable the add to cart button
 		if ( ! variation.is_purchasable || ! variation.is_in_stock || ! variation.variation_is_visible ) {
 			purchasable = false;

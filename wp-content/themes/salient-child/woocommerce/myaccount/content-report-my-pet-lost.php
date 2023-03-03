@@ -112,22 +112,24 @@ if ($wp_query->have_posts()) {
       <div class="col-sm-3 rmb-15">
         <a href="javascript:;" class="show-post">
 <?php
-                            if ( has_post_thumbnail() ) {
-                                  echo get_the_post_thumbnail();
-                                } else {
-                                  the_content();
-                                 ?><img src="https://staging.idtag.com/wp-content/uploads/2021/01/dog-placeholder.png"><?php 
-                                } ?>
-        </a>
+          if ( has_post_thumbnail() ) {
+                echo get_the_post_thumbnail();
+              } else {
+                the_content();
+               ?><img src=<?php echo site_url()."/wp-content/uploads/2019/02/pet-image.jpg"; ?>><?php 
+              } ?>
+</a>
       </div>
       <div class="col-sm-5 rmb-15">
         <strong>Pet Name:</strong> <a href="javascript:;" class="show-post"><span class="name"><?php echo get_the_title(); ?></span></a>
         <br>
-        <strong>Pet Type:</strong> <span><?php $typeId = $mypod->display('pet_type');
-        echo (isset(get_term( $typeId )->name)) ? get_term( $typeId )->name : "" ;
+        <strong>Pet Type:</strong> <span><?php echo $typeId = $mypod->display('pet_type');
+              ?></span>
         ?></span>
         <br>
         <strong>IDTag Serial Number:</strong> <span class="name"><?php echo $mypod->display('smarttag_id_number'); ?></span>
+         <br>
+         <strong>MicroChip Number:</strong> <span class="name"><?php echo $mypod->display('microchip_id_number'); ?></span>
         <br>
         <strong>ID Tag Plan:</strong> <span><?php echo $product_name; ?></span>
       </div>
@@ -143,7 +145,7 @@ if ($wp_query->have_posts()) {
           if ($check) {
             echo '<p><a href="/my-account/report-pet-lost/?pet_id='.get_the_ID().'" class="site-btn-red btn site-btn">Report Pet As Lost <i class="fa fa-caret-right"></i></a></p>';
           }else{
-            echo '<p class="last-modify-date">REPORTED AS LOST ON: '.$lastModifyDate.' </p><input type="hidden" name="smarttag_id_number" value="'.$smarttag_id_number.'"><input type="hidden" name="report_pet_as_found" value="1"><p><a href="/my-account/report-pet-found-list/?pet_id='.get_the_ID().'" class="site-btn-light-blue btn site-btn">Report Pet As Found &nbsp;<i class="fa fa-caret-right"></i></a></p>';
+            echo '<p class="last-modify-date">REPORTED AS LOST ON: '.$lastModifyDate.' </p><input type="hidden"       name="smarttag_id_number" value="'.$smarttag_id_number.'"><input type="hidden" name="report_pet_as_found" value="1"><p><a href="/my-account/report-pet-found-list/?pet_id='.get_the_ID().'" class="site-btn-light-blue btn site-btn">Report Pet As Found &nbsp;<i class="fa fa-caret-right"></i></a></p>';
           }
           ?>
           <a href="/my-account/show-profile/?pet_id=<?php echo get_the_ID(); ?>" class="light-blue-link"><strong>View/Edit Full Pet Profile </strong><i class="fa fa-caret-right"></i></a>

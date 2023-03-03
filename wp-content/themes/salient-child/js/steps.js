@@ -370,7 +370,6 @@ var app = {
                     remote: {
                         url: ajaxurl,
                         type: "POST",
-                        dataType: 'json',
                         data: {'action':'isMicrochipIdValid'},
                         dataFilter: function(response){
                             var obj = jQuery.parseJSON(response);
@@ -380,7 +379,7 @@ var app = {
                                 return false;
                             }
                             return true;
-                        } 
+                        }
                     }
                 },
                 conf_microchip_id: {
@@ -453,12 +452,6 @@ var app = {
                         }
                     }
                 },
-                /*p_sec_no: {
-                   checkSpecialCharate: true,
-                   restric: true,
-                    minlength: 13,
-                    maxlength: 14
-                },*/
                 s_prm_no: {
                     checkSpecialCharate: true,
                     restric: true,
