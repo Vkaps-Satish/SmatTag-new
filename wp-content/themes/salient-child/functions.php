@@ -9492,7 +9492,12 @@ function add_variation_product_callback(){
       new \WC_Product( $product_id),$match_attributes
     );
 
+
+
+
     $addProduct = $woocommerce->cart->add_to_cart( $product_id ,1, $variation_id,wc_get_product_variation_attributes( $variation_id )); 
+
+
     if(!empty($addProduct) && $variation_id!= 0){
         echo json_encode(array("success"=>1,"message"=>'Custom Product Added Into Cart'));
     }else{
@@ -9535,3 +9540,60 @@ function get_product_variation_through_size_callback(){
     
 }
 
+
+add_action('wp_ajax_get_product_variation_on_homepage', 'get_product_variation_on_homepage_callback');
+add_action('wp_ajax_nopriv_get_product_variation_on_homepage','get_product_variation_on_homepage_callback');
+function get_product_variation_on_homepage_callback(){
+   
+  /*  print_r($_POST);
+    die();*/
+
+
+
+    $attribute_pa_shape = $_POST['type'];
+    $attribute_pa_size = $_POST['size'];
+    $product_id = $_POST['product_id'];
+    $product = wc_get_product($product_id);
+    $product_children = $product->get_children();
+
+
+    $child_variations = array();
+    foreach ($product_children as $child){
+        $child_variations[] = $product->get_available_variation($child);
+    }    
+
+    $result = [];
+    if(!empty($child_variations)){
+        foreach ($child_variations as $key => $data) {
+           
+
+           if($data['attributes']['attribute_pa_shape'] == $attribute_pa_shape && $data['attributes']['attribute_pa_size'] == $attribute_pa_size) {
+                $term = get_term_by('slug', $data['attributes']['attribute_pa_color'], 'pa_color');
+                $attribute_name = $term->name;
+
+                $meta = get_term_meta($term->term_id);
+                $img_src = wp_get_attachment_image_src($meta['pa_color_swatches_id_photo'][0]);
+                $data['attributes']['attribute_image'] = $img_src[0];
+                $data['attributes']['product_type'] =  'Aluminum';
+                $data['attributes']['attribute_name'] =  $attribute_name;
+                 array_push($result , $data['attributes']);
+            }
+            if($data['attributes']['attribute_pa_ttype'] == $attribute_pa_shape &&  $data['attributes']['attribute_pa_size'] == $attribute_pa_size){
+                $term = get_term_by('slug', $data['attributes']['attribute_pa_style'], 'pa_style');
+                $attribute_name = $term->name;
+                $meta = get_term_meta($term->term_id);
+                $img_src = wp_get_attachment_image_src($meta['pa_style_swatches_id_photo'][0]);
+                $data['attributes']['attribute_image'] = $img_src[0];
+                $data['attributes']['product_type'] =  'Brass';
+                $data['attributes']['attribute_name'] =  $attribute_name;
+                 array_push($result , $data['attributes']);
+            }
+        }
+
+    }
+    echo json_encode(array("status" =>"success", "data" => $result, "total_result" => count($result)));
+    exit();
+
+
+
+}

@@ -43,7 +43,7 @@ $form = true;
 				<button type="submit" class="single_add_to_cart_button_custom button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
 
 			<?php } ?>
-			<span class="addbtn_error"></span>
+			
 		<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
 
 		
@@ -60,11 +60,11 @@ $form = true;
 			e.preventDefault();
 			<?php $_SESSION["idtag_action"] = 'new-id-tag'; // 86400 = 1 day ?>
 
-			var product_id = jQuery("input[name='product_id']").val();
+			var product_id = $("input[name='product_id']").val();
 			if(product_id == "6033"){
-				var shape = jQuery("#pa_shape").val();
-				var size = jQuery("#pa_size").val();
-				var color = jQuery("#pa_color").val();
+				var shape =  $('#picker_pa_shape').find('.selected').attr('data-value');
+				var size = $("#picker_pa_size input[type='radio']:checked").val();
+				var color = $("#picker_pa_color").find('.selected').attr('data-value');
 				var quantity = $("input[name=quantity]").val();
 
 				var data = { 
@@ -86,9 +86,9 @@ $form = true;
 			}
 			
 			if(product_id == "6089"){
-				var type = jQuery("#pa_ttype").val();
-				var size = jQuery("#pa_size").val();
-				var style = jQuery("#pa_style").val();
+ 				var type =  $('#picker_pa_ttype').find('.selected').attr('data-value');
+				var size = $("#picker_pa_size input[type='radio']:checked").val();
+				var style = jQuery("#picker_pa_style").find('.selected').attr('data-value');
 				var quantity = $("input[name=quantity]").val()
 				var data = { 
 							product_id : product_id, 
@@ -116,8 +116,8 @@ $form = true;
 						window.open(window.location.origin+'/product/smarttag-id-tag-protection-plans/?sub=true');
 						return ;	
 					}else{
-						$('.addbtn_error').text(response['message']);
-						$('.addbtn_error').css('color: red');
+						alert(response['message']);
+						
 
 					}
               	}
