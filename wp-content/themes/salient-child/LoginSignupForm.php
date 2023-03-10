@@ -740,16 +740,6 @@ return true;
 
 },"Please enter Only Number.");
 	
-
-
-
-
-
-
-
-
-
-
 	$("#login").trigger( "click" );
 	$('#rember').change(function(){
 		      $(this).val(this.checked ? "true" : "false");
@@ -899,15 +889,23 @@ return true;
 		     rules: {
 		  		SrialId: {
 				        required: true,
+				        maxlength : 8,
+				        minlength : 8
 				        },
 		      	ConSrialId: {
 				        required: true,
-				        equalTo : "#SrilId"
+				        equalTo : "#SrilId",
+				        maxlength : 8,
+				        minlength : 8
 		      			},
 		      	},
 		    messages: {
-		    SrialId: "Enter Serial Id",
-		    ConSrialId: "Confirm Serial Id",
+			    SrialId: {
+			    	"required":"Enter Serial Id number",
+			    	"minlength":"Serial Id should be 8 digits only",
+			    	"maxlength":"Serial Id should be 8 digits only"
+			    },
+			    ConSrialId: {"required":"Enter Confirm Serial Id number"},
 		    },
 		    submitHandler: function(form) {
 		    	
@@ -919,28 +917,30 @@ return true;
 	       			SrlData.append($(this).attr('name'), $(this).val());
 	       		})
 
-	       		 SrlData.append('action', "LoginWithEmailPassword");
+	       		SrlData.append('action', "LoginWithEmailPassword");
 	       	
-	        		 $.ajax({
-			                    type: 'POST',
-			                    url: ajaxurl,
-			                    data: SrlData,
-			                    contentType: false,
-			                    processData: false,
-			                    success: function(response) {
-			                    	var Obj = jQuery.parseJSON( response );
-		                    	      if(Obj.success == 1){
-	                    					  window.location.href = "<?php echo get_site_url(); ?>/my-account/";
-	                    				}else{
-						              		$('#EmEror').text(Obj.message).fadeIn();
-						                }
-			                   	},
-			                   	complete:function(){
-			                   		$('.loader-wrap').fadeOut();
-			                   	}
-	                     });
-	       		
+    		 	$.ajax({
+                    type: 'POST',
+                    url: ajaxurl,
+                    data: SrlData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                    	var Obj = jQuery.parseJSON( response );
+                    	console.log("Obj", Obj);
+            	      	if(Obj.success == 1){
+        					window.location.href = "<?php echo get_site_url(); ?>/my-account/";
+        				}else{
+		              		$('#EmEror').text(Obj.message).fadeIn();
+		                }
+                   	},
+                   	complete:function(){
+                   		$('.loader-wrap').fadeOut();
+                   	}
+                });
+   		
 		    }
+
 		  });
 
 		$("form[name='SmtSignupform']").validate({
@@ -1234,9 +1234,7 @@ return true;
 	            var Edata =  new FormData();
 	            var Data =  new FormData();
 	              	Edata.append('action', 'firstTimeLoginWithEmailPassword');
-
-	             
-	               window.resResult = new Array();
+					window.resResult = new Array();
 	             
 	             	$.each($('#FirstEmailSignIn .signIndata'), function() {
 	               		Edata.append($(this).attr('name'), $(this).val());
@@ -1246,14 +1244,11 @@ return true;
 	               		Data.append($(this).attr('name'), $(this).val());
 	                }); 
 
-						baseFunction(ajaxurl, Edata, 'POST' ,Data ,resResult);
+					baseFunction(ajaxurl, Edata, 'POST' ,Data ,resResult);
 
 	            }
 	        });
-
-
-
-	});
+		});
 
 async function importDataAndLogin(ajaxurl, Data, method) {
 
@@ -1309,11 +1304,6 @@ async function baseFunction(ajaxurl, Edata, method , Data ,resResult) {
 			$('.loader-wrap').fadeOut();
         	console.log('error response_1', error)
     	}
-
-
-   	
-	
-	
 }  
 
 

@@ -576,8 +576,6 @@ var app = {
             },
             submitHandler: function(f) {
 
-
-
                 $('#output').text('');
                 $('.loader-wrap').fadeIn();
 
@@ -588,7 +586,7 @@ var app = {
                 var insfd = new FormData();
                 var petAramnt = new FormData();
                 var cusPro = new FormData();
-
+                var cusProduct = new FormData();
                 var files_data = $('#profileuser1 .files-data');
                 var data = "";
                 window.resResult = new Array();
@@ -607,865 +605,215 @@ var app = {
 
                 insfd.append('action', 'Pet_Insurance');
                 petAramnt.append('action', 'Pet_Arrangement');
-            cusPro.append('action', 'add_id-tag_into_cart');
-            
-
-
-
-            /*checkbox  phone number */
-            var checkbox_under_userInfo = localStorage.getItem('cart_checkbox');
-            ufd.append('checkbox_under_userInfo', checkbox_under_userInfo);
-
-
-
-
-
-
-
-                // insfd.append('action', 'Pet_Insurance');
-                // petAramnt.append('action', 'Pet_Arrangement');
-             //   cusPro.append('action', 'add_id-tag_into_cart');
+                cusPro.append('action', 'add_id-tag_into_cart');
                 
-                // USER AND PET PROFILE DATA
+
+
+                /*checkbox  phone number */
+                var checkbox_under_userInfo = localStorage.getItem('cart_checkbox');
+                ufd.append('checkbox_under_userInfo', checkbox_under_userInfo);
+                 // USER AND PET PROFILE DATA
                 $.each($('#profileuser1 .text-data'), function() {
                     fd.append($(this).attr('name'), $(this).val());
                 });
 
-
-                $.each($('#profileuser1 .user-data'), function() {
+                 $.each($('#profileuser1 .user-data'), function() {
                     ufd.append($(this).attr('name'), $(this).val());
                 });
 
-                  $.each($('#profileuser1 .protectArg'), function() {
+                $.each($('#profileuser1 .protectArg'), function() {
                     petAramnt.append($(this).attr('name'), $(this).val());
-            }); 
+                }); 
 
-            $.each($('#profileuser1 .PetInsurance'), function() {
-              insfd.append($(this).attr('name'), $(this).val());
-            });
-    
-            $.each($('#profileuser1 .customdata'), function() {
-                  cusPro.append($(this).attr('name'), $(this).val());
-             });
-
-
-            $.each($('.subPlans .AddSubscription'), function() {
-                   subplan.append($(this).attr('proid'));
-             });
-
-       /* var  data1 = { 'attribute_pa_protection' : 'gold', 
-                   'attribute_pa_plan' : '5-year',
-                   'quantity' : '1',
-                    'action' : 'AddSubscriptionPlan',
-                };
-*/
+                $.each($('#profileuser1 .PetInsurance'), function() {
+                  insfd.append($(this).attr('name'), $(this).val());
+                });
+        
+                $.each($('#profileuser1 .customdata'), function() {
+                      cusPro.append($(this).attr('name'), $(this).val());
+                 });
 
 
+                $.each($('.subPlans .AddSubscription'), function() {
+                       subplan.append($(this).attr('proid'));
+                 });
 
-
-
-                /* ADD ACTION TO ADD PRODICT */
-               // productId.append('action', 'productAddToCart');
-
-                /* CUSTOM PRODUCT DATA*/
                 
-
                 var product = "";
                 var value = "";
 
                 $.each($('#selectType .nice-select li'), function() {
                     if ($(this).hasClass('selected')) {
                         product = jQuery(this).attr('data-product');
-                        value = jQuery(this).attr('data-value');
+                        type = jQuery(this).attr('data-value');
                     }
                 });
-                var size = $('#field2').val();
 
-              
-
-               // alert(product);
-                var cusProduct = new FormData();
-                if (product == 'aluminum' && value == 'circle') {
-                    /*alert(value);
-                    alert(size);
-                   */
-                  
-                   /* var color = '';
-                    $.each($('input[name=color]'), function() {
-                        if ($(this).attr('checked') == 'checked') {
-                            color = $(this).val();
-                        }
-                    });*/
+                var size = $('#selectSize .list .selected').attr('data-value');
+                var type = jQuery('#selectType .list .selected').attr('data-value');
+                var  style = jQuery('#stylee .showOnGrid .active').find('.style-radio').val();
 
 
-                    var  products_id = 6033;
-                     var variation_id ="";
-                         $.each($('.circle'), function() {
-                             color = $('input[name="color"]:checked').val();
-                         });
+                data = {
+                    'attribute_pa_shape': type,
+                    'attribute_pa_size': size,
+                    'attribute_pa_color': style,
+                    'action': 'add_id-tag_into_cart',
+                    'product_type': product,
+                    'engraving_front_line_1': $("#front_line1").text(),
+                    'engraving_front_line_2': $("#front_line2").text(),
+                    'engraving_front_line_3': $("#front_line3").text(),
+                    'engraving_front_line_4': $("#front_line4").text(),
+                };
 
-                     if(color== 'blue-circle'){
-                         variation_id ="6446";
-                     }else if(color== 'black-circle'){
-                         variation_id ="6447";
-                     }else{
-                         variation_id ="6448";
-                     }
-
-
-
-                     data = {
-                        'attribute_pa_shape': value,
-                        'attribute_pa_size': size,
-                        'attribute_pa_color': color,
-                        'action': 'add_id-tag_into_cart',
-                        'product_id': products_id,
-                        'variation_id': variation_id,
-                        'engraving_front_line_1': $("#front_line1").text(),
-                        'engraving_front_line_2': $("#front_line2").text(),
-                        'engraving_front_line_3': $("#front_line3").text(),
-                        'engraving_front_line_4': $("#front_line4").text(),
-                    };
-
-                    for ( var key in data ) {
-                        cusProduct.append(key, data[key]);
-                    }
-
-                }else if(product == 'aluminum' && value == 'bone'){
-
-
-                    var  products_id = 6033;
-                     var variation_id ="";
-                         $.each($('.circle'), function() {
-                             color = $('input[name="color"]:checked').val();
-                         });
-
-                     if(color== 'black-bone'){
-                         variation_id ="6438";
-                     }else if(color== 'blue-bone'){
-                         variation_id ="6439";
-                     }else if(color== 'pink-bone'){
-                         variation_id ="6440";
-                     }else{
-                         variation_id ="6441";
-                     }
-
-
-
-                     data = {
-                        'attribute_pa_shape': value,
-                        'attribute_pa_size': size,
-                        'attribute_pa_color': color,
-                        'action': 'add_id-tag_into_cart',
-                        'product_id': products_id,
-                        'variation_id': variation_id,
-                        'engraving_front_line_1': $("#front_line1").text(),
-                        'engraving_front_line_2': $("#front_line2").text(),
-                        'engraving_front_line_3': $("#front_line3").text(),
-                        'engraving_front_line_4': $("#front_line4").text(),
-                    };
-
-                    for ( var key in data ) {
-                        cusProduct.append(key, data[key]);
-                    }
-
-                }else if(product == 'aluminum' && value == 'heart'){
-
-                        var  products_id = 6033;
-                         var variation_id ="";
-                             $.each($('.heart'), function() {
-                                 color = $('input[name="color"]:checked').val();
-                             });
-
-                         if(color== 'pink-heart'){
-                             variation_id ="6452";
-                         }else if(color== 'red-heart'){
-                             variation_id ="6453";
-                         }else{
-                             variation_id ="6454";
-                         }
-
-
-
-                         data = {
-                            'attribute_pa_shape': value,
-                            'attribute_pa_size': size,
-                            'attribute_pa_color': color,
-                            'action': 'add_id-tag_into_cart',
-                            'product_id': products_id,
-                            'variation_id': variation_id,
-                            'engraving_front_line_1': $("#front_line1").text(),
-                            'engraving_front_line_2': $("#front_line2").text(),
-                            'engraving_front_line_3': $("#front_line3").text(),
-                        };
-
-                        for ( var key in data ) {
-                            cusProduct.append(key, data[key]);
-                        }
-
-
-
-                }else if(product == 'brass' && value == 'circle'){
-                    var style = '';
-                   /* $.each($('input[name=style]'), function() {
-                        if ($(this).attr('checked') == 'checked') {
-                            style = $(this).val();
-                        }
-                    });*/
-
-                        var color = '';
-                        var product_id =  6089;
-                        var variation_id ="";
-
-                
-                        $.each($('.circle'), function() {
-                           color = $('input[name="style"]:checked').val();
-                        });
-
-                        if(color == 'circle-1'){
-                            variation_id ="76842";
-                        }else if(color == 'circle-2'){
-                            variation_id ="76843";
-                        }else if(color == 'circle-3'){
-                            variation_id ="76844";
-                        }else if(color == 'circle-4'){
-                            variation_id ="76845";
-                        }else if(color == 'circle-5'){
-                            variation_id ="76846";
-                        }else if(color == 'circle-6'){
-                            variation_id ="76847";
-                        }else if(color == 'circle-7'){
-                            variation_id ="76832";
-                        }else if(color== 'circle-8'){
-                            variation_id ="107091";
-                        }
-                    
-
-                    data = {
-                        'attribute_pa_ttype': value,
-                        'attribute_pa_size': size,
-                        'attribute_pa_style': color,
-                          'product_id': product_id,
-                        'variation_id': variation_id,
-                        'action': 'add_id-tag_into_cart',
-                        'engraving_back_line_1':$("#back_line1").text(),
-                        'engraving_back_line_2': $("#back_line2").text(),
-                        'engraving_back_line_3': $("#back_line3").text(),
-                        'engraving_back_line_4': $("#back_line4").text(),
-                    };
-                        for ( var key in data ) {
-                            cusProduct.append(key, data[key]);
-                        }
-                }else if(product == 'brass' && value == 'heart'){
-                        
-                        var color = '';
-                        var  products_id = 6089;
-                         var variation_id ="";
-                         $.each($('.heart'), function() {
-                             color = $('input[name="style"]:checked').val();
-                         });
-
-                         if(color == 'heart-1'){
-                             variation_id ="76881";
-                         }else{ 
-                             variation_id = "76882";
-                         }
-
-                    data = {
-                        'attribute_pa_ttype': value,
-                        'attribute_pa_size': size,
-                        'attribute_pa_style': color,
-                          'product_id': products_id,
-                        'variation_id': variation_id,
-                        'action': 'add_id-tag_into_cart',
-                        'engraving_back_line_1':$("#back_line1").text(),
-                        'engraving_back_line_2': $("#back_line2").text(),
-                        'engraving_back_line_3': $("#back_line3").text(),
-                        'engraving_back_line_4': $("#back_line4").text(),
-                    };
-                      for ( var key in data ) {
-                        cusProduct.append(key, data[key]);
-                    }
-                }else if(product == 'brass' && value == 'bone'){
-                        
-                        var color = '';
-                        var  products_id = 6089;
-                         var variation_id ="";
-                         $.each($('.bone'), function() {
-                             color = $('input[name="style"]:checked').val();
-                         });
-
-                         if(color == 'bone-1'){
-                             variation_id ="76787";
-                         }else if (color == 'bone-2'){ 
-                             variation_id = "76788";
-                         }else if (color == 'bone-3'){ 
-                             variation_id = "76789";
-                         }else if (color == 'bone-4'){ 
-                             variation_id = "76790";
-                         }else if (color == 'bone-5'){ 
-                             variation_id = "76791";
-                         }else if (color == 'bone-6'){ 
-                             variation_id = "76792";
-                         }else if (color == 'bone-7'){ 
-                             variation_id = "76792";
-                         }else if (color == 'bone-8'){ 
-                             variation_id = "107012";
-                         }else if (color == 'bone-9'){ 
-                             variation_id = "107008";
-                         }else if (color == 'bone-10'){ 
-                             variation_id = "107009";
-                         }
-
-                    data = {
-                        'attribute_pa_ttype': value,
-                        'attribute_pa_size': size,
-                        'attribute_pa_style': color,
-                          'product_id': products_id,
-                        'variation_id': variation_id,
-                        'action': 'add_id-tag_into_cart',
-                        'engraving_back_line_1':$("#back_line1").text(),
-                        'engraving_back_line_2': $("#back_line2").text(),
-                        'engraving_back_line_3': $("#back_line3").text(),
-                        'engraving_back_line_4': $("#back_line4").text(),
-                    };
-                      for ( var key in data ) {
-                        cusProduct.append(key, data[key]);
-                    }
+                for ( var key in data ) {
+                    cusProduct.append(key, data[key]);
                 }
-
-
-
-
-
+                
                 if($('#profileuser1 #u-first').attr('value') != ''){
-                
-
-
-
-
-                baseFn(ajaxurl, ufd, 'POST', fd, resResult, insfd, cusProduct, petAramnt);
-
-
-
-       
-
-
-                // $.ajax({
-                //     type: 'POST',
-                //     url: ajaxurl,
-                //     data: ufd,
-                //     contentType: false,
-                //     processData: false,
-                //     success: function(response) {
-                //     var Obj      = JSON.parse(response);
-                //     var UsrID    = Obj.usrId;
-                    // fd.append('userId',UsrID); 
-                //     resResult.push(Obj.message); 
-                    /*},complete: function(){*/
-
-
-
-
-                  // if($('#profileuser1 #sname_input').attr('value') != ''){
-
-                            // $.ajax({
-                              //   type: 'POST',
-                              //   url: ajaxurl,
-                              //   data: fd,
-                              //   contentType: false,
-                              //   processData: false,
-                              //   success: async function(response) {
-                              //   var Obj = JSON.parse(response);
-                               
-                              //   resResult.push(Obj.message); 
-
-                              //    if($('.subPlans').hasClass('AddSubscription')){ 
-
-                              
-                              //    await  AddSubscription();
-                                
-                                
-                              // }
-
-
-                              //       if ($('#heth_id').is(":checked") == true) {
-              
-                                   
-                              //       console.log('function_2');
-                              //     await  insurance();
-                              
-                              //  }
-                               /*if($('#PetArg').is(":checked") == true){
-
-                                   
-                                       console.log('function_3');
-                                    PetArg();
-                                
-                                
-                               }*/
-
-                              //  }
-                            //});
-                   // }
-               // }
-           // });
-        }else{
-
-               
-                baseFn(ajaxurl, ufd, 'POST', fd, resResult, insfd, cusProduct, petAramnt);
-
-
-            //     $.ajax({
-            //         type: 'POST',
-            //         url: ajaxurl,
-            //         data: ufd,
-            //         contentType: false,
-            //         processData: false,
-            //         success: function(response) {
-            //         var Obj      = JSON.parse(response);
-            //         var UsrID    = Obj.usrId;
-            //         fd.append('userId',UsrID); 
-            //         resResult.push(Obj.message); 
-            //         /*},complete: function(){*/
-
-
-
-
-            //       // if($('#profileuser1 #sname_input').attr('value') != ''){
-
-            //                 $.ajax({
-            //                     type: 'POST',
-            //                     url: ajaxurl,
-            //                     data: fd,
-            //                     contentType: false,
-            //                     processData: false,
-            //                     success: function(response) {
-            //                     var Obj = JSON.parse(response);
-                               
-            //                     resResult.push(Obj.message); 
-            //                     }
-            //                 });
-            //        // }
-            //     }
-            // });
-
-        }
-
-
-async function userCreate(ajaxurl, ufd, method) {
-    return $.ajax({
-        type: method || 'POST',
-        url: ajaxurl,
-        data: ufd,
-        contentType: false,
-        processData: false
-    });
-}
-
- async function baseFn(ajaxurl, ufd, method, fd, resResult, insfd = null, cusProduct = null, petAramnt = null) {
-    try {
-
-        const response_1 = await userCreate(ajaxurl, ufd, method)
-
-
-        var obj_ = JSON.parse(response_1);
-        var UsrID = obj_.usrId;
-        fd.append('userId', UsrID);
-        resResult.push(obj_.message);
-        window.checkPorduct++;
-    } catch (error) {
-        console.log('error response_1', error)
-    }
-
- try {
-        const response_2 = await userCreate(ajaxurl, fd, 'POST');
-        var obj = JSON.parse(response_2);
-
-        resResult.push(obj.message);
-        window.checkPorduct++;
-    } catch (error) {
-        console.log('error response_2', error)
-    }
-    
-    if ($('.subPlans').hasClass('AddSubscription')) {
-
-        var product_id = localStorage.getItem("products_id");
-
-        var subplan = new FormData();
-        subplan.append('action', 'AddSubscriptionPlan');
-        subplan.append('product_id', product_id);
-
-        try {
-            const response_3 = await userCreate(ajaxurl, subplan, 'POST');
-            console.log('response_3', response_3)
-
-            var obj_1 = JSON.parse(response_3);
-            resResult.push(obj_1.message);
-            window.checkPorduct++;
-
-        } catch (error) {
-            console.log('error response_3', error)
-        }
-
-    }
-      
-
-    if ($('#heth_id').is(":checked") == true) {
-        try {
-            const response_4 = await userCreate(ajaxurl, insfd, 'POST');
-            console.log('response_4', response_4)
-
-            var obj_2 = JSON.parse(response_4);
-            resResult.push(obj_2.message);
-            window.checkPorduct++;
-
-        } catch (error) {
-            console.log('error response_4', error)
-        }
-    }
-
-
-    if ($('#CustPro').is(":checked") == true) {
-        try {
-            const response_5 = await userCreate(ajaxurl, cusProduct, 'POST');
-            console.log('response_5', response_5)
-
-            var obj_3 = JSON.parse(response_5);
-            resResult.push(obj_3.message);
-            window.checkPorduct++;
-        } catch (error) {
-            console.log('error response_4', error)
-        }
-    }
- 
-
-    if ($('#PetArg').is(":checked") == true) {
-        try {
-            const response_6 = await userCreate(ajaxurl, petAramnt, 'POST');
-            console.log('response_6', response_6)
-
-            var obj_4 = JSON.parse(response_6);
-            resResult.push(obj_4.message);
-            window.checkPorduct++;
-        } catch (error) {
-            console.log('error response_4', error)
-        }
-    }
-
-    finalResponseMsg();
-}
-
-
-       /* function AddSubscription(){
-             if($('.subPlans').hasClass('AddSubscription')){ 
-                
-                var product_id = localStorage.getItem("products_id");
-                var  data1 = { 'product_id': product_id, 
-                                          'action' : 'AddSubscriptionPlan',
-                                  };
-                     $.ajax({
-                              type: 'POST',
-                              url: ajaxurl,
-                              data: data1,
-                            
-                          success: function(response) {
-                              var Obj = JSON.parse(response);
-                              resResult.push(Obj.message); 
-                              window.checkPorduct++;  
-                         }
-                     });
-            }
-        }
-
-
-
-         function insurance(){
-         
-
-                
-               if ($('#heth_id').is(":checked") == true) {
-              
-                alert('insurance');
-                       $.ajax({
-                            type: 'POST',
-                            url: ajaxurl,
-                            data: insfd,
-                            contentType: false,
-                            processData: false,
-                            success: function(response) {
-                                var Obj = JSON.parse(response);
-                                resResult.push(Obj.message); 
-                                window.checkPorduct++;
-                                }
-                            });
-                           }
+                    baseFn(ajaxurl, ufd, 'POST', fd, resResult, insfd, cusProduct, petAramnt);
+                }else{
+                    baseFn(ajaxurl, ufd, 'POST', fd, resResult, insfd, cusProduct, petAramnt);
                 }
 
-                 function CustPro(){
-  
-                   if ($('#CustPro').is(":checked") == true) {
-                       alert('custome prodcuct');
-                        $.ajax({
-                                type: 'POST',
-                                url: ajaxurl,
-                                data: data,
-                                success: function(response) {
-                                    console.log('custom'+response);
-                                    var Obj = JSON.parse(response);
-                                    resResult.push(Obj.message); 
-                                    window.checkPorduct++;
-                                    
-                                }
-                            });
-                }
-            }
 
-
-            function PetArg(){
-
-                    if($('#PetArg').is(":checked") == true){
-                          alert('agrement');
-                          $.ajax({
-                                  type: 'POST',
-                                  url: ajaxurl,
-                                  data: petAramnt,
-                                  contentType: false,
-                                  processData: false,
-                                   success: function(response) {
-                                      var Obj = JSON.parse(response);
-                                      resResult.push(Obj.message); 
-                                      window.checkPorduct++;
-                                     
-                                  }
-                              });
-                     }     
-
-                }
-
- */
-
-
-
-         function finalResponseMsg(){
-
-                if(resResult){
-
-
-
-                    localStorage.removeItem('conf_microchip_id');
-                    localStorage.removeItem('microchip_id');
-                    localStorage.removeItem('pet_name');
-                    localStorage.removeItem('pet_type');
-                    localStorage.removeItem('primary_breed');
-                    localStorage.removeItem('secondary_breed');
-                    localStorage.removeItem('primary_color');
-                    localStorage.removeItem('secondary_color');
-                    localStorage.removeItem('gender');
-                    localStorage.removeItem('size');
-                    localStorage.removeItem('pet_date_of_birth');
-                    localStorage.removeItem('products_id');
-                    //alert(window.checkPorduct);
-                   // localStorage.removeItem('Insurance');
-                    localStorage.setItem("products_id" , 75193);
-
-                   
-
-                    $('.loader-wrap').fadeOut();
-                    console.log('checkPorduct'+window.checkPorduct);
-                    if(window.checkPorduct > 0){
-                        $('#closed').attr('href','/cart');
-                    }else{
-                        $('#closed').attr('href','/home');
-                    }
-                        $('.popup-wrap').fadeIn(function(){
-                        $.each(resResult, function(i, v){
-                            $('.popup-content').append(resResult[i]);
-                        }); 
-                    });
-                }
-
-}
-               
-
-
-
-                  
-                        
-                        // setTimeout(function(){
-                        //         if(resResult){
-                        //             //alert(window.checkPorduct);
-                        //             $('.loader-wrap').fadeOut();
-                        //             console.log('checkPorduct'+window.checkPorduct);
-                        //             if(window.checkPorduct > 0){
-                        //                 $('#closed').attr('href','/cart');
-                        //             }else{
-                        //                 $('#closed').attr('href','/home');
-                        //             }
-                        //             $('.popup-wrap').fadeIn(function(){
-                        //             $.each(resResult, function(i, v){
-                        //             $('.popup-content').append(resResult[i]);
-                        //                 }); 
-                        //             });
-                        //         }
-                        //     }, 20000);
-                
-
-   
-
-
-
-
-
-
-                
-
-
-
-
-/*
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                // Pet Arrangment
-                if ($('#PetArg').is(":checked") == true) {
-                    alert('PetArg');
-                    $.each($('#profileuser1 .
-                    '), function() {
-                        // petAramnt.append($(this).attr('name'), $(this).val());
-                        productId.append($(this).attr('name'), $(this).val());
-                    });
-                }
-                
-                //Pet insurance
-                if ($('#heth_id').is(":checked") == true) {   
-                alert('heth_id'); 
-                    $.each($('#profileuser1 .PetInsurance'), function() {
-                        // insfd.append($(this).attr('name'), $(this).val());
-                        productId.append($(this).attr('name'), $(this).val());
-                    });
-                }
-                    
-                //Add Subscriptions
-                if ($('#profileuser1 .site-btn').hasClass('AddSubscription')) {
-                    $.each($('#profileuser1 .AddSubscription'), function() {
-                        productId.append($(this).attr('filed'), $(this).attr('proid'));
-                    });
-                }    
-
-                if ($('#profileuser1 #u-first').attr('value') != '') {
-                    alert('#profileuser1 #u-first');
-                    $('.popup-content').empty();
-                    $.ajax({
-                        type: 'POST',
+                async function userCreate(ajaxurl, ufd, method) {
+                    return $.ajax({
+                        type: method || 'POST',
                         url: ajaxurl,
                         data: ufd,
                         contentType: false,
-                        processData: false,
-                        success: function(response) {
-                            var Obj = JSON.parse(response);
-                            resResult.push(Obj.message);
-                            window.UsrID = Obj.usrId;
-                            fd.append('userId', window.UsrID);
-                            if ($('#profileuser1 #sname_input').attr('value') != '' && window.UsrID !=null) {
-                                $.ajax({
-                                    type: 'POST',
-                                    url: ajaxurl,
-                                    data: fd,
-                                    contentType: false,
-                                    processData: false,
-                                    success: function(response) {
-                                        var Obj = JSON.parse(response);
-                                        resResult.push(Obj.message);
-                                        var petId = Obj.petId;
-                                        productId.append("petId",petId);
-                                        var type = "";
-                                        if ($("input[name=universalMicrochip]").val() == 1) {
-                                            type = "universal microchip";
-                                        }
-                                        productId.append("formType",type);
-                                        if (petId != 0) {
-                                            $.ajax({
-                                                type: 'POST',
-                                                url: ajaxurl,
-                                                data: productId,
-                                                contentType: false,
-                                                processData: false,
-                                                success: function(response) {
-                                                    var Obj = JSON.parse(response);
-                                                    resResult.push(Obj.message);
-                                                }
-                                            });
-                                            if ($('#CustPro').attr("checked") == 'checked') {
-                                                $.ajax({
-                                                    type: 'POST',
-                                                    url: ajaxurl,
-                                                    data: data,
-                                                    success: function(response) {
-                                                        console.log('custom' + response);
-                                                        var Obj = JSON.parse(response);
-                                                        resResult.push(Obj.message);
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    }
-                                });
-                            }
-                        },
-                        complete: function(response) {
-                                setTimeout(function() {
-                               
-                                    $('.loader-wrap').fadeOut();
-                                    var url = 'https://staging.idtag.com/cart';
-
-
-                                    if(window.UsrID != null){
-                                        $("#closed").attr('href', url);  
-                                    }
-
-
-                                  
-                                    $('.popup-wrap').fadeIn(function() {
-                                        $.each(resResult, function(i, v) {
-
-
-                                            $('.popup-content').append(resResult[i]);
-
-                                        });
-                                    });
-
-
-
-     
-
-
-
-                                
-                            }, 10000);
-                        // }else{
-                        //  alert("sorry");
-                        // }
-                        }
+                        processData: false
                     });
-                }*/
- //}
+                }
+
+                async function baseFn(ajaxurl, ufd, method, fd, resResult, insfd = null, cusProduct = null, petAramnt = null) {
+                    try {
+
+                        const response_1 = await userCreate(ajaxurl, ufd, method)
+
+
+                        var obj_ = JSON.parse(response_1);
+                        var UsrID = obj_.usrId;
+                        fd.append('userId', UsrID);
+                        resResult.push(obj_.message);
+                        window.checkPorduct++;
+                    } catch (error) {
+                        console.log('error response_1', error)
+                    }
+
+                    try {
+                        const response_2 = await userCreate(ajaxurl, fd, 'POST');
+                        var obj = JSON.parse(response_2);
+
+                        resResult.push(obj.message);
+                        window.checkPorduct++;
+                    } catch (error) {
+                        console.log('error response_2', error)
+                    }
+                    
+                    if ($('.subPlans').hasClass('AddSubscription')) {
+
+                        var product_id = localStorage.getItem("products_id");
+
+                        var subplan = new FormData();
+                        subplan.append('action', 'AddSubscriptionPlan');
+                        subplan.append('product_id', product_id);
+
+                        try {
+                            const response_3 = await userCreate(ajaxurl, subplan, 'POST');
+                            console.log('response_3', response_3)
+
+                            var obj_1 = JSON.parse(response_3);
+                            resResult.push(obj_1.message);
+                            window.checkPorduct++;
+
+                        } catch (error) {
+                            console.log('error response_3', error)
+                        }
+
+                    }
+                      
+
+                    if ($('#heth_id').is(":checked") == true) {
+                        try {
+                            const response_4 = await userCreate(ajaxurl, insfd, 'POST');
+                            console.log('response_4', response_4)
+
+                            var obj_2 = JSON.parse(response_4);
+                            resResult.push(obj_2.message);
+                            window.checkPorduct++;
+
+                        } catch (error) {
+                            console.log('error response_4', error)
+                        }
+                    }
+
+
+                    if ($('#CustPro').is(":checked") == true) {
+                        try {
+                            const response_5 = await userCreate(ajaxurl, cusProduct, 'POST');
+                            console.log('response_5', response_5)
+
+                            var obj_3 = JSON.parse(response_5);
+                            resResult.push(obj_3.message);
+                            window.checkPorduct++;
+                        } catch (error) {
+                            console.log('error response_4', error)
+                        }
+                    }
+                 
+
+                    if ($('#PetArg').is(":checked") == true) {
+                        try {
+                            const response_6 = await userCreate(ajaxurl, petAramnt, 'POST');
+                            console.log('response_6', response_6)
+
+                            var obj_4 = JSON.parse(response_6);
+                            resResult.push(obj_4.message);
+                            window.checkPorduct++;
+                        } catch (error) {
+                            console.log('error response_4', error)
+                        }
+                    }
+
+                    finalResponseMsg();
+                }
+
+                function finalResponseMsg(){
+                    if(resResult){
+                        localStorage.removeItem('conf_microchip_id');
+                        localStorage.removeItem('microchip_id');
+                        localStorage.removeItem('pet_name');
+                        localStorage.removeItem('pet_type');
+                        localStorage.removeItem('primary_breed');
+                        localStorage.removeItem('secondary_breed');
+                        localStorage.removeItem('primary_color');
+                        localStorage.removeItem('secondary_color');
+                        localStorage.removeItem('gender');
+                        localStorage.removeItem('size');
+                        localStorage.removeItem('pet_date_of_birth');
+                        localStorage.removeItem('products_id');
+                        //alert(window.checkPorduct);
+                       // localStorage.removeItem('Insurance');
+                        localStorage.setItem("products_id" , 75193);
+
+                        $('.loader-wrap').fadeOut();
+                        console.log('checkPorduct'+window.checkPorduct);
+                        if(window.checkPorduct > 0){
+                            $('#closed').attr('href','/cart');
+                        }else{
+                            $('#closed').attr('href','/home');
+                        }
+
+                        $('.popup-wrap').fadeIn(function(){
+                            $.each(resResult, function(i, v){
+                                $('.popup-content').append(resResult[i]);
+                            }); 
+                        });
+                    }
+
+                }
 }
         });
     },
@@ -1579,415 +927,137 @@ async function userCreate(ajaxurl, ufd, method) {
                 .focus();
 
         });
-
     }
-
 };
 
 app.init();
 
 
-
-// $('.sname_input-MC1').blur(function(){
-//     alert();
-
-//     var ids = $(this).val();
-//     var id = ids.replace(/\s/g, '');
-//     if(id.length == 8){
-
-//         $.ajax({
-//             url: ajaxurl,
-//             method:"POST", 
-//             dataType: 'json',
-//             data:{
-//               'smarttag_id_number': id, 
-//               'action' : 'checkSmartTagIDValid_testing',
-//             },
-//             success: function(data) {
-//                 console.log(data);
-//                 console.log(data.message);
-//                 if(data.status == '302'  && data.result == 'exist'){
-//                     console.log('1');
-//                     $('.show-atag').hide();
-//                     $('.valid_message').removeClass('error_success');
-//                     $('.valid_message').css('color','red')
-//                     $('.valid_message').text(data.message);
-//                     $('.valid_message').show();
-//                     $('.show-atag').hide();
-                        
-//                 }else if(data.status == 406  && data.result == 'fail'){
-//                     console.log('2');
-                 
-//                     $('.valid_message').removeClass('error_success');
-//                     $('.valid_message').css('color','red');
-//                     $('.valid_message').text(data.message);
-//                     $('.valid_message').show();
-//                     $('.show-atag').show();
-                    
-
-//                 }else if(data.status == '200'  && data.result == 'success'){
-//                     console.log('3');
-                    
-//                     $('.valid_message').hide();
-//                     $('.show-atag').hide();
-//                         return true;
-//                 }else{
-//                   console.log('4');
-//                     $('.valid_message').addClass('error');
-//                     $('.valid_message').removeClass('error_success');
-//                     $('.valid_message').text(data.message);
-//                     $('.show-atag').hide();
-//                     $('.valid_message').show();
-
-//                     return false;
-//                 }
-//             }
-//         });
-//     }else if(id.length == 15){
-//         console.log('checkMicrochipIDValid1');
-//         $.ajax({
-//             url: ajaxurl,
-//             method:"POST", 
-//             dataType: 'json',
-//             data:{
-//               'smarttag_id_number': id, 
-//               'action' : 'checkMicrochipIDValid1',
-//             },
-//             success: function(data) {
-//                 if(data.status == '302'  && data.result == 'exist'){
-                    
-//                     $('.valid_message').addClass('error');
-//                     $('.valid_message').removeClass('error_success');
-//                     $('.valid_message').css('color','red')
-//                     $('.valid_message').text(data.message);
-//                     $('.valid_message').show();
-//                     $('.show-atag').hide();
-//                     return false;
-
-//                 }else if(data.status == 406  && data.result == 'fail'){
-                    
-//                     $('.valid_message').addClass('error');
-//                     $('.valid_message').removeClass('error_success');
-//                     $('.valid_message').css('color','red');
-//                     $('.valid_message').text(data.message);
-//                     $('.valid_message').show();
-//                     $('.show-atag').hide();
-//                     return false;
-                    
-
-//                 }else if(data.status == '200'  && data.result == 'success'){
-                    
-//                     $('.valid_message').hide();
-//                     $('.show-atag').hide();
-//                     return true;
-//                 }else{
-//                     $('.valid_message').addClass('error');
-//                     $('.valid_message').removeClass('error_success');
-//                     $('.valid_message').text(data.message);
-//                     $('.show-atag').show();
-//                     $('.valid_message').hide();
-//                     return false;
-//                 }
-//             }
-//         });
-//     }
-// });
-
-
-
-
 $('.dog_universal_microchip_id').blur(function(){
-           var ids =$("input[name=universal_microchip_id]").val();
-           var id = ids.replace(/\s/g, '');
-       
-             $.ajax({
-                    url: ajaxurl,
-                    method:"POST", 
-                    dataType: 'json',
-                    data:{
-                      'smarttag_id_number': id, 
-                      'action' : 'checkUniversalMicrochipId',
-                    },
-                     success: function(data) {
-                        console.log('response12');
-                                          
-                            if(data.status == '302'  && data.result == 'exist'){
-                                console.log('1');
+    var ids =$("input[name=universal_microchip_id]").val();
+    var id = ids.replace(/\s/g, '');
+    $.ajax({
+        url: ajaxurl,
+        method:"POST", 
+        dataType: 'json',
+        data:{
+          'smarttag_id_number': id, 
+          'action' : 'checkUniversalMicrochipId',
+        },
+        success: function(data) {
+            
+            console.log('response12');
+            if(data.status == '302'  && data.result == 'exist'){
+                console.log('1');
 
-                                $('.valid_message').addClass('error');
-                                $('.valid_message').removeClass('error_success');
-                                $('.valid_message').css('color','red')
-                                $('.valid_message').text(data.message);
-                                $('.valid_message').show();
-                                $('.show-atag').hide();
-                                    return false;
-                            }else if(data.status == '201'  && data.result == 'otherMichrochip'){
-
-
-                                $('.valid_message').addClass('error');
-                                $('.valid_message').removeClass('error_success');
-                                $('.valid_message').css('color','red')
-                                $('.valid_message').text(data.message);
-                                $('.valid_message').show();
-                                $('.show-atag').show();
-                                    return false;
-                            }else{
-                                console.log('3');
-                                $('.valid_message').hide();
-                                $('.show-atag').hide();
-                                    return true;
-                            }
-                                    
-                     }
-                });
+                $('.valid_message').addClass('error');
+                $('.valid_message').removeClass('error_success');
+                $('.valid_message').css('color','red')
+                $('.valid_message').text(data.message);
+                $('.valid_message').show();
+                $('.show-atag').hide();
+                    return false;
+            }else if(data.status == '201'  && data.result == 'otherMichrochip'){
 
 
-
-     });
+                $('.valid_message').addClass('error');
+                $('.valid_message').removeClass('error_success');
+                $('.valid_message').css('color','red')
+                $('.valid_message').text(data.message);
+                $('.valid_message').show();
+                $('.show-atag').show();
+                    return false;
+            }else{
+                console.log('3');
+                $('.valid_message').hide();
+                $('.show-atag').hide();
+                    return true;
+            }
+                        
+        }
+    });
+});
     
 
 /*For webhook trigger add customew pet profile*/
 
-    $(document).ready(function(){
-
-var url = window.location.hostname+'/webhook-pet-profile/';
-
-     if(window.location.href.indexOf(url) > -1) {
+$(document).ready(function(){
+    var url = window.location.hostname+'/webhook-pet-profile/';
+    if(window.location.href.indexOf(url) > -1) {
         checkSmartTagIDValid_on_webhook();
-     }
-        $('.webhook_check_id').blur(function(){
-            checkSmartTagIDValid_on_webhook();
-        });
+    }
+    $('.webhook_check_id').blur(function(){
+        checkSmartTagIDValid_on_webhook();
     });
 
-
-function checkSmartTagIDValid_on_webhook(){
-
-
-    var ids = $('.webhook_check_id').val();
-     var id = ids.replace(/\s/g, '');
-
-
+    //
+    function checkSmartTagIDValid_on_webhook(){
+        var ids = $('.webhook_check_id').val();
+        var id = ids.replace(/\s/g, '');
         if(id.length== '15'){
-
-
-                  $.ajax({
-                    url: ajaxurl,
-                    method:"POST",
-                    dataType:'json',
-                    data:{
-                      'smarttag_id_number': id, 
-                      'action' : 'checkSmartTagIDValid_on_webhook',
-                    },
-                    success: function(result) {
-                      
-                         if(result.status == '200'  && result.result == 'success'){
-                        
-                            $('.valid_message').addClass('error');
-                            $('.valid_message').removeClass('error_success');
-                            $('.valid_message').text(result.message);
-                            $('.show-atag').hide();
-                             $('.valid_message').hide();
-                                return true;
-                        }else{
-                          console.log('4');
-                            $('.valid_message').addClass('error');
-                            $('.valid_message').removeClass('error_success');
-                            $('.valid_message').text(result.message);
-                            $('.show-atag').hide();
-                             $('.valid_message').show();
-                                return false;
-                        }
-                       
-                   }    
-              
+            $.ajax({
+                url: ajaxurl,
+                method:"POST",
+                dataType:'json',
+                data:{
+                  'smarttag_id_number': id, 
+                  'action' : 'checkSmartTagIDValid_on_webhook',
+                },
+                success: function(result) {
+                    if(result.status == '200'  && result.result == 'success'){
+                        $('.valid_message').addClass('error');
+                        $('.valid_message').removeClass('error_success');
+                        $('.valid_message').text(result.message);
+                        $('.show-atag').hide();
+                        $('.valid_message').hide();
+                        return true;
+                    }else{
+                        console.log('4');
+                        $('.valid_message').addClass('error');
+                        $('.valid_message').removeClass('error_success');
+                        $('.valid_message').text(result.message);
+                        $('.show-atag').hide();
+                        $('.valid_message').show();
+                        return false;
+                    }
+                }    
             });
-
-
         }
-         // else{
-         //    alert('Invalid Temp Microchip Id Number');
-         //    window.reload();
-         // }
+    }
 
+    //
+    var url2 = window.location.hostname+'/our-services/universal-microchip-register-new/';
+    if (window.location.href.indexOf(url2) > -1) {
+        $('#pname_input').blur(function(){
+            var ids =$("input[name=universal_microchip_id]").val();
+            var id = ids.replace(/\s/g, '');
 
-
-
-
-}
-
-
-
-$(document).ready(function() {
- 
-    var url = window.location.hostname+'/our-services/microchip-registry/';
-    var url1 = window.location.hostname+'/our-services/smarttag-registry/';
-    if (window.location.href.indexOf(url) > -1 || window.location.href.indexOf(url1) > -1 ) {
-        console.log("ocean");
-
-    //     $('#pname_input').blur(function(){
-    //         var ids = $('.sname_input-MC').val();
-    //           var id = ids.replace(/\s/g, '');
-    //               if(id.length == 8){
-
-    //                   $.ajax({
-    //                     url: ajaxurl,
-    //                     method:"POST", 
-    //                     dataType: 'json',
-    //                     data:{
-    //                       'smarttag_id_number': id, 
-    //                       'action' : 'checkSmartTagIDValid_testing',
-    //                     },
-    //                     success: function(data) {
-
+            $.ajax({
+                url: ajaxurl,
+                method:"POST", 
+                dataType: 'json',
+                data:{
+                  'smarttag_id_number': id, 
+                  'action' : 'checkUniversalMicrochipId',
+                },
+                success: function(data) {
+                    if(data.status == '302'  && data.result == 'exist'){
+                        console.log('1');
+                        $('.valid_message').addClass('error');
+                        $('.valid_message').removeClass('error_success');
+                        $('.valid_message').css('color','red')
+                        $('.valid_message').text(data.message);
+                        $('.valid_message').show();
+                        $('.show-atag').hide();
+                        return false;
+                    }else{
                         
-                          
-    //                     console.log(data);
-    //                     console.log(data.message);
-    //                         if(data.status == '302'  && data.result == 'exist'){
-    //                             console.log('1');
-    //                                 $('.show-atag').hide();
-    //                            // $('.valid_message').addClass('error');
-    //                             $('.valid_message').removeClass('error_success');
-    //                             $('.valid_message').css('color','red')
-    //                             $('.valid_message').text(data.message);
-    //                             $('.valid_message').show();
-    //                             $('.show-atag').hide();
-                                    
-    //                         }else if(data.status == 406  && data.result == 'fail'){
-    //                             console.log('2');
-                             
-    //                             $('.valid_message').removeClass('error_success');
-    //                             $('.valid_message').css('color','red');
-    //                             $('.valid_message').text(data.message);
-    //                             $('.valid_message').show();
-    //                             $('.show-atag').show();
-                                
-
-    //                         }else if(data.status == '200'  && data.result == 'success'){
-    //                             console.log('3');
-                                
-    //                             $('.valid_message').hide();
-    //                             $('.show-atag').hide();
-    //                                 return true;
-    //                         }else{
-    //                           console.log('4');
-    //                             $('.valid_message').addClass('error');
-    //                             $('.valid_message').removeClass('error_success');
-    //                             $('.valid_message').text(data.message);
-    //                             $('.show-atag').hide();
-    //                              $('.valid_message').show();
-
-    //                                 return false;
-    //                         }
-                           
-    //                    }
-                  
-    //             });
-    //         }else if(id.length == 15){
-    //                 console.log('checkMicrochipIDValid1');
-    //              $.ajax({
-    //                     url: ajaxurl,
-    //                     method:"POST", 
-    //                     dataType: 'json',
-    //                     data:{
-    //                       'smarttag_id_number': id, 
-    //                       'action' : 'checkMicrochipIDValid1',
-    //                     },
-    //                      success: function(data) {
-                                              
-    //                             if(data.status == '302'  && data.result == 'exist'){
-    //                                 console.log('1');
-
-    //                                 $('.valid_message').addClass('error');
-    //                                 $('.valid_message').removeClass('error_success');
-    //                                 $('.valid_message').css('color','red')
-    //                                 $('.valid_message').text(data.message);
-    //                                 $('.valid_message').show();
-    //                                 $('.show-atag').hide();
-    //                                     return false;
-    //                             }else if(data.status == 406  && data.result == 'fail'){
-    //                                 console.log('2');
-
-    //                                $('.valid_message').addClass('error');
-    //                                 $('.valid_message').removeClass('error_success');
-    //                                 $('.valid_message').css('color','red');
-    //                                 $('.valid_message').text(data.message);
-    //                                 $('.valid_message').show();
-    //                                 $('.show-atag').hide();
-                                    
-
-    //                             }else if(data.status == '200'  && data.result == 'success'){
-    //                                 console.log('3');
-                                    
-    //                                 $('.valid_message').hide();
-    //                                 $('.show-atag').hide();
-    //                                     return true;
-    //                             }else{
-    //                               console.log('4');
-    //                                 $('.valid_message').addClass('error');
-    //                                 $('.valid_message').removeClass('error_success');
-    //                                 $('.valid_message').text(data.message);
-    //                                 $('.show-atag').show();
-    //                                 $('.valid_message').hide();
-
-    //                                     return false;
-    //                             }
-                                        
-    //                                 }
-    //                 });
-    //             }
-    // });
-
-
- }
-
- var url2 = window.location.hostname+'/our-services/universal-microchip-register-new/';
-     
-  if (window.location.href.indexOf(url2) > -1) {
-     
-     $('#pname_input').blur(function(){
-         var ids =$("input[name=universal_microchip_id]").val();
-           var id = ids.replace(/\s/g, '');
-
-             $.ajax({
-                    url: ajaxurl,
-                    method:"POST", 
-                    dataType: 'json',
-                    data:{
-                      'smarttag_id_number': id, 
-                      'action' : 'checkUniversalMicrochipId',
-                    },
-                     success: function(data) {
-                        
-                                          
-                            if(data.status == '302'  && data.result == 'exist'){
-                                console.log('1');
-
-                                $('.valid_message').addClass('error');
-                                $('.valid_message').removeClass('error_success');
-                                $('.valid_message').css('color','red')
-                                $('.valid_message').text(data.message);
-                                $('.valid_message').show();
-                                $('.show-atag').hide();
-                                    return false;
-                            }else{
-                                console.log('3');
-                                
-                                $('.valid_message').hide();
-                                $('.show-atag').hide();
-                                    return true;
-                            }
-                                    
-                     }
-                });
-
-
-
-     });
-  }
-
-    
-
-
+                        $('.valid_message').hide();
+                        $('.show-atag').hide();
+                        return true;
+                    }
+                }
+            });
+        });
+    }
 });

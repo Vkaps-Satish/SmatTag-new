@@ -697,206 +697,14 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                                  <div class="row">
                                     <div class="col-sm-12">
                                        <div class="field-box">
-                                          <label class="field-label">Select a Design:</label>
-                                          <div class="field-div" id="stylee">
-                                             <div class="custom-radio-box circle" data-toggle="buttons">
-                                                <label class="btn active" role="button">
-                                                   <input type="radio" value="circle-1" variation_id ="76842" name="style" checked="checked" class="style-radio" data-name="design-circle">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/flower_circle_shape.png" alt="radio image" data-name="design-circle" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio" variation_id ="76843" value="circle-2" name="style" class="style-radio" data-name="design-circle">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/pink_paw_circle.png" alt="radio image" data-name="design-circle" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio" value="circle-3" name="style" variation_id="76844" class="style-radio" data-name="design-circle">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/pink_paw_circle_shape.png" alt="radio image" data-name="design-circle" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio" variation_id="76845" value="circle-4" name="style" class="style-radio" data-name="design-circle">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/smarttag_circle_shape.png" alt="radio image" data-name="design-circle" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio" value="circle-5" name="style" class="style-radio" variation_id ="76846"data-name="design-circle">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/b3back_paw_circle.png" alt="radio image" data-name="design-circle" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio" variation_id ="76847" value="circle-6" name="style" class="style-radio" data-name="design-circle">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/black_paw_circle_shape.png" alt="radio image" data-name="design-circle" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                    <input type="radio" value="circle-7" name="style" class="style-radio" data-name="design-circle">
-                                                    <div class="custom-radio-img">
-                                                        <img src="<?php bloginfo('template_url'); ?>-child/images/circle_back.png" alt="radio image" data-name="design-circle" />
-                                                    </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                    <input type="radio" value="circle-8" name="style" class="style-radio" data-name="design-circle">
-                                                    <div class="custom-radio-img">
-                                                        <img src="<?php bloginfo('template_url'); ?>-child/images/circle_paw_blue.jpg" alt="radio image" data-name="design-circle" />
-                                                    </div>
-                                                </label>
-                                             </div>
-                                             <div class="custom-radio-box heart" data-toggle="buttons">
-                                                <label class="btn active" role="button">
-                                                   <input type="radio" variation_id="76881" value="heart-1" name="style" checked="checked" class="style-radio" data-name="design-heart">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/brass_heart.jpg" alt="radio image" data-name="design-heart" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio" variation_id="76882"  value="heart-2" name="style" class="style-radio" data-name="design-heart">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/crown_heart_shape.png" alt="radio image" data-name="design-heart" />
-                                                   </div>
-                                                </label>
-                                             </div>
-                                             <div class="custom-radio-box bone" data-toggle="buttons">
-                                                <label class="btn active" role="button">
-                                                   <input type="radio" variation_id ="76803" value="bone-1" name="style" checked="checked" class="style-radio" data-name="design-bone">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/black_bone_bone_shape.png" alt="radio image" data-name="design-bone" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio"  variation_id ="76804" value="bone-2" name="style" class="style-radio" data-name="design-bone">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/brass_large_bone_adopted_10.jpg" alt="radio image" data-name="design-bone" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio" variation_id ="76805" value="bone-3" name="style" class="style-radio" data-name="design-bone">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/camoflage_bone_shape_1.png" alt="radio image" data-name="design-bone" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio" variation_id ="76806"  value="bone-4" name="style" class="style-radio" data-name="design-bone">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/paw_off_bone_shape_1.png" alt="radio image" data-name="design-bone" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio"  variation_id ="76807" value="bone-5" name="style" class="style-radio" data-name="design-bone">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/rainbow_bone_shape_1.png" alt="radio image" data-name="design-bone" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio"  variation_id ="76808" value="bone-6" name="style" class="style-radio" data-name="design-bone">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/shelter_dog_rock_bone_shape_5_9_2012.png" alt="radio image" data-name="design-bone" />
-                                                   </div>
-                                                </label>
-                                                                            <label class="btn" role="button">
-                                                                                <input type="radio" value="bone-7" name="style" class="style-radio" data-name="design-bone">
-                                                                                <div class="custom-radio-img">
-                                                                                    <img src="<?php bloginfo('template_url'); ?>-child/images/bone_back.jpg" alt="radio image" data-name="design-bone"/>
-                                                                                </div>
-                                                                            </label>
-                                                                            <label class="btn" role="button">
-                                                                                <input type="radio" value="bone-8" name="style" class="style-radio" data-name="design-bone">
-                                                                                <div class="custom-radio-img">
-                                                                                    <img src="<?php bloginfo('template_url'); ?>-child/images/bone_bone_pink.png" alt="radio image" data-name="design-bone" />
-                                                                                </div>
-                                                                            </label>
-                                                                            <label class="btn" role="button">
-                                                                                <input type="radio" value="bone-9" name="style" class="style-radio" data-name="design-bone">
-                                                                                <div class="custom-radio-img">
-                                                                                    <img src="<?php bloginfo('template_url'); ?>-child/images/sbone_bone_pink.jpg" alt="radio image" data-name="design-bone" />
-                                                                                </div>
-                                                                            </label>
-                                                                            <label class="btn" role="button">
-                                                                                <input type="radio" value="bone-10" name="style" class="style-radio" data-name="design-bone">
-                                                                                <div class="custom-radio-img">
-                                                                                    <img src="<?php bloginfo('template_url'); ?>-child/images/3_paws_bone_tag_blue.jpg" alt="radio image" data-name="design-bone" />
-                                                                                </div>
-                                                                            </label>
-                                             </div>
-                                          </div>
-                                          <div class="field-div" id="colorr">
-                                             <div class="custom-radio-box circle" data-toggle="buttons">
-                                                <label class="btn active" role="button">
-                                                   <input type="radio" variation_id="6446"  value="blue-circle" name="color" checked="checked" class="style-radio" data-name="color-circle">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/bluetag2.jpg" alt="radio image" data-name="color-circle" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio" variation_id="6447" value="black-circle" name="color" class="style-radio" data-name="color-circle">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/circle_black_1.jpg" alt="radio image" data-name="color-circle" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio" variation_id="6448" value="pink-circle" name="color" class="style-radio" data-name="color-circle">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/circle_pink_2.jpg" alt="radio image" data-name="color-circle" />
-                                                   </div>
-                                                </label>
-                                             </div>
-                                             <div class="custom-radio-box heart" data-toggle="buttons">
-                                                <label class="btn active" role="button">
-                                                   <input type="radio" variation_id ="6452" value="pink-heart" name="color" checked="checked" class="style-radio" data-name="color-heart">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/heart_pink_shape_2.png" alt="radio image" data-name="color-heart" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio" variation_id ="6453" value="red-heart" name="color" class="style-radio" data-name="color-heart">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/heart_red_shape_2.png" alt="radio image" data-name="color-heart" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio" variation_id="6454" value="yellow-heart" name="color" class="style-radio" data-name="color-heart">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/heart_yellow_shape_2.png" alt="radio image" data-name="color-heart" />
-                                                   </div>
-                                                </label>
-                                             </div>
-                                             <div class="custom-radio-box bone" data-toggle="buttons">
-                                                <label class="btn active" role="button">
-                                                   <input type="radio" variation_id ="6438" value="black-bone" name="color" checked="checked" class="style-radio" data-name="color-bone">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/black_bone_shape_2_2.png" alt="radio image" data-name="color-bone" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio" variation_id="6439" value="blue-bone" name="color" class="style-radio" data-name="color-bone">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/blue_bone_shape_2.png" alt="radio image" data-name="color-bone" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio" variation_id="6440" value="pink-bone" name="color" class="style-radio" data-name="color-bone">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/pink_bone_shape_2.png" alt="radio image" data-name="color-bone" />
-                                                   </div>
-                                                </label>
-                                                <label class="btn" role="button">
-                                                   <input type="radio" variation_id="6441" value="red-bone" name="color" class="style-radio" data-name="color-bone">
-                                                   <div class="custom-radio-img">
-                                                      <img src="<?php bloginfo('template_url'); ?>-child/images/red_bone-shape_2.png" alt="radio image" data-name="color-bone" />
-                                                   </div>
-                                                </label>
-                                             </div>
-                                          </div>
-                                       </div>
-                                    </div
-                                       >
+                                            <label class="field-label">Select a Design:</label>
+                                            <div class="field-div" id="stylee">
+                                                <div class="custom-radio-box circle showOnGrid" data-toggle="buttons">
+                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                  </div>
                                  <div class="row">
                                     <div class="col-sm-12">
@@ -916,7 +724,7 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                                                    </span>
                                                 </div>
                                                 <div class="section-back-image design-circle micro-back">
-                                                   <label>Back:</label>
+                                                   <label>Back12:</label>
                                                    <span class="micro-back-img">
                                                    <img src="<?php bloginfo('template_url'); ?>-child/images/circle_back.png" class="back-img">
                                                    <span class="woo-complex-custom">	
@@ -1567,62 +1375,6 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
 </script>
 <script type="text/javascript">
     $(document).ready(function(){
-        $('#selectType').find('.pro-data').addClass('select_type');
-        $('#selectSize').find('.pro-data').addClass('select_size');
-        var select_list_select_size = jQuery('.select_size').children(".list").find('.selected').text();
-        if (select_list_select_size == 'Small (1 in / 2.54 cm)') {
-            $('.custom-radio-box bone, .custom-radio-img').each(function(i, j) {
-                var select_list_height = jQuery('.select_type').children(".list").find('.selected').text();
-                if (select_list_height == 'Brass Bone') {
-                    if (i == 13 || i == 14 || i == 15 || i == 16 || i == 17 || i == 18 || i == 19) {
-                        $(this).hide();
-                      
-                    }
-                }else if (select_list_height == 'Brass Circle') {
-                    if (i == 7) {
-                        $(this).hide();
-                        
-                    }
-                }
-
-            });
-        } 
-        $('.select_size, .list').change(function() {
-            var select_list_select_size = jQuery('.select_size').children(".list").find('.selected').text();
-            if (select_list_select_size == 'Small (1 in / 2.54 cm)') {
-                $('.custom-radio-box bone, .custom-radio-img').each(function(i, j) {
-                    var select_list_height = jQuery('.select_type').children(".list").find('.selected').text();
-                        if (select_list_height == 'Brass Bone') {
-                            if (i == 13 || i == 14 || i == 15 || i == 16 || i == 17 || i == 18 || i == 19) {
-                            $(this).hide();
-                        }
-                    }else if (select_list_height == 'Brass Circle') {
-                        if (i == 7) {
-                            $(this).hide();
-                         
-                        }
-                    }
-
-                });
-            }else{
-                var select_list_height = jQuery('.select_type').children(".list").find('.selected').text();
-                $('.custom-radio-box bone, .custom-radio-img').each(function(i, j) {
-                    var select_list_height = jQuery('.select_type').children(".list").find('.selected').text();
-                    if (select_list_height == 'Brass Bone') {
-                        if (i == 13 || i == 14 || i == 15 || i == 16 || i == 17 || i == 18 || i == 19) {
-                            $(this).show();
-                            $('.large-tag').show();
-                        }
-                    }else if (select_list_height == 'Brass Circle') {
-                        if (i == 7) {
-                            $(this).show();
-                        }
-                    }
-
-                });
-            }
-
-        });
 
 
     if($('.primary_checkbox').is(':checked')){
@@ -1648,7 +1400,88 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
         }
 
     });
-});
+
+
+
+
+/*Get product variation dynamically*/
+
+    setTimeout(function() { //fetch tag's on page load
+        var size = $('#selectSize .list .selected').attr('data-value');
+        var type = $('#selectType .list .selected').attr('data-value');
+        var product_id = '6089';
+        getVariationFromSelectedAttr(type,size,product_id);
+    }, 2500);
+
+/*choose Tag type*/
+    $(document).on( 'click', '#selectType .list li', function(e){
+        e.preventDefault();
+        var type = $(this).attr('data-value');
+        var product_type = $(this).attr('data-product');
+        var size = $('#selectSize .list .selected').attr('data-value');
+        if(product_type == 'aluminum'){
+            var product_id = '6033';
+        }else{
+            var product_id = '6089';
+        }
+            getVariationFromSelectedAttr(type, size,product_id);
+               
+        }); 
+/*choose Tag size*/
+    $(document).on( 'click', '#selectSize .list li', function(e){
+        e.preventDefault();
+        var size = $(this).attr('data-value');
+        var type = $('#selectType .list .selected').attr('data-value');
+        var product_type = $('#selectType .list .selected').attr('data-product');
+            if(product_type == 'aluminum'){
+                var product_id = '6033';
+            }else{
+                var product_id = '6089';
+            }
+            
+            getVariationFromSelectedAttr(type, size,product_id);
+               
+        }); 
+    });
+
+
+    function getVariationFromSelectedAttr(type,size,product_id){
+        var data = {    
+                product_id : product_id, 
+                type :  type, 
+                size :  size, 
+                action : 'get_product_variation_on_homepage',
+            }
+            $(".loader-wrap").fadeIn();
+            
+        $.ajax({
+            type: 'POST',
+            url: ajaxurl,
+            data: data,
+            dataType: "json",
+            success: function(response) {
+                $(".loader-wrap").fadeOut();
+                var data = response.data;
+                jQuery('.showOnGrid').show();
+                jQuery('.showOnGrid').html('');
+                jQuery(data).each(function(index,attr){
+                    console.log(attr);
+
+
+                    if(attr.product_type == 'Aluminum' ){
+                        jQuery('.showOnGrid').append('<label class="btn" role="button" class="small-bone"><input type="radio" value="'+attr.attribute_pa_color+'" name="style" class="style-radio" data-name="design-'+attr.attribute_pa_shape+'"><div class="custom-radio-img"><img src="'+attr.attribute_image+'" alt="radio image" data-name="design-circle"/></div><span class="tag-name">'+attr.attribute_name+'</span></label>');
+                    }else{
+                        jQuery('.showOnGrid').append('<label class="btn" role="button" class="small-bone"><input type="radio" value="'+attr.attribute_pa_style+'" name="style" class="style-radio" data-name="design-'+attr.attribute_pa_ttype+'"><div class="custom-radio-img"><img src="'+attr.attribute_image+'" alt="radio image" data-name="design-circle"/></div><span class="tag-name">'+attr.attribute_name+'</span></label>'); 
+                    }
+                });
+            }
+        });
+
+    }
+
+
+
+
 
 </script>
 <?php get_footer(); ?>

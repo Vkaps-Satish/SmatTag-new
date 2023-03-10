@@ -1,4 +1,6 @@
 	// $(function() {z
+
+
 			$('a[href]').each(function(){ 
 	        	if(location.pathname == $(this).attr("href")){
 	        	$(this).css("background", "#3b5b81"); 	
@@ -76,7 +78,7 @@
 
 		// get price of custom product
 		$("#profileuser1 #CustPro").on('click',function(){
-			 $('.loader-wrap').fadeIn();
+				//	 $('.loader-wrap').fadeIn();
          	$("#field1").prop('required',true);
          	$("#field2").prop('required',true);
          	
@@ -88,66 +90,49 @@
 			var product = "";
         	var value = "";
 
-                $.each($('#selectType .nice-select li'), function() {
-                	
-                    if ($(this).hasClass('selected')) {
-                        product = jQuery(this).attr('data-product');
-                        value = jQuery(this).attr('data-value');
-                    }
-                });
-                
-                var size = $('#field2').val();
-                if (product == 'aluminum') {
-                    var color = '';
-                    $.each($('input[name=color]'), function() {
-                        if ($(this).attr('checked') == 'checked') {
-                            color = $(this).val();
-                        }
-                    });
-                    data = {
-                        'attribute_pa_shape': value,
-                        'attribute_pa_size': size,
-                        'attribute_pa_color': color,
-                        'action': 'custom_product_price',
-                        'engraving_front_line_1': $("#front_line1").text(),
-                        'engraving_front_line_2': $("#front_line2").text(),
-                        'engraving_front_line_3': $("#front_line3").text(),
-                    };
-                } else {
-                    var style = '';
-                    $.each($('input[name=style]'), function() {
-                        if ($(this).attr('checked') == 'checked') {
-                            style = $(this).val();
-                        }
-                    });
-                    data = {
-                        'attribute_pa_ttype': value,
-                        'attribute_pa_size': size,
-                        'attribute_pa_style': style,
-                        'action': 'custom_product_price',
-                        'engraving_back_line_1':$("#back_line1").text(),
-                        'engraving_back_line_2': $("#back_line2").text(),
-                        'engraving_back_line_3': $("#back_line3").text(),
-                    };
+            $.each($('#selectType .nice-select li'), function() {
+            	if ($(this).hasClass('selected')) {
+                    product = jQuery(this).attr('data-product');
+                    value = jQuery(this).attr('data-value');
                 }
+            });
+                
+            if(product == 'aluminum'){
+	    	    var size = $('#field2').val();
+	    	    var  color = jQuery('#stylee .showOnGrid .active').find('.style-radio').val();
+    	 		var data = {
+	    	            'attribute_pa_shape': value,
+	    	            'attribute_pa_size': size,
+	    	            'attribute_pa_color': color,
+	    	            'action': 'custom_product_price',
+	    	            'engraving_front_line_1': $("#front_line1").text(),
+	    	            'engraving_front_line_2': $("#front_line2").text(),
+	    	            'engraving_front_line_3': $("#front_line3").text(),
+	    	        };
+            }else{
+            	var size = $('#field2').val();
+	    	   	var style =  jQuery('#stylee .showOnGrid .active').find('.style-radio').val();
+	    		var data = {
+	    	            'attribute_pa_ttype': value,
+	    	            'attribute_pa_size': size,
+	    	            'attribute_pa_style': style,
+	    	            'action': 'custom_product_price',
+	    	            'engraving_front_line_1': $("#front_line1").text(),
+	    	            'engraving_front_line_2': $("#front_line2").text(),
+	    	            'engraving_front_line_3': $("#front_line3").text(),
+	    	        };
+            }
 
-                console.log("value",color);
-                console.log("size",size);
-                console.log("value",value);
-
-                if(color != "" || size != "" || value != "" ){
-                	
+			 if(color != "" || size != "" || value != "" ){
+                		
                     $.ajax({
                         type: 'POST',
                         url: ajaxurl,
                         data: data,
                         success: function(response) {
 						 $('.loader-wrap').fadeOut();
-                        	
-                            console.log('custom variable product id is: ' + response);
                             var Obj = JSON.parse(response);
                             if(Obj.success == 1){
-                                
                                 console.log("product price" , Obj.productPrice);
                                 $("span#ProductPrice").text(Obj.productPrice);
                                 
@@ -157,7 +142,7 @@
                 }
   			});
 		/*Universal Michrochip register*/
-				$("#CustPro").on('click',function(){
+				/*$("#CustPro").on('click',function(){
 					 $('.loader-wrap').fadeIn();
 		         	$("#field1").prop('required',true);
 		         	$("#field2").prop('required',true);
@@ -240,4 +225,4 @@
 		                        }
 		                    });
 		                }
-		  			});
+		  			});*/

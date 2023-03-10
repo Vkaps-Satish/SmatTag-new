@@ -1287,10 +1287,20 @@ jQuery(document).ready(function(){
 	
 		jQuery('#picker_pa_color .select-option.swatch-wrapper.selected').each(function(i,element){
 	    	var styleText = $(this).find('a').attr("title");
+
 			var frontTagImage = $(this).find('img').attr("src");
 			$('.front_img').attr('src', frontTagImage);
 			$('.back_img').attr('src', frontTagImage);
 			$('.style').text(styleText);
+			if(styleText == 'FrontTag Circle'){
+	    		$('#frontend').hide();
+	    		var backimage =window.location.origin+'/wp-content/uploads/2021/01/circle_black_1-82x100.jpg';
+	    		$('.back_img').attr('src', backimage);
+	    	}else{
+	    		$('#frontend').show();
+	    		$('.back_img').attr('src', frontTagImage);
+	    	}
+
 
 
 		});

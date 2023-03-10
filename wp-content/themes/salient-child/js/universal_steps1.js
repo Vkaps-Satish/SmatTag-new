@@ -658,261 +658,28 @@ var app = {
                     value = jQuery(this).attr('data-value');
                 }
             });
-            var size = $('#field2').val();
 
-              
-
-               // alert(product);
-                var cusProduct = new FormData();
-                if (product == 'aluminum' && value == 'circle') {
-                    /*alert(value);
-                    alert(size);
-                   */
-                  
-                   /* var color = '';
-                    $.each($('input[name=color]'), function() {
-                        if ($(this).attr('checked') == 'checked') {
-                            color = $(this).val();
-                        }
-                    });*/
+            var size = $('#selectSize .list .selected').attr('data-value');
+            var type = jQuery('#selectType .list .selected').attr('data-value');
+            var  style = jQuery('#stylee .showOnGrid .active').find('.style-radio').val();
 
 
-                    var  products_id = 6033;
-                     var variation_id ="";
-                         $.each($('.circle'), function() {
-                             color = $('input[name="color"]:checked').val();
-                         });
+            data = {
+                'attribute_pa_shape': type,
+                'attribute_pa_size': size,
+                'attribute_pa_color': style,
+                'action': 'add_id-tag_into_cart',
+                'product_type': product,
+                'engraving_front_line_1': $("#front_line1").text(),
+                'engraving_front_line_2': $("#front_line2").text(),
+                'engraving_front_line_3': $("#front_line3").text(),
+                'engraving_front_line_4': $("#front_line4").text(),
+            };
 
-                     if(color== 'blue-circle'){
-                         variation_id ="6446";
-                     }else if(color== 'black-circle'){
-                         variation_id ="6447";
-                     }else{
-                         variation_id ="6448";
-                     }
-
-
-
-                     data = {
-                        'attribute_pa_shape': value,
-                        'attribute_pa_size': size,
-                        'attribute_pa_color': color,
-                        'action': 'add_id-tag_into_cart',
-                        'product_id': products_id,
-                        'variation_id': variation_id,
-                        'engraving_front_line_1': $("#front_line1").text(),
-                        'engraving_front_line_2': $("#front_line2").text(),
-                        'engraving_front_line_3': $("#front_line3").text(),
-                        'engraving_front_line_4': $("#front_line4").text(),
-                    };
-
-                    for ( var key in data ) {
-                        cusProduct.append(key, data[key]);
-                    }
-
-                }else if(product == 'aluminum' && value == 'bone'){
-
-
-                    var  products_id = 6033;
-                     var variation_id ="";
-                         $.each($('.circle'), function() {
-                             color = $('input[name="color"]:checked').val();
-                         });
-
-                     if(color== 'black-bone'){
-                         variation_id ="6438";
-                     }else if(color== 'blue-bone'){
-                         variation_id ="6439";
-                     }else if(color== 'pink-bone'){
-                         variation_id ="6440";
-                     }else{
-                         variation_id ="6441";
-                     }
-
-
-
-                     data = {
-                        'attribute_pa_shape': value,
-                        'attribute_pa_size': size,
-                        'attribute_pa_color': color,
-                        'action': 'add_id-tag_into_cart',
-                        'product_id': products_id,
-                        'variation_id': variation_id,
-                        'engraving_front_line_1': $("#front_line1").text(),
-                        'engraving_front_line_2': $("#front_line2").text(),
-                        'engraving_front_line_3': $("#front_line3").text(),
-                        'engraving_front_line_4': $("#front_line4").text(),
-                    };
-
-                    for ( var key in data ) {
-                        cusProduct.append(key, data[key]);
-                    }
-
-                }else if(product == 'aluminum' && value == 'heart'){
-
-                        var  products_id = 6033;
-                         var variation_id ="";
-                             $.each($('.heart'), function() {
-                                 color = $('input[name="color"]:checked').val();
-                             });
-
-                         if(color== 'pink-heart'){
-                             variation_id ="6452";
-                         }else if(color== 'red-heart'){
-                             variation_id ="6453";
-                         }else{
-                             variation_id ="6454";
-                         }
-
-
-
-                         data = {
-                            'attribute_pa_shape': value,
-                            'attribute_pa_size': size,
-                            'attribute_pa_color': color,
-                            'action': 'add_id-tag_into_cart',
-                            'product_id': products_id,
-                            'variation_id': variation_id,
-                            'engraving_front_line_1': $("#front_line1").text(),
-                            'engraving_front_line_2': $("#front_line2").text(),
-                            'engraving_front_line_3': $("#front_line3").text(),
-                        };
-
-                        for ( var key in data ) {
-                            cusProduct.append(key, data[key]);
-                        }
-
-
-
-                }else if(product == 'brass' && value == 'circle'){
-                    var style = '';
-                   /* $.each($('input[name=style]'), function() {
-                        if ($(this).attr('checked') == 'checked') {
-                            style = $(this).val();
-                        }
-                    });*/
-
-                        var color = '';
-                        var product_id =  6089;
-                        var variation_id ="";
-
-                
-                        $.each($('.circle'), function() {
-                           color = $('input[name="style"]:checked').val();
-                        });
-
-                        if(color == 'circle-1'){
-                            variation_id ="76842";
-                        }else if(color == 'circle-2'){
-                            variation_id ="76843";
-                        }else if(color == 'circle-3'){
-                            variation_id ="76844";
-                        }else if(color == 'circle-4'){
-                            variation_id ="76845";
-                        }else if(color == 'circle-5'){
-                            variation_id ="76846";
-                        }else if(color == 'circle-6'){
-                            variation_id ="76847";
-                        }else if(color == 'circle-7'){
-                            variation_id ="76832";
-                        }else if(color== 'circle-8'){
-                            variation_id ="107091";
-                        }
-                    
-
-                    data = {
-                        'attribute_pa_ttype': value,
-                        'attribute_pa_size': size,
-                        'attribute_pa_style': color,
-                          'product_id': product_id,
-                        'variation_id': variation_id,
-                        'action': 'add_id-tag_into_cart',
-                        'engraving_back_line_1':$("#back_line1").text(),
-                        'engraving_back_line_2': $("#back_line2").text(),
-                        'engraving_back_line_3': $("#back_line3").text(),
-                        'engraving_back_line_4': $("#back_line4").text(),
-                    };
-                        for ( var key in data ) {
-                            cusProduct.append(key, data[key]);
-                        }
-                }else if(product == 'brass' && value == 'heart'){
-                        
-                        var color = '';
-                        var  products_id = 6089;
-                         var variation_id ="";
-                         $.each($('.heart'), function() {
-                             color = $('input[name="style"]:checked').val();
-                         });
-
-                         if(color == 'heart-1'){
-                             variation_id ="76881";
-                         }else{ 
-                             variation_id = "76882";
-                         }
-
-                    data = {
-                        'attribute_pa_ttype': value,
-                        'attribute_pa_size': size,
-                        'attribute_pa_style': color,
-                          'product_id': products_id,
-                        'variation_id': variation_id,
-                        'action': 'add_id-tag_into_cart',
-                        'engraving_back_line_1':$("#back_line1").text(),
-                        'engraving_back_line_2': $("#back_line2").text(),
-                        'engraving_back_line_3': $("#back_line3").text(),
-                        'engraving_back_line_4': $("#back_line4").text(),
-                    };
-                      for ( var key in data ) {
-                        cusProduct.append(key, data[key]);
-                    }
-                }else if(product == 'brass' && value == 'bone'){
-                        
-                        var color = '';
-                        var  products_id = 6089;
-                         var variation_id ="";
-                         $.each($('.bone'), function() {
-                             color = $('input[name="style"]:checked').val();
-                         });
-
-                         if(color == 'bone-1'){
-                             variation_id ="76787";
-                         }else if (color == 'bone-2'){ 
-                             variation_id = "76788";
-                         }else if (color == 'bone-3'){ 
-                             variation_id = "76789";
-                         }else if (color == 'bone-4'){ 
-                             variation_id = "76790";
-                         }else if (color == 'bone-5'){ 
-                             variation_id = "76791";
-                         }else if (color == 'bone-6'){ 
-                             variation_id = "76792";
-                         }else if (color == 'bone-7'){ 
-                             variation_id = "76792";
-                         }else if (color == 'bone-8'){ 
-                             variation_id = "107012";
-                         }else if (color == 'bone-9'){ 
-                             variation_id = "107008";
-                         }else if (color == 'bone-10'){ 
-                             variation_id = "107009";
-                         }
-
-                    data = {
-                        'attribute_pa_ttype': value,
-                        'attribute_pa_size': size,
-                        'attribute_pa_style': color,
-                          'product_id': products_id,
-                        'variation_id': variation_id,
-                        'action': 'add_id-tag_into_cart',
-                        'engraving_back_line_1':$("#back_line1").text(),
-                        'engraving_back_line_2': $("#back_line2").text(),
-                        'engraving_back_line_3': $("#back_line3").text(),
-                        'engraving_back_line_4': $("#back_line4").text(),
-                    };
-                      for ( var key in data ) {
-                        cusProduct.append(key, data[key]);
-                    }
-                }
-
+            var cusProduct = new FormData();
+                for ( var key in data ) {
+                    cusProduct.append(key, data[key]);
+                }    
 
                 if($('#universalForm #u-first').attr('value') != ''){
                	 	baseFn(ajaxurl, ufd, 'POST', fd, resResult, insfd, cusProduct, petAramnt);
