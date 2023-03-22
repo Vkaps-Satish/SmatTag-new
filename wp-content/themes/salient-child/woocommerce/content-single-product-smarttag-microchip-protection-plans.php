@@ -601,7 +601,7 @@ $petdata = get_posts( $args );
         </form> 
         <a href="/cart/" class="btn btn-default btn-next skip1 site-btn" id="skip-plan">Skip Protection Plan <i class="fa fa-caret-right"></i></a>
       </div>
-       <span class="short-regular" style="position: relative; top: -12px;"><small><em>*must activate with our partner PAWP, see email for directions</em></small></span>
+       <span class="short-regular" style="position: relative; top: 0px;"><small><em>*must activate with our partner PAWP, see email for directions</em></small></span>
 
     </div>
   </div>

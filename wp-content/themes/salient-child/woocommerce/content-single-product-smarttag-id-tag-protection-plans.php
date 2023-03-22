@@ -623,7 +623,7 @@ if(isset($_GET['switch-subscription'])){
         
       </div>
     </div>
- <span class="short-regular" style="position: relative; top: -12px;"><small><em>*must activate with our partner PAWP, see email for directions</em></small></span>
+ <span class="short-regular" style="position: relative; top: 0px;"><small><em>*must activate with our partner PAWP, see email for directions</em></small></span>
 
                       <!-- <div class="summary entry-summary"> -->
 

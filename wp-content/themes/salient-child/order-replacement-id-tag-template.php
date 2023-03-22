@@ -248,7 +248,7 @@ if ( !is_user_logged_in() ){
 	    </div>
 	</div>
 <!-- for protection plan end -->
-			            <div class="pp-tabs-content pp-tab-content-2">
+			            <div class="pp-tabs-content pp-tab-content-3 show-update-form">
 			                <div class="contact-form">
 			                    <form action="" method="post" class="update-form">
 			                        <input type="hidden" name="post_id" value="<?php echo $postId; ?>">      
@@ -294,136 +294,68 @@ if ( !is_user_logged_in() ){
 			                    <div class="blue-border-box">
 			                        <p></p>
 			                        <?php  
+										$customer_user_id = get_current_user_id(); // current user ID here for example
+										$customer_orders = wc_get_orders( array(
+										    'meta_key' => '_customer_user',
+										    'meta_value' => $customer_user_id,
+										    'post_status' => $order_statuses,
+										    'numberposts' => -1
+										) );
+										
+										foreach($customer_orders as $order ){
+											foreach($order->get_items() as $item_id => $item){
+												if( method_exists( $item, 'get_data' ) ) {
+										            $item_data = $item->get_data();
+										            $order_id = $item_data['order_id'];
+													$result = $wpdb->get_results('select t1.*, t2.* FROM 
+										       									 wp_woocommerce_order_items as t1 JOIN wp_woocommerce_order_itemmeta as t2 ON t1.order_item_id = t2.order_item_id
+										       								 where t1.order_id='.$order_id);
 
+													foreach ($result as $result1) {
+														if ($result1->meta_key == 'pa_protection') {
+																$pa_protection = strip_tags($result1->meta_value);
+																$myArray[] = $pa_protection;
+														}
+													}
 
+										        } 
+											}
+										}
+									if ($product_id == 6089 || $product_id == 7722) {
+		                                if ($type == "bone") {
+		                                    /*echo '<img src="'.get_site_url().'/wp-content/themes/salient-child/images/black_bone_shape_2_2.png" data-name="color-bone">';*/
+		                                    echo $backImage; 
+		                                }elseif ($type == "circle") {
+		                                   /* echo '<img src="'.get_site_url().'/wp-content/themes/salient-child/images/bluetag2.jpg" data-name="color-circle">';*/
+		                                   echo $backImage; 
+		                                }elseif ($type == "heart") {
+		                                   /* echo '<img src="'.get_site_url().'/wp-content/themes/salient-child/images/heart_pink_shape_2.png" data-name="color-heart">';*/
+		                                   echo $backImage; 
+		                                }
+		                            }elseif ($product_id == 6033 || $product_id == 7659) {
+		                                if ($shape == "bone") {
+		                                   /* echo '<img src="'.get_site_url().'/wp-content/themes/salient-child/images/bone_back.jpg" data-name="back-img">';*/
+		                                   echo $backImage; 
+		                                }elseif ($shape == "circle") {
+		                                   /* echo '<img src="'.get_site_url().'/wp-content/themes/salient-child/images/circle_back.png" data-name="back-img">';*/
+		                                   echo $backImage; 
+		                                }elseif ($shape == "heart") {
+		                                   /* echo '<img src="'.get_site_url().'/wp-content/themes/salient-child/images/brass_heart.jpg" data-name="back-img">';*/
+		                                   echo $backImage; 
+		                                }
+			                        }
 
-			                       $customer_user_id = get_current_user_id(); // current user ID here for example
+			                        if ($myArray!='') { 
+			                        	if(in_array('platinum',$myArray ) || in_array('gold',$myArray )){ ?>
+                    			    	 		<a href="javascript:;" class="color-light-blue with_pa_protection  ">Order Replacement Tag<i class="fa fa-caret-right"></i></a>
+							<?php   	}else{  ?>
+                        			    		<a href="javascript:;" class="color-light-blue replace-btn">Order Replacement Tag <i class="fa fa-caret-right"></i></a>
+                			   			<?php }  
 
-// Getting current customer orders
-$customer_orders = wc_get_orders( array(
-    'meta_key' => '_customer_user',
-    'meta_value' => $customer_user_id,
-    'post_status' => $order_statuses,
-    'numberposts' => -1
-) );
+			                        }else{  ?>
+		                        		<a href="javascript:;" class="color-light-blue replace-btn">Order Replacement Tag <i class="fa fa-caret-right"></i></a>
+		                        	<?php }  ?>
 
-
-
-foreach($customer_orders as $order ){
-	 	foreach($order->get_items() as $item_id => $item){
-
-        	if( method_exists( $item, 'get_data' ) ) {
-            	$item_data = $item->get_data();
-            		
-    	            $order_id = $item_data['order_id'];
-
-            	  $result = $wpdb->get_results('select t1.*, t2.* FROM 
-       									 wp_woocommerce_order_items as t1 JOIN wp_woocommerce_order_itemmeta as t2 ON t1.order_item_id = t2.order_item_id
-       								 where t1.order_id='.$order_id);
-
-				  foreach ($result as $result1) {
-				  
-            	     
-            	      		
-		if ($result1->meta_key == 'pa_protection') {
-		
-
-			$pa_protection = strip_tags($result1->meta_value);
-			$myArray[] = $pa_protection;
-
-		}
-
-
-				 
-				  	 /*if ($result1->meta_key == 'pa_protection') {
-			               		 $pa_protection = strip_tags($result1->meta_value);
-				            }elseif ($result1->meta_key == 'pa_plan') {
-								$pa_plan = strip_tags($result1->meta_value);
-							 }elseif ($result1->order_item_name == 'SmartTag ID Tag Protection Plans') {
-								$SmartTag = strip_tags($result1->order_item_name);
-							 }*/
-                	}
-
-        	} 
-	 	}
-}
-	
-
-
-
-		                       	/*$order_id = '106902';
-		                      
-		                        	 $result = $wpdb->get_results('select t1.*, t2.* FROM 
-       									 wp_woocommerce_order_items as t1 JOIN wp_woocommerce_order_itemmeta as t2 ON t1.order_item_id = t2.order_item_id
-       								 where t1.order_id='.$order_id);
-        
-        							  foreach ($result as $result1) {
-    
-        							 
-        							  	 if ($result1->meta_key == 'pa_protection') {
-								               		 $pa_protection = strip_tags($result1->meta_value);
-									            }elseif ($result1->meta_key == 'pa_plan') {
-													$pa_plan = strip_tags($result1->meta_value);
-            									 }elseif ($result1->order_item_name == 'SmartTag ID Tag Protection Plans') {
-													$SmartTag = strip_tags($result1->order_item_name);
-            									 }
-			                        	}*/
-
-
-									 if ($product_id == 6089 || $product_id == 7722) {
-			                                if ($type == "bone") {
-			                                    /*echo '<img src="'.get_site_url().'/wp-content/themes/salient-child/images/black_bone_shape_2_2.png" data-name="color-bone">';*/
-			                                    echo $backImage; 
-			                                }elseif ($type == "circle") {
-			                                   /* echo '<img src="'.get_site_url().'/wp-content/themes/salient-child/images/bluetag2.jpg" data-name="color-circle">';*/
-			                                   echo $backImage; 
-			                                }elseif ($type == "heart") {
-			                                   /* echo '<img src="'.get_site_url().'/wp-content/themes/salient-child/images/heart_pink_shape_2.png" data-name="color-heart">';*/
-			                                   echo $backImage; 
-			                                }
-			                            }elseif ($product_id == 6033 || $product_id == 7659) {
-			                                if ($shape == "bone") {
-			                                   /* echo '<img src="'.get_site_url().'/wp-content/themes/salient-child/images/bone_back.jpg" data-name="back-img">';*/
-			                                   echo $backImage; 
-			                                }elseif ($shape == "circle") {
-			                                   /* echo '<img src="'.get_site_url().'/wp-content/themes/salient-child/images/circle_back.png" data-name="back-img">';*/
-			                                   echo $backImage; 
-			                                }elseif ($shape == "heart") {
-			                                   /* echo '<img src="'.get_site_url().'/wp-content/themes/salient-child/images/brass_heart.jpg" data-name="back-img">';*/
-			                                   echo $backImage; 
-			                                }
-			                            }
-
-			                       
-			                           	
-			                        	if ($myArray!='') { 
-			                        	
-			    							 if(in_array('platinum',$myArray ) || in_array('gold',$myArray )){ ?>
-			                        			    	 <a href="javascript:;" class="color-light-blue with_pa_protection  ">Order Replacement Tag<i class="fa fa-caret-right"></i></a>
-			                        			<?php    }else{  ?>
-			                        			    	<a href="javascript:;" class="color-light-blue replace-btn">Order Replacement Tag <i class="fa fa-caret-right"></i></a>
-			                        			   <?php }  
-
-			                        	}else{  ?>
-			                        		<a href="javascript:;" class="color-light-blue replace-btn">Order Replacement Tag <i class="fa fa-caret-right"></i></a>
-			                        	<?php }   
-
-
-
-
-											/*if($pa_protection == 'platinum' || $pa_protection == 'gold'){*/ ?>
-													
-													<!--  <a href="javascript:;" class="color-light-blue with_pa_protection  ">Order Replacement Tag<i class="fa fa-caret-right"></i></a> -->
-											<?php 	/*} else{*/ ?>
-													<!-- <a href="javascript:;" class="color-light-blue replace-btn">Order Replacement Tag <i class="fa fa-caret-right"></i></a> -->
-												<?php 	
-
-
-											//} ?>
-
-
-
-			                         
 			                    </div>
 			                </div>
 			                <div class="col-sm-4 rmb-15">
@@ -470,20 +402,7 @@ foreach($customer_orders as $order ){
 			            <?php } ?>
 			            <input type="hidden" name="size" value="<?php echo $size; ?>">
 			        </form>
-
-
-			       <!--  <form style="display: none;" action="" method="post" id= "with_pa_protection">
-			            <input type="hidden" name="product_id" value="<?php echo $product_id; ?>" id="product-id">
-			            <input type="hidden" name="frontLine1" class="front-line-1 front-line" value="">
-			            <input type="hidden" name="frontLine2" class="front-line-2 front-line" value="">
-			            <input type="hidden" name="frontLine3" class="front-line-3 front-line" value="">
-			            <input type="hidden" name="frontLine4" class="front-line-4 front-line" value="">
-			            <input type="hidden" name="backLine1" class="back-line-1" value="">
-			            <input type="hidden" name="backLine2" class="back-line-2" value="">
-			            <input type="hidden" name="backLine3" class="back-line-3" value="">
-			            <input type="hidden" name="backLine4" class="back-line-4" value="">
-			            <input type="hidden" name="serialNumber" value="<?php echo $smartTagId; ?>">
-			            <?php if ($product_id == 6089 || $product_id == 7722) { ?>
+						<?php if ($product_id == 6089 || $product_id == 7722) { ?>
 			                <input type="hidden" name="type" value="<?php echo $type; ?>">
 			                <input type="hidden" name="style" value="<?php echo $style; ?>">
 			            <?php } elseif ($product_id == 6033 || $product_id == 7659) { ?>
@@ -492,23 +411,19 @@ foreach($customer_orders as $order ){
 			            <?php } ?>
 			            <input type="hidden" name="size" value="<?php echo $size; ?>">
 			        </form> -->
-
-
-
-
-			        <script type="text/javascript">
+					<script type="text/javascript">
 			            jQuery(document).ready(function($){
-
-			            	$('.with_pa_protection').click(function(){
-			            	
-			            		$('.with_pa_protection1').toggle();
+							$('.with_pa_protection').click(function(){
+		            			$('.with_pa_protection1').toggle();
 			            		$('.simple-pet-info').toggle();
-
 			            	});
-
-
 							$(".lines-edit").click(function(){
-			                    $(".pp-tab-option-2").click();
+			                	$(".pp-tab-option-2").click();
+
+			                });
+			                $(".pp-tab-option-1").click(function(){
+			                 	$('.show-update-form').toggle();
+
 			                });
 			                $(".lines-show").click(function(){
 			                    $("p.fline1 span").text($('input.frontLine1').val());
@@ -523,6 +438,7 @@ foreach($customer_orders as $order ){
 			                    $(".pp-tab-option-1").click();
 			                });
 			                $(".pp-tab-option-2").click(function(){
+			                	$('.show-update-form').toggle();
 			                    $('input.frontLine1').val($("p.fline1 span").text());
 			                    $('input.frontLine2').val($("p.fline2 span").text());
 			                    $('input.frontLine3').val($("p.fline3 span").text());
@@ -562,14 +478,7 @@ foreach($customer_orders as $order ){
 				echo "Sorry No Idtag to Replacement";
 
 			}else{
-
-
-
-
-
-
-
-					 $user_id = get_current_user_id();
+					$user_id = get_current_user_id();
 				    $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 				    $args=array(
 				        'post_type' => 'pet_profile',
@@ -624,6 +533,7 @@ foreach($customer_orders as $order ){
 				                        <strong>Pet Type:</strong> <span><?php echo $mypod->display('pet_type'); ?></span>
 				                        <br>
 				                        <strong>IDTag Serial Number:</strong> <span class="name"><?php echo $mypod->display('smarttag_id_number'); ?></span>
+				                         <strong>IDTag Serial Number:</strong> <span class="name"><?php echo $mypod->display('microchip_id_number'); ?></span>
 				                        <br>
 				                        <strong>ID Tag Plan:</strong> <span><?php echo $product_name; ?></span>
 				                    </div>
@@ -675,7 +585,6 @@ foreach($customer_orders as $order ){
 <script type="text/javascript">
 	
 	$(document).ready(function(){
-		
 		$(document).on('click', '.single_id_tag_add_to_cart_button', function (e) {
 
 		      	
@@ -696,69 +605,57 @@ foreach($customer_orders as $order ){
 		        var variation_id = $('.variation_id').val();
 
 	<?php  session_start();
- 	$_SESSION["product_id"] = $product_id; // 86400 = 1 day
- 	$_SESSION["idtag_action"] = 'replacement_id_tag'; // 86400 = 1 day?>
+ 			$_SESSION["product_id"] = $product_id; // 86400 = 1 day
+ 			$_SESSION["idtag_action"] = 'replacement_id_tag'; // 86400 = 1 day?>
+			if (product_id == 6089 || product_id == 7722) { 
+	     		data1 = {
+	         		    'attribute_pa_ttype': 'bone',
+	         		    'attribute_pa_size': size,
+	         		    'attribute_pa_style': style,
+	         		     'product_id': product_id,
+	         		    'variation_id': variation_id,
+	         		   	'action': 'woocommerce_ajax_add_to_cart_replacement',
+	         		    'engraving_front_line_1': frontLine1,
+	         		    'engraving_front_line_2': frontLine2,
+	         		    'engraving_front_line_3': frontLine3,
+	         		    'engraving_front_line_4': frontLine4,
+	         		    'engraving_back_line_1': backLine1,
+	         		    'engraving_back_line_2': backLine2,
+	         		    'engraving_back_line_3': backLine3,
+         		  		'price': 0,
 
-
-
-					if (product_id == 6089 || product_id == 7722) { 
-		         		data1 = {
-			         		    'attribute_pa_ttype': 'bone',
-			         		    'attribute_pa_size': size,
-			         		    'attribute_pa_style': style,
-			         		      'product_id': product_id,
-			         		    'variation_id': variation_id,
-			         		   'action': 'woocommerce_ajax_add_to_cart_replacement',
-			         		    'engraving_front_line_1': frontLine1,
-			         		    'engraving_front_line_2': frontLine2,
-			         		    'engraving_front_line_3': frontLine3,
-			         		    'engraving_front_line_4': frontLine4,
-			         		    'engraving_back_line_1': backLine1,
-			         		    'engraving_back_line_2': backLine2,
-			         		    'engraving_back_line_3': backLine3,
-			         		  
-			         		    'price': 0,
-
-		     	    		};
-		     		}else if (product_id == 6033 || product_id == 7659) { 
-		           			data1 = {
-			           			    'attribute_pa_shape': shape,
-			           			    'attribute_pa_size': size,
-			           			    'attribute_pa_color': color,
-			           			    'action': 'woocommerce_ajax_add_to_cart_replacement',
-			           			    'product_id': product_id,
-			           			    'variation_id': variation_id,
-			           			     'engraving_front_line_1': frontLine1,
-				         		    'engraving_front_line_2': frontLine2,
-				         		    'engraving_front_line_3': frontLine3,
-				         		    'engraving_front_line_4': frontLine4,
-				         		    'engraving_back_line_1': backLine1,
-				         		    'engraving_back_line_2': backLine2,
-				         		    'engraving_back_line_3': backLine3,
-				         		   
-		           			};
+	 	    		};
+		     	}else if (product_id == 6033 || product_id == 7659) { 
+           			data1 = {
+	           			    'attribute_pa_shape': shape,
+	           			    'attribute_pa_size': size,
+	           			    'attribute_pa_color': color,
+	           			    'action': 'woocommerce_ajax_add_to_cart_replacement',
+	           			    'product_id': product_id,
+	           			    'variation_id': variation_id,
+	           			     'engraving_front_line_1': frontLine1,
+		         		    'engraving_front_line_2': frontLine2,
+		         		    'engraving_front_line_3': frontLine3,
+		         		    'engraving_front_line_4': frontLine4,
+		         		    'engraving_back_line_1': backLine1,
+		         		    'engraving_back_line_2': backLine2,
+		         		    'engraving_back_line_3': backLine3,
+		         		   
+           			};
 		        }
-		        			
-						 $.ajax({
-			      		        type: 'POST',
-			      		        url: ajaxurl,
-			      		        data: data1,
-			      		        beforeSend:function(){
-         							$(".loader-wrap").fadeIn();
-
-      							},
-			      		        
-			      		        success: function(response) {
-			      		        		$(".loader-wrap").fadeOut();
-		      		    		 		window.location.href = window.location.origin+'/checkout';
-			      		        }
-			      		    });
-
-		      
-		  
-		      		     
-		 });
-
+		        		$.ajax({
+		      		        type: 'POST',
+		      		        url: ajaxurl,
+		      		        data: data1,
+		      		        beforeSend:function(){
+ 								$(".loader-wrap").fadeIn();
+							},
+			      		    success: function(response) {
+	      		        		$(".loader-wrap").fadeOut();
+      		    		 		window.location.href = window.location.origin+'/cart';
+		      		        }
+		      		    });
+		});
 	});
 
 </script>

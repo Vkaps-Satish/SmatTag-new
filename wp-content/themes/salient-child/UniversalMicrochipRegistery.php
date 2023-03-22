@@ -716,15 +716,15 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                                                    <span class="micro-back-img">
                                                    <img src="<?php bloginfo('template_url'); ?>-child/images/flower_circle_shape.png" class="front-img">
                                                    <span class="woo-complex-custom" style="display: none;">
-                                                   <span class="back_line_text1" id="front_line1"></span>
-                                                   <span class="back_line_text2" id="front_line2">Microchip ID#</span>
-                                                   <span class="back_line_text3" id="front_line3"></span>
-                                                   <span class="back_line_text3" id="front_line4"></span>
+                                                   <span class="back_line_text1" style="color: white;" id="front_line1"></span>
+                                                   <span class="back_line_text2" style="color: white;" id="front_line2">www.idtag.com</span>
+                                                   <span class="back_line_text3" style="color: white;" id="front_line3">(866)60-FOUND</span>
+                                                   <span class="back_line_text3" style="color: white;" id="front_line4"></span>
                                                    </span>
                                                    </span>
                                                 </div>
                                                 <div class="section-back-image design-circle micro-back">
-                                                   <label>Back12:</label>
+                                                   <label>Back:</label>
                                                    <span class="micro-back-img">
                                                    <img src="<?php bloginfo('template_url'); ?>-child/images/circle_back.png" class="back-img">
                                                    <span class="woo-complex-custom">	
@@ -734,18 +734,18 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                                                     <span class="back_line_text4" id="back_line4"></span>
                                                    </span>
                                                 </div>
-                                                <div class="section-front-image design-bone micro-back">
+                                                <div class="section-front-image design-bone micro-back front-bone">
                                                    <label>Front:</label>
                                                    <span class="micro-back-img">
                                                    <img src="<?php bloginfo('template_url'); ?>-child/images/black_bone_bone_shape.png" class="front-img">
                                                    <span class="woo-complex-custom" style="display: none;">	
-                                                   <span class="front_line_text1" id="front_line1"></span>
-                                                   <span class="front_line_text2" id="front_line2"></span>
-                                                   <span class="front_line_text3" id="front_line3"></span>
+                                                   <span class="front_line_text1 3" id="front_line1"></span>
+                                                   <span class="front_line_text2" id="front_line2">www.idtag.com</span>
+                                                   <span class="front_line_text3" id="front_line3">(866)60-FOUND</span>
                                                    </span>
                                                    </span>
                                                 </div>
-                                                <div class="section-back-image design-bone micro-back">
+                                                <div class="section-back-image design-bone micro-back back-bone">
                                                    <label>Back:</label>
                                                    <span class="micro-back-img">
                                                    <img src="<?php bloginfo('template_url'); ?>-child/images/bone_back.jpg" class="back-img">
@@ -762,9 +762,9 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                                                    <span class="micro-back-img">
                                                    <img src="<?php bloginfo('template_url'); ?>-child/images/brass_heart.jpg" class="front-img">
                                                    <span class="woo-complex-custom" style="display: none;">	
-                                                   <span class="front_line_text1" id="front_line1"></span>
-                                                   <span class="front_line_text2" id="front_line2"></span>
-                                                   <span class="front_line_text3" id="front_line3"></span>
+                                                   <span class="front_line_text1 4" id="front_line1"></span>
+                                                   <span class="front_line_text2" id="front_line2">www.idtag.com</span>
+                                                   <span class="front_line_text3" id="front_line3">(866)60-FOUND</span>
                                                    </span>
                                                    </span>
                                                 </div>
@@ -786,7 +786,7 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                                                    <span class="micro-back-img">
                                                    <img src="<?php bloginfo('template_url'); ?>-child/images/bluetag2.jpg" class="front-img"> 
                                                    <span class="woo-complex-custom" style="display: none;">	
-                                                   <span class="front_line_text1" id="front_line1"></span>
+                                                   <span class="front_line_text1 5" id="front_line1"></span>
                                                    <span class="front_line_text2" id="front_line2"></span>
                                                    <span class="front_line_text3" id="front_line3"></span>
                                                    </span>
@@ -809,7 +809,7 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                                                    <span class="micro-back-img">
                                                    <img src="<?php bloginfo('template_url'); ?>-child/images/black_bone_shape_2_2.png" class="front-img">
                                                    <span class="woo-complex-custom" style="display: none;">	
-                                                   <span class="front_line_text1" id="front_line1"></span>
+                                                   <span class="front_line_text1 6" id="front_line1"></span>
                                                    <span class="front_line_text2" id="front_line2"></span>
                                                    <span class="front_line_text3" id="front_line3"></span>
                                                    <span class="front_line_text4" id="front_line4"></span>
@@ -832,7 +832,7 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                                                    <span class="micro-back-img">
                                                    <img src="<?php bloginfo('template_url'); ?>-child/images/heart_pink_shape_2.png" class="front-img">
                                                    <span class="woo-complex-custom" style="display: none;">	
-                                                   <span class="front_line_text1" id="front_line1"></span>
+                                                   <span class="front_line_text1 7" id="front_line1"></span>
                                                    <span class="front_line_text2" id="front_line2"></span>
                                                    <span class="front_line_text3" id="front_line3"></span>
                                                    <span class="front_line_text4" id="front_line4"></span>
@@ -867,14 +867,16 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                                             <div class="custom_Field engraving-field-inner" id="frontend">
                                                 <h2 class="woo-complex-head">ID Tag Engraving Text</h2>
                                                         <div class="engraving-field engraving_1 ">
-                                                    <span class="engraving-label" for="engraving"><strong>Line 1:</strong> (20 Character Limit)</span>
-                                                    <input type="text" id="tagEditableText" name="tagEditableText" class="front-line" placeholder="Type here" maxlength="20" value="">
+                                                            <span class="engraving-label" for="engraving"><strong>Line 1:</strong> (20 Character Limit)</span>
+                                                            <input type="text" id="tagEditableText" name="tagEditableText" class="front-line" placeholder="Type here" maxlength="20" value="">
                                                          </div>
                                                 </div>
                                              <div>
                                              <label>
                                              <input type="radio" id="CustPro" name="customproduct">Yes I want a custom engraved ID Tag
+                                             </label>
                                              <br>
+                                             <label>
                                              <input type="radio" id="CustProdis" class="CustProdis" checked name="customproduct">No, I don't want an engraved ID Tag
                                              <br>
                                              </div>
@@ -966,7 +968,7 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                                              <span class="micro-back-img">
                                              <img src="<?php bloginfo('template_url'); ?>-child/images/flower_circle_shape.png" class="front-img">
                                              <span class="woo-complex-custom" style="display: none;">
-                                             <span class="front_line_text1" id="front_line1"></span>
+                                             <span class="front_line_text1 8" id="front_line1"></span>
                                             <span class="front_line_text2" id="front_line2">www.idtag.com</span>
                                              <span class="front_line_text3" id="front_line3">(866)60-FOUND</span>
                                              <span class="front_line_text4" id="front_line4"></span>
@@ -991,7 +993,7 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                                              <span class="micro-back-img">
                                              <img src="<?php bloginfo('template_url'); ?>-child/images/black_bone_bone_shape.png" class="front-img">
                                              <span class="woo-complex-custom" style="display: none;">	
-                                            <span class="front_line_text1" id="front_line1"></span>
+                                            <span class="front_line_text1 9" id="front_line1"></span>
                                             <span class="front_line_text2" id="front_line2">www.idtag.com</span>
                                              <span class="front_line_text3" id="front_line3">(866)60-FOUND</span>
                                              <span class="front_line_text4" id="front_line4"></span>
@@ -1018,7 +1020,7 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                                              <span class="micro-back-img">
                                              <img src="<?php bloginfo('template_url'); ?>-child/images/brass_heart.jpg" class="front-img">
                                              <span class="woo-complex-custom" style="display: none;">	
-                                             <span class="front_line_text1" id="front_line1"></span>
+                                             <span class="front_line_text1 10" id="front_line1"></span>
                                             <span class="front_line_text2" id="front_line2">www.idtag.com</span>
                                              <span class="front_line_text3" id="front_line3">(866)60-FOUND</span>
                                              <span class="front_line_text4" id="front_line4"></span>
@@ -1046,7 +1048,7 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                                              <span class="micro-back-img">
                                              <img src="<?php bloginfo('template_url'); ?>-child/images/bluetag2.jpg" class="front-img"> 
                                              <span class="woo-complex-custom" style="display: none;">	
-                                             <span class="front_line_text1" id="front_line1"></span>
+                                             <span class="front_line_text1 11" id="front_line1"></span>
                                             <span class="front_line_text2" id="front_line2">www.idtag.com</span>
                                              <span class="front_line_text3" id="front_line3">(866)60-FOUND</span>
                                              <span class="front_line_text4" id="front_line4"></span>
@@ -1071,7 +1073,7 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                                              <span class="micro-back-img">
                                              <img src="<?php bloginfo('template_url'); ?>-child/images/black_bone_shape_2_2.png" class="front-img">
                                              <span class="woo-complex-custom" style="display: none;">	
-                                             <span class="front_line_text1" id="front_line1"></span>
+                                             <span class="front_line_text1 1" id="front_line1"></span>
                                              <span class="front_line_text2" id="front_line2">www.idtag.com</span>
                                              <span class="front_line_text3" id="front_line3">(866)60-FOUND</span>
                                              <span class="front_line_text4" id="front_line4"></span>
@@ -1096,7 +1098,7 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                                              <span class="micro-back-img">
                                              <img src="<?php bloginfo('template_url'); ?>-child/images/heart_pink_shape_2.png" class="front-img">
                                              <span class="woo-complex-custom" style="display: none;">	
-                                             <span class="front_line_text1" id="front_line1"></span>
+                                             <span class="front_line_text1 2" id="front_line1"></span>
                                              <span class="front_line_text2" id="front_line2">www.idtag.com</span>
                                              <span class="front_line_text3" id="front_line3">(866)60-FOUND</span>
                                              <span class="front_line_text4" id="front_line4"></span>
@@ -1121,7 +1123,7 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
                                     </div>
                                  </div>
                               </div>
-                              <div class="col-sm-4">
+                              <div class="col-sm-4 ProductPrice">
                                  <strong>Price:&nbsp;</strong>$<span id="ProductPrice"></span>
                               </div>
                            </div>
@@ -1375,6 +1377,11 @@ $primary_cell_number_code     = get_user_meta($user_id, 'primary_cell_country_co
 </script>
 <script type="text/javascript">
     $(document).ready(function(){
+
+
+
+
+
 
 
     if($('.primary_checkbox').is(':checked')){

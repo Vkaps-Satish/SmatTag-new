@@ -181,7 +181,7 @@ wp_enqueue_script( 'jquery-js', 'https://cdn.jsdelivr.net/npm/jquery.ui.widget@1
     if(!is_page(107938)){
         wp_enqueue_script( 'steps-script', get_stylesheet_directory_uri() . '/js/steps.js', array( 'jquery' ),rand(),true );
     }
-    if(!is_page(7264)){
+    if(is_page('universal-microchip-register-new')){
         wp_enqueue_script( 'universal-steps-script', get_stylesheet_directory_uri() . '/js/universal_steps.js', array( 'jquery' ),rand(),true );
     }
      
@@ -1701,7 +1701,7 @@ function CreatePetProfile($pets){
 
 
     $newusername = $_POST['p_email'];
-    $newemail    = $_POST['p_email'];
+    $nCreate_Pet_profileewemail    = $_POST['p_email'];
     $newpassword = $_POST['password'];
     $secemail = $_POST['s_email'];
 
@@ -2370,6 +2370,9 @@ function cvf_upload_files(){
         update_post_meta($postid, 'vaterinarian_secondary_phone_number', $_POST['vaterinarian_secondary_phone_number']);
         update_post_meta($postid, 'vaterinarian_secondary_phone_number_code', $_POST['vaterinarian_secondary_phone_number_code']);
        
+        $universal_microchip_id = preg_replace('/\s+/', '', $_POST['universal_microchip_id']);
+        update_post_meta($postid, 'universal_microchip_id', $universal_microchip_id);
+
         $microchip_id_number = preg_replace('/\s+/', '', $_POST['microchip_id']);
         update_post_meta($postid, 'microchip_id_number', $microchip_id_number);
     
@@ -2594,9 +2597,6 @@ function get_custom_product_price(){
     global $woocommerce, $globalAluminumIdTag, $globalBrassIdTag;    
     unset($_POST['action']);
     $cart_item_data = array();
-
-
-
     $attributes['attribute_pa_size'] =  $_POST['attribute_pa_size'];
     
     if(isset($_POST['attribute_pa_color'])){
@@ -2616,6 +2616,8 @@ function get_custom_product_price(){
             $product = wc_get_product( $variationld );
             $productPrice = $product->get_regular_price();
             echo json_encode(array("success"=>1,"productPrice" => $productPrice));
+        }else{
+            echo json_encode(array("success"=>0,"message" => 'Please select design'));
         }
     die;  
      
@@ -2690,71 +2692,38 @@ add_action('wp_ajax_woocommerce_ajax_add_to_cart_replacement', 'woocommerce_ajax
 add_action('wp_ajax_nopriv_woocommerce_ajax_add_to_cart_replacement', 'woocommerce_ajax_add_to_cart_replacement');   
 
 function woocommerce_ajax_add_to_cart_replacement(){
+global $woocommerce, $globalAluminumIdTag, $globalBrassIdTag;  
+    $product_id = $_POST['product_id'];
+    $variation_id = $_POST['variation_id'];
+    $variation_id = '76788';
+    $cart_success = WC()->cart->add_to_cart( $product_id ,1, $variation_id,wc_get_product_variation_attributes( $variation_id )); 
 
-
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-
-
-
-  global $woocommerce, $globalAluminumIdTag, $globalBrassIdTag;  
-        $product_id = $_POST['product_id'];
-        $variation_id = $_POST['variation_id'];
-        $product = wc_get_product($product_id);
-         WC()->cart->add_to_cart( $product_id ,1, $variation_id,wc_get_product_variation_attributes( $variation_id )); 
-
-
-
-
-        $url =  site_url().'our-services/order-a-replacement-id-tag';
-        if (strpos($url,'order-a-replacement-id-tag') !== false) {
-
-            $new_array = array($globalAluminumIdTag ,$globalBrassIdTag);
-            $items = $woocommerce->cart->get_cart();
-             foreach ( $items as $hash => $value ) {
-                if(in_array($value['product_id'], $new_array)){
-                 
-                    $coupon_code = 'freeweek'; 
-                       
-                       //  if ( WC()->cart->has_discount( $coupon_code ) ) return;
-                       
-                         foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
-                       
-                         // this is your product ID
-                         $autocoupon = array( $product_id );
-
-                        // print_r($autocoupon);
-                        // die();
-
-                       
-                    if ( in_array( $cart_item['product_id'], $autocoupon ) ) {   
-                             WC()->cart->apply_coupon( $coupon_code );
-                             wc_print_notices();
-
-                             $checkout_url=  WC()->cart->get_checkout_url();;
-
-                             echo $checkout_url;  
-
-                             exit();
-                         }
-                       
-                    }
-                        
-
-
-
-                }else {
-                        echo 'No cars.';
-                    }
-
-                 exit;
-        }
-
-    }else{
-        echo 'dfdffff';
     }
+
+
+function wdm_add_item_data( $cart_item_data, $product_id ) {
+global $globalAluminumIdTag, $globalBrassIdTag;
+       $new_array = array($globalAluminumIdTag ,$globalBrassIdTag);
+    $url = $_SERVER['HTTP_REFERER'] ;
+            if (strpos($url,'order-a-replacement-id-tag') !== false) {
+                if(in_array($product_id, $new_array)){
+                   $cart_item_data[ "custom_price" ] = 0;
+                   return $cart_item_data;          
+                }
+            }
 }
+add_filter( 'woocommerce_add_cart_item_data', 'wdm_add_item_data', 10, 2 );
+
+function woocommerce_custom_price_to_cart_item( $cart_object ) {  
+ foreach ( $cart_object->cart_contents as $key => $value ) {
+         if( isset( $value["custom_price"] ) ) {
+             $value['data']->set_price($value["custom_options"]);
+         }
+     }     
+}
+add_action( 'woocommerce_before_calculate_totals', 'woocommerce_custom_price_to_cart_item', 10 );
+
+
 
 add_action('wp_ajax_woocommerce_ajax_add_to_cart', 'woocommerce_ajax_add_to_cart');
 add_action('wp_ajax_nopriv_woocommerce_ajax_add_to_cart', 'woocommerce_ajax_add_to_cart');   
@@ -4820,7 +4789,7 @@ function checkValidSmartTagId($smartTagID){
         }else{
             $result = 0;
             $msg = "Unable to Find given SmartId";
-            $myarray = array("status"=>"200","result"=>"notValid","message"=> $msg);
+            $myarray = array("status"=>false,"result"=>"notValid","message"=> $msg);
               echo json_encode($myarray);
            
         }
@@ -9419,7 +9388,7 @@ function add_variation_product_callback(){
     if(!empty($addProduct) && $variation_id!= 0){
         echo json_encode(array("success"=>1,"message"=>'Custom Product Added Into Cart'));
     }else{
-        echo json_encode(array("success"=>0,"message"=>'Something Went to wrong'));
+        echo json_encode(array("success"=>0,"message"=>'Please choose Style/Color'));
     }
       exit(); 
 }

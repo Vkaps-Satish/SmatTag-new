@@ -911,7 +911,7 @@ $secondary_phone_country_code  = get_user_meta($user_id,'secondary_phone_country
       </tr> 
 </tbody>
 </table>
- <span class="short-regular" style="position: relative; top: -12px;"><small><em style="font-size: 12px;">*must activate with our partner PAWP, see email for directions</em></small></span>
+ <span class="short-regular" style="position: relative; top: 0px;"><small><em style="font-size: 12px;">*must activate with our partner PAWP, see email for directions</em></small></span>
 </div>
 </div>
 <div class="step-btns">
@@ -986,10 +986,10 @@ $secondary_phone_country_code  = get_user_meta($user_id,'secondary_phone_country
 								<span class="micro-back-img">
 									<img src="<?php bloginfo('template_url'); ?>-child/images/flower_circle_shape.png" class="front-img">
 									<span class="woo-complex-custom" style="display: none;">
-										<span class="back_line_text1" id="back_line1"></span>
-										<span class="back_line_text2" id="back_line2">www.idtag.com</span>
-										<span class="back_line_text3" id="back_line3">(866)60-FOUND</span>
-										<span class="back_line_text4" id="back_line4"></span>
+										<span class="back_line_text1" style="color:white;" id="back_line1"></span>
+										<span class="back_line_text2" style="color:white;" id="back_line2">www.idtag.com</span>
+										<span class="back_line_text3" style="color:white;" id="back_line3">(866)60-FOUND</span>
+										<span class="back_line_text4" style="color:white;" id="back_line4"></span>
 									</span>
 								</span>
 							</div>
@@ -1351,10 +1351,10 @@ Included with your SmartTag Membership</h3>
 						<span class="micro-back-img">
 							<img src="<?php bloginfo('template_url'); ?>-child/images/flower_circle_shape.png" class="front-img">
 							<span class="woo-complex-custom" style="display: none;">
-								<span class="back_line_text1" id="back_line1"></span>
-								<span class="back_line_text2" id="back_line2">www.idtag.com</span>
-								<span class="back_line_text3" id="back_line3">(866)60-FOUND</span>
-								<span class="back_line_text4" id="back_line4"></span>
+								<span class="back_line_text1" style="color:white;"  id="back_line1"></span>
+								<span class="back_line_text2" style="color:white;"  id="back_line2">www.idtag.com</span>
+								<span class="back_line_text3" style="color:white;" id="back_line3">(866)60-FOUND</span>
+								<span class="back_line_text4" style="color:white;" id="back_line4"></span>
 							</span>
 						</span>
 					</div>
@@ -1402,8 +1402,8 @@ Included with your SmartTag Membership</h3>
 							<img src="<?php bloginfo('template_url'); ?>-child/images/brass_heart.jpg" class="front-img">
 							<span class="woo-complex-custom" style="display: none;">	
 								<span class="front_line_text1" id="front_line1"></span>
-								<span class="front_line_text2" id="front_line2"></span>
-								<span class="front_line_text3" id="front_line3">
+								<span class="front_line_text2" id="front_line2">www.idtag.com</span>
+								<span class="front_line_text3" id="front_line3">(866)60-FOUND
 								</span>
 								<span class="back_line_text4" id="back_line4"></span>
 							</span>
@@ -1506,7 +1506,7 @@ Included with your SmartTag Membership</h3>
 				</div>
 			</div>
 		</div>
-<div class="col-sm-4">
+<div class="col-sm-4 ProductPrice">
 	<strong>Price:&nbsp;</strong>$<span id="ProductPrice"></span>
 </div>
 </div>

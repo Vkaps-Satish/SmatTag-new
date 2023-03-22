@@ -1536,94 +1536,49 @@ wp_footer(); ?>
          	 $('.ste4').html('Next'+' <i class="fa fa-caret-right"></i>');
          });
   
-      /*   $("#profileuser1 #CustPro").on('click',function(){
-         	$("#field1").prop('required',true);
-         	$("#field2").prop('required',true);
-         	
-         	$("#eng_id").show();
-         	$("#eng_id1").hide();
-
-        	$('.skip2').html('Next'+' <i class="fa fa-caret-right"></i>');
-         });
-        
-        $("#profileuser1 #CustProdis").on("click",function(){
-        	$("#eng_id").hide();
-         	$("#eng_id1").show();
-         	if ( $('#heth_id').attr("checked") != 'checked' && $('#CustPro').attr("checked") != 'checked' && $('#PetArg').attr("checked") != 'checked') {
-				$('.skip2').html('Next'+' <i class="fa fa-caret-right"></i>');
-			}else{
-				$('.skip2').html('Skip All Offers'+' <i class="fa fa-caret-right"></i>');
-			}
-        })*/
-
-
-           $("#CustPro").on('click',function(){
-         	$("#field1").prop('required',true);
-         	$("#field2").prop('required',true);
-         	
-         	$("#eng_id").show();
-         	$("#eng_id1").hide();
-
-        	$('.skip2').html('Next'+' <i class="fa fa-caret-right"></i>');
+     			$("#CustPro").on('click',function(){
+         		$("#field1").prop('required',true);
+         		$("#field2").prop('required',true);
+       			$("#eng_id").show();
+         		$("#eng_id1").hide();
+						$('.skip2').html('Next'+' <i class="fa fa-caret-right"></i>');
          });
         
         $("#CustProdis").on("click",function(){
         	$("#eng_id").hide();
          	$("#eng_id1").show();
-         	if ( $('#heth_id').attr("checked") != 'checked' && $('#CustPro').attr("checked") != 'checked' && $('#PetArg').attr("checked") != 'checked') {
-				$('.skip2').html('Next'+' <i class="fa fa-caret-right"></i>');
-			}else{
-				$('.skip2').html('Skip All Offers'+' <i class="fa fa-caret-right"></i>');
-			}
-        })
-
-
-
-
-
-
-
-		$("#heth_id").on('click',function(){
-         	$('.ste4').html(''+' <i class="fa fa-caret-right"></i>');
-         });
-
-         $("#PetArg").on('click',function(){
-      	 $('.ste4').html('Next'+' <i class="fa fa-caret-right"></i>');
-         });
-      	
-
-
-
-
-
-
- /*       
-		$("#profileuser1 #heth_id").on('click',function(){
-         	$('.ste4').html(''+' <i class="fa fa-caret-right"></i>');
-         });
-
-         $("#profileuser1 #PetArg").on('click',function(){
-      	 $('.ste4').html('Next'+' <i class="fa fa-caret-right"></i>');
-         });
-      	*/
-      	$('.subPlans').on('click',function(){
+         		if ( $('#heth_id').attr("checked") != 'checked' && $('#CustPro').attr("checked") != 'checked' && $('#PetArg').attr("checked") != 'checked') {
+								$('.skip2').html('Next'+' <i class="fa fa-caret-right"></i>');
+						}else{
+							$('.skip2').html('Skip All Offers'+' <i class="fa fa-caret-right"></i>');
+						}
+        });
+		
+				$("#heth_id").on('click',function(){
+					$('.ste4').html(''+' <i class="fa fa-caret-right"></i>');
+				});
+				
+				$("#PetArg").on('click',function(){
+      		$('.ste4').html('Next'+' <i class="fa fa-caret-right"></i>');
+        });
+   
+   			$('.subPlans').on('click',function(){
       		$("#pln-div").show();
         	$(this).parent().parent().find("div .pp-plan-name");
         	$(this).parents("fieldset").find("input[name=protectionPlan]").val(1);
-      	    $('.subPlans').removeClass('AddSubscription');
-		   var PlanPrice = $(this).attr('price');
-		   var Plantype = $(this).parent().parent().parent().find('h2').text();
-      	   var PlnName = $(this).parent().parent().find(".pp-plan-name").text();
-      	    $("#pln").text(Plantype+" "+PlnName);
-      	    $("#PlnPrice").text(PlanPrice);
-          	$(this).addClass('AddSubscription');
-
-          		var products_id =  $(this).attr('proid');
-          	$('.subPlans').html('Add to Cart'+ ' <i class="fa fa-shopping-cart"></i>');
-          		localStorage.setItem('products_id',products_id);
-          	$(this).text('Added'); 
-
-       });
+      	  $('.subPlans').removeClass('AddSubscription');
+		   
+		   		var PlanPrice = $(this).attr('price');
+		   		var Plantype = $(this).parent().parent().parent().find('h2').text();
+    	   	var PlnName = $(this).parent().parent().find(".pp-plan-name").text();
+    	    $("#pln").text(Plantype+" "+PlnName);
+    	    $("#PlnPrice").text(PlanPrice);
+        	$(this).addClass('AddSubscription');
+					var products_id =  $(this).attr('proid');
+          $('.subPlans').html('Add to Cart'+ ' <i class="fa fa-shopping-cart"></i>');
+          localStorage.setItem('products_id',products_id);
+          $(this).text('Added'); 
+				});
 
     });
 	function readURLL(input,classs) {
@@ -1758,13 +1713,33 @@ wp_footer(); ?>
 			jQuery("div.color-pro div").hide();
 			var imgName = jQuery(this).find("img").attr("src");
 			var img = jQuery(this).parent().find('.style-radio').attr('data-name');
-			// alert(img);
+			var productype = $('#selectType .list .selected').attr('data-product');
+			var producsize = $('#selectType .list .selected').attr('data-value');
+		
 			var clas = jQuery(this).parent().find('.style-radio').attr('name');
 			if (clas == 'style') {
-				jQuery("div."+clas+"-pro div."+img+".section-front-image img").attr("src",imgName);
-			}else{
+				if((productype == 'aluminum' && producsize == 'bone')|| (productype == 'aluminum' && producsize == 'heart') || (productype == 'aluminum' && producsize == 'circle')){
+					jQuery("div."+clas+"-pro div."+img+".section-front-image img").attr("src",imgName);
+					jQuery("div."+clas+"-pro div."+img+".section-back-image img").attr("src",imgName);
+				}if((productype == 'brass' && producsize == 'bone')){
+					var imgName1 = window.location.origin+'/wp-content/themes/salient-child/images/bone_back.jpg';
+					jQuery("div."+clas+"-pro div."+img+".section-front-image img").attr("src",imgName);
+					jQuery("div."+clas+"-pro div."+img+".section-back-image img").attr("src",imgName1);
+				}else if(productype == 'brass' && producsize == 'circle'){
+					var imgName1 = window.location.origin+'/wp-content/themes/salient-child/images/circle_back.png';
+					jQuery("div."+clas+"-pro div."+img+".section-front-image img").attr("src",imgName);
+					jQuery("div."+clas+"-pro div."+img+".section-back-image img").attr("src",imgName1);
 				
-				jQuery("div."+clas+"-pro div."+img+" img").attr("src",imgName);
+				}else if(productype == 'brass' && producsize == 'heart'){
+					var imgName1 = window.location.origin+'/wp-content/themes/salient-child/images/heart_shape_back.jpg';
+					jQuery("div."+clas+"-pro div."+img+".section-front-image img").attr("src",imgName);
+					jQuery("div."+clas+"-pro div."+img+".section-back-image img").attr("src",imgName1);
+
+				}else{
+					jQuery("div."+clas+"-pro div."+img+".section-front-image img").attr("src",imgName);
+				}	
+			}else{
+					jQuery("div."+clas+"-pro div."+img+" img").attr("src",imgName);
 			}
 			jQuery("div."+clas+"-pro div."+img).show();
 			

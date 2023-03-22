@@ -460,7 +460,7 @@ var app = {
                         }
                     }
                 },
-                s_prm_no: {
+              /*  s_prm_no: {
                     checkSpecialCharate: true,
                     restric: true,
                     minlength: 13,
@@ -471,13 +471,13 @@ var app = {
                     restric: true,
                     minlength: 13,
                     maxlength: 14
-                },
+                },*/
                 s_zipcode :{
                     number: true,
                     minlength: 5,
                     maxlength: 5
                 },
-                vaterinarian_primary_phone_number: {
+             /*   vaterinarian_primary_phone_number: {
                     checkSpecialCharate: true,
                     restric: true,
                     minlength: 13,
@@ -492,7 +492,7 @@ var app = {
                 vaterinarian_zip_code :{
                     minlength: 5,
                     maxlength: 5
-                },
+                },*/
                 attribute_pa_ttype:{
                     required:true
                 },protectionPlan:{
@@ -536,7 +536,7 @@ var app = {
                     minlength : "The phone number must be 10  digits.",
                     maxlength : "The phone number must be 10  digits.",
                 },*/
-                s_prm_no: {
+                /*s_prm_no: {
                         minlength : "The phone number must be 10  digits.",
                         maxlength : "The phone number must be 10  digits.",
                 },
@@ -551,7 +551,7 @@ var app = {
                 vaterinarian_secondary_phone_number: {
                         minlength : "The phone number must be 10  digits.",
                         maxlength : "The phone number must be 10  digits.",
-                },
+                },*/
                 p_zipcode: {
                         minlength : "The Zipcode must be 5 digits.",
                         maxlength : "The Zipcode must be 5 digits.",
@@ -581,6 +581,12 @@ var app = {
                     }
                     jQuery(item.element).attr("aria-invalid", true); // add invalid aria
                 })
+
+                 $('html, body').animate({
+                    scrollTop: $(validator.errorList[0].element).offset().top
+                }, 2000);
+
+
             },
             submitHandler: function(f) {
 
@@ -663,18 +669,33 @@ var app = {
             var type = jQuery('#selectType .list .selected').attr('data-value');
             var  style = jQuery('#stylee .showOnGrid .active').find('.style-radio').val();
 
+            if(product == 'aluminum'){
+                data = {
+                    'attribute_pa_shape': type,
+                    'attribute_pa_size': size,
+                    'attribute_pa_color': style,
+                    'action': 'add_id-tag_into_cart',
+                    'product_type': product,
+                    'engraving_front_line_1': $("#front_line1").text(),
+                    'engraving_front_line_2': $("#front_line2").text(),
+                    'engraving_front_line_3': $("#front_line3").text(),
+                    'engraving_front_line_4': $("#front_line4").text(),
+                };  
+            }else{
+                 data = {
+                    'attribute_pa_shape': type,
+                    'attribute_pa_size': size,
+                    'attribute_pa_color': style,
+                    'action': 'add_id-tag_into_cart',
+                    'product_type': product,
+                    'engraving_back_line_1': $("#back_line1").text(),
+                    'engraving_back_line_2': $("#back_line2").text(),
+                    'engraving_back_line_3': $("#back_line3").text(),
+                    'engraving_back_line_4': $("#back_line4").text(),
+                }; 
+            }
 
-            data = {
-                'attribute_pa_shape': type,
-                'attribute_pa_size': size,
-                'attribute_pa_color': style,
-                'action': 'add_id-tag_into_cart',
-                'product_type': product,
-                'engraving_front_line_1': $("#front_line1").text(),
-                'engraving_front_line_2': $("#front_line2").text(),
-                'engraving_front_line_3': $("#front_line3").text(),
-                'engraving_front_line_4': $("#front_line4").text(),
-            };
+            
 
             var cusProduct = new FormData();
                 for ( var key in data ) {

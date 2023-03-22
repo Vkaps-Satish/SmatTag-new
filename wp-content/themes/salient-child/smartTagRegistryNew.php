@@ -102,7 +102,7 @@ $primary_cell_number_code = get_user_meta($user_id,'primary_cell_country_code',$
 									<div class="field-div">
 										<label>*Serial Number </label>
 										<input type="text" placeholder="Serial Number" name="smarttag_id_number" class="text-data sereal-number-1 sname_input-MC break_number-4" id="sname_input" required="" value="<?= (isset($_GET['id'])) ? $_GET['id'] : "" ?>"   />
-										 <span class="valid_message "></span>
+										 <span class="valid_message"style="color:red; font-size:15px;"></span>
 									</div>
 									<div class="field-div">
 										<label> </label>
@@ -117,7 +117,7 @@ $primary_cell_number_code = get_user_meta($user_id,'primary_cell_country_code',$
 								</div>
 								<div class="field-wrap two-fields-wrap">
 								  	<div class="field-div " >
-										<label>**Pet Type & Breed </label>
+										<label>*Pet Type & Breed </label>
 										<div class="field-wrap two-fields-wrap">
 											<div class="field-div">
 											 	<select name="pet_type" class="text-data" id="pettype" required=""  >
@@ -197,7 +197,7 @@ $primary_cell_number_code = get_user_meta($user_id,'primary_cell_country_code',$
 												<label>*Gender </label>
 											    <select name="gender" class="text-data" id="pgender" required="">
 											    	<option value="">Select</option>
-													<option value="male" >Male</option>
+													<option value="male">Male</option>
 													<option value="female">Female</option>
 												</select>
 											</div>
@@ -1012,7 +1012,7 @@ $primary_cell_number_code = get_user_meta($user_id,'primary_cell_country_code',$
 										      </tr>
 									      </tbody>
 									</table>
-									 <span class="short-regular" style="position: relative; top: -12px;"><small><em style="font-size: 12px;">*must activate with our partner PAWP, see email for directions</em></small></span>
+									 <span class="short-regular" style="position: relative; top: 0px;"><small><em style="font-size: 12px;">*must activate with our partner PAWP, see email for directions</em></small></span>
 								</div>
 							</div>
 							<div class="step-btns ">

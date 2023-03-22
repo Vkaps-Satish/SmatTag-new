@@ -103,7 +103,7 @@ $form = true;
 							quantity:quantity
 				}
 			}	
-			console.log("Data", data);
+			
 			$('.loader-wrap').fadeIn();
 			$.ajax({
      		 	type: 'POST',
